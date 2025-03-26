@@ -1,16 +1,38 @@
 <template>
-  <div class="mx-auto flex max-w-sm items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
-    <div>
-      <div class="text-xl font-medium text-black dark:text-white">ChitChat</div>
-      <p class="text-gray-500 dark:text-gray-400">You have a new message!</p>
+  <main class="my-10 max-w-3/4 mx-auto">
+    <div class="buttons flex flex-row space-x-1 pb-5 justify-between">
+      <div>
+        <h3>RentBase</h3>
+      </div>
+      <div class="flex flex-row space-x-1">
+        <NuxtLink to="/login">
+          <UButton icon="i-lucide-rocket" size="md" color="primary" variant="solid">Login</UButton>
+        </NuxtLink>
+        <UButton icon="i-lucide-rocket" size="md" color="secondary" variant="solid">Register</UButton>
+      </div>
     </div>
-  </div>
+
+    <div class="jumbo bg-gray-100 rounded-3xl h-96"></div>
+
+    <div class="grid grid-cols-3 my-5 spa gap-5 content-stretch">
+      <div v-for="i in 6" class="w-full h-56 border-gray-200 border rounded-3xl "></div>
+    </div>
+
+
+    <div class="footer flex bg-gray-100 w-full rounded-3xl h-80">
+
+    </div>
+
+
+  </main>
 </template>
 
-<script>
-export default {
-  name: "index"
+<script setup>
+
+const func = () => {
+
 }
+
 </script>
 
 <style scoped>
