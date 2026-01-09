@@ -1,241 +1,143 @@
 <template>
-  <main class="my-10 xl:w-4/5 lg:w-3/4 w-5/6 mx-auto">
-    <div class="buttons flex flex-row space-x-1 pb-5 justify-center">
-      <div>
-        <h3>RentBase</h3>
-      </div>
+  <div class="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300 antialiased">
+    <div class="relative z-10 flex flex-col min-h-screen">
+      <!-- Minimalist Navbar -->
+      <nav class="max-w-5xl mx-auto w-full px-6 py-8 flex items-center justify-between">
+        <NuxtLink to="/" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
+            <span class="text-white text-xl">⚡</span>
+          </div>
+          <span class="text-2xl font-black text-stone-900 dark:text-white tracking-tighter">RentBase</span>
+        </NuxtLink>
 
-    </div>
-
-    <div class="jumbo py-5 text-center flex flex-col xl:w-2/3 lg:w-3/5 md:w-4/5 lg:py-10  mx-auto items-center">
-      <h2 class="my-2.5 xl:text-7xl lg:text-5xl md:text-5xl text-4xl font-bold">How about, we help you <span
-          class="underline underline-offset-4 text-blue-700">pay</span> your <span
-          class="underline underline-offset-4 text-blue-700 animate-bounce">rent</span> month on month?</h2>
-      <UButton class="w-fit  bg-linear-to-r/hsl from-indigo-500 to-blue-400" size="xl" style="cursor: pointer">Get
-        Started Now!
-      </UButton>
-    </div>
-
-    <div
-        v-if="state.showCalculator"
-        class="calculator border-blue-200 border-1 bg-blue-50 rounded-3xl w-full xl:w-2/3 md:w-4/5 lg:w-2/3 mx-auto my-10">
-      <div class="flex flex-col items-center justify-center px-5 py-10">
-        <h2 class="my-3 px-5 text-2xl">Let us in on your finances!</h2>
-
-        <div class="w-full flex flex-col items-center justify-center p-5">
-          <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-            <div class="flex flex-col space-y-5 lg:flex-row md:flex-row  space-x-4">
-              <UFormField label="Net monthly salary" name="netMonthlySalary">
-                <UInputNumber v-model="state.netMonthlySalary"
-                              orientation="vertical"
-                              description="We'll never share your email with anyone else."
-                              hint="Optional"
-                              help="Please enter a valid email address."
-                              size="xl"/>
-              </UFormField>
-              <UFormField label="Rent amount per month" name="rentAmountPerMonth">
-                <UInputNumber v-model="state.rentAmountPerMonth"
-                              orientation="vertical"
-                              description="We'll never share your email with anyone else."
-                              hint="Optional"
-                              help="Please enter a valid email address."
-                              size="xl"/>
-              </UFormField>
-            </div>
-
-            <div class="flex flex-row ">
-              <div class="flex  flex-col space-y-5 lg:flex-row md:flex-row  space-x-4">
-                <UFormField label="Number of years renting" name="rentDurationPerMonth">
-                  <UInputNumber v-model="state.rentDurationPerMonth"
-                                orientation="vertical"
-                                description="We'll never share your email with anyone else."
-                                hint="Optional"
-                                help="Please enter a valid email address."
-                                size="xl"/>
-                </UFormField>
-                <UFormField label="Employment status" name="employmentType">
-                  <USelect v-model="value" :items="items" size="xl" class="w-48"/>
-                </UFormField>
-              </div>
-            </div>
-            <UButton size="xl" type="submit" class="bg-linear-to-r/hsl from-indigo-500 to-blue-400">
-              Calculate
-            </UButton>
-          </UForm>
-
+        <div class="flex items-center gap-6">
+          <div class="hidden md:flex items-center gap-8 text-sm font-bold text-stone-500 uppercase tracking-widest">
+            <NuxtLink to="/contract" class="hover:text-emerald-500 transition-colors">Legal</NuxtLink>
+            <NuxtLink to="/deposit" class="hover:text-emerald-500 transition-colors">Deposits</NuxtLink>
+          </div>
+          <div class="h-6 w-px bg-stone-200 dark:bg-stone-800 hidden md:block"></div>
+          <div class="flex items-center gap-4">
+            <ColorSchemeButton />
+            <template v-if="user">
+               <UserDropdown />
+            </template>
+            <template v-else>
+              <NuxtLink 
+                to="/auth/login"
+                class="px-8 py-3 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-black rounded-full hover:scale-105 transition-all text-sm shadow-xl shadow-stone-900/10"
+              >
+                Sign In
+              </NuxtLink>
+            </template>
+          </div>
         </div>
-      </div>
-    </div>
+      </nav>
 
-    <div
-        v-else
-        class="calculator w-full xl:w-2/3 md:w-4/5 lg:w-2/3 mx-auto border-gray-200  border-1 p-5 xl:p-15 rounded-3xl my-5">
-      <div class="flex flex-row w-full mx-auto">
+      <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 pb-40">
+        <!-- Straightforward Hero -->
+        <div class="text-center max-w-4xl mx-auto animate-fade-in">
+           <h1 class="text-5xl sm:text-7xl lg:text-8xl font-black text-stone-900 dark:text-white mb-8 tracking-tighter leading-[0.95] text-balance">
+             Rent with <br class="hidden sm:block"/>
+             <span class="text-emerald-500">Confidence.</span>
+           </h1>
+           <p class="text-stone-500 dark:text-stone-400 text-xl sm:text-2xl font-medium max-w-2xl mx-auto leading-relaxed mb-16 text-balance">
+             The essential protocol for verifying agents, drafting legal agreement, and securing your security deposit.
+           </p>
 
-        <div class="justify-center items-center flex flex-col w-full">
-
-          <div v-if="state.expectedMonthlyRent.isElligible">
-            <p class="text-gray-500 text-sm text-center p-3">
-              To use a font in your Nuxt UI application, you can simply declare it in your CSS. It will be automatically
-              loaded and optimized for you.
-            </p>
-            <div
-                class="shadow-md w-full mt-5 bg-linear-to-r from-blue-600 to-gray-700 text-white border-1 rounded-2xl xl:my-5 xl:p-5 flex flex-col p-5">
-              <h2 class="xl:text-5xl lg:text-5xl md:text-5xl text-4xl font-bold">
-                {{ formatMoney(state.expectedMonthlyRent.totalRepayment) }}</h2>
-              <small class="text-blue-300 text-md">Expected monthly rent payment</small>
-
-              <div class="flex xl:flex-row lg:flex-row flex-col justify-between mt-8">
-                <p>Refundable Security Deposit:</p>
-                <h4 class="font-bold">{{ formatMoney(state.expectedMonthlyRent.refundableDeposit) }}</h4>
-              </div>
-
-              <div class="flex xl:flex-row lg:flex-row flex-col justify-between mt-3">
-                <p>Amount due before Move-in</p>
-                <h4 class="font-bold">{{ formatMoney(state.expectedMonthlyRent.amountDueBeforeMoveIn) }}</h4>
-              </div>
-            </div>
-            <div class="flex xl:flex-row lg:flex-row md:flex-row flex-col my-5 space-x-5 space-y-5 w-2/3">
-              <UButton @click="state.showCalculator = true" size="xl"
-                       class="hidden bg-linear-to-r/hsl from-indigo-500 to-blue-400">Calculate Again
-              </UButton>
-              <UButton class="bg-linear-to-r/hsl from-indigo-500 to-blue-400" size="xl" to="https://github.com/nuxt/ui"
-                       target="_blank">Apply Now!
-              </UButton>
-            </div>
-
-          </div>
-          <div
-              v-else
-              class="shadow-md text-center w-full bg-linear-to-r from-red-600 to-gray-700 text-white border-1 rounded-2xl my-5 p-5 flex flex-col">
-            <h2 class="xl:text-5xl lg:text-5xl md:text-5xl text-3xl  font-bold leading-15">Sorry!, you are not eligible
-              to access our aid</h2>
-          </div>
-
-          <UButton @click="state.showCalculator = true" color="neutral" class="font-bold rounded-full self-center"
-                   icon="i-lucide-rocket">Close
-          </UButton>
-
+           <!-- Primary Search Tool -->
+           <div class="w-full max-w-lg mx-auto mb-20">
+             <AgentSearchBar @write-review="handleWriteReview" @view-reviews="handleViewReviews" />
+           </div>
         </div>
 
-      </div>
+        <!-- Feature Pills (Adeton-like) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl w-full animate-fade-in delay-100">
+           <NuxtLink to="/contract" class="group bg-white dark:bg-stone-900 p-8 rounded-[40px] border border-stone-100 dark:border-stone-800 hover:border-emerald-500/50 transition-all hover:shadow-2xl hover:shadow-emerald-500/5">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-stone-50 dark:bg-stone-800 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">📜</div>
+                <UIcon name="i-lucide-arrow-up-right" class="w-6 h-6 text-stone-300 group-hover:text-emerald-500 transition-colors" />
+              </div>
+              <h3 class="text-2xl font-black text-stone-900 dark:text-white mb-2 uppercase tracking-tighter">Pocket Lawyer</h3>
+              <p class="text-stone-500 dark:text-stone-400 font-medium leading-relaxed">Swift, legal tenancy agreements.</p>
+           </NuxtLink>
+
+           <NuxtLink to="/deposit" class="group bg-white dark:bg-stone-900 p-8 rounded-[40px] border border-stone-100 dark:border-stone-800 hover:border-emerald-500/50 transition-all hover:shadow-2xl hover:shadow-emerald-500/5">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-stone-50 dark:bg-stone-800 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">🛡️</div>
+                <UIcon name="i-lucide-arrow-up-right" class="w-6 h-6 text-stone-300 group-hover:text-emerald-500 transition-colors" />
+              </div>
+              <h3 class="text-2xl font-black text-stone-900 dark:text-white mb-2 uppercase tracking-tighter">Deposit Shield</h3>
+              <p class="text-stone-500 dark:text-stone-400 font-medium leading-relaxed">Secure proof for your deposit.</p>
+           </NuxtLink>
+        </div>
+      </main>
+      
+      <!-- Minimalist Footer -->
+      <footer class="py-12 border-t border-stone-200 dark:border-stone-800">
+         <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-2 opacity-40">
+               <div class="w-6 h-6 bg-stone-900 dark:bg-white rounded-lg"></div>
+               <span class="font-bold text-stone-900 dark:text-white tracking-widest text-[10px] uppercase">RentBase Protocol</span>
+            </div>
+            <p class="text-[10px] text-stone-400 font-black uppercase tracking-[0.3em]">© 2025 Protocol Labs Ghana.</p>
+         </div>
+      </footer>
+      
+      <!-- Modals -->
+      <AuthModal 
+        v-model="showAuthModal" 
+        @success="handleAuthSuccess"
+      />
     </div>
 
-
-    <div class="my-5">
-
-    </div>
-
-    <div
-        class="w-full xl:w-2/3 md:w-4/5 lg:w-2/3 mx-auto footer mt-32 flex flex-col bg-linear-to-r/hsl from-indigo-500 to-blue-400 border-1 border-gray-200 rounded-3xl py-20 text-center justify-center">
-      <h5 class="text-blue-100 font-bold">RentBase</h5>
-      <small class="text-gray-50">&copy;2025. All Rights Reserved</small>
-    </div>
-
-
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">
-import * as v from 'valibot'
-import type {FormSubmitEvent} from '@nuxt/ui'
+import { formatPhoneDisplay } from '~/utils/formatPhone'
 
-enum EmploymentType {
-  Private = 'Private',
-  Government = 'Government',
-  SelfEmployment = 'Self Employment',
+const router = useRouter()
+const { user, signOut } = useAuth()
+
+const showAuthModal = ref(false)
+
+function handleAuthSuccess() {
+  // Optionally redirect to dashboard after login
 }
 
-type RentLoanDetails = {
-  principal: number;    // Rent amount to borrow
-  rate: number;
-  monthlySalary: number;// Annual interest rate in %
-  durationInMonths: number;  // Repayment period in months
-};
-
-const items = ref([EmploymentType.Private.toString(), EmploymentType.Government, EmploymentType.SelfEmployment])
-const value = ref(EmploymentType.Private)
-
-const schema = v.object({
-  employmentType: v.pipe(v.string(), v.string('Invalid email')),
-  rentAmountPerMonth: v.pipe(v.number(), v.number('Invalid email')),
-  netMonthlySalary: v.pipe(v.number(), v.number('Invalid email')),
-  rentDurationPerMonth: v.pipe(v.number(), v.toMinValue(2)),
-})
-
-type Schema = v.InferOutput<typeof schema>
-
-const state = reactive({
-  employmentType: EmploymentType.Private,
-  rentAmountPerMonth: 0.0,
-  netMonthlySalary: 0.0,
-  rentDurationPerMonth: 0.0,
-  expectedMonthlyRent: {} as RentLoanDetailsResponse,
-  showCalculator: true
-})
-
-type RentLoanDetailsResponse = {
-  principal: number;
-  interest: number;
-  totalRepayment: number;
-  monthlyRepayment: number;
-  amountDueBeforeMoveIn: number;
-  refundableDeposit: number;
-  isElligible: boolean;
-};
-
-function roundUpToTwoDecimals(value: number): number {
-  return Math.ceil(value * 100) / 100;
+function navigateToContract() {
+  router.push('/contract')
 }
 
-function formatMoney(amount: number, currency: string = 'GHS'): string {
-  return new Intl.NumberFormat('en-GH', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
+function navigateToDeposit() {
+  router.push('/deposit')
 }
 
-function calculateRentLoan({principal, rate, durationInMonths, monthlySalary}: RentLoanDetails) {
-  const timeInYears = durationInMonths / 12;
-  const interest = (principal * rate * timeInYears) / 100;
-  const totalRepayment = roundUpToTwoDecimals(principal + interest);
-  const monthlyRepayment = roundUpToTwoDecimals(totalRepayment / durationInMonths);
-  const isElligible = (monthlySalary >= principal * 3)
-  const refundableDeposit = (5 * (durationInMonths * principal)) / 100;
-  const amountDueBeforeMoveIn = totalRepayment + refundableDeposit;
-
-  return {
-    principal,
-    interest,
-    totalRepayment,
-    monthlyRepayment,
-    amountDueBeforeMoveIn,
-    refundableDeposit,
-    isElligible
-  };
+function handleWriteReview(phone: string) {
+  router.push(`/agent/${phone}?review=true`)
 }
 
-
-const toast = useToast()
-
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  state.showCalculator = false
-  // toast.add({title: 'Success', description: 'The form has been submitted.', color: 'success'})
-  console.log(event.data)
-  console.log(state.rentAmountPerMonth)
-
-  state.expectedMonthlyRent = calculateRentLoan({
-    principal: state.rentAmountPerMonth,
-    rate: 10,
-    durationInMonths: state.rentDurationPerMonth,
-    monthlySalary: state.netMonthlySalary,
-  })
-
+function handleViewReviews(phone: string) {
+  router.push(`/agent/${phone}`)
 }
 </script>
 
 <style scoped>
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.05); }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
 
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
 </style>
