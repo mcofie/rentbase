@@ -2,44 +2,49 @@
 @import "@nuxt/ui";
 
 @theme {
-  /* Minimalist Stone Palette */
-  --color-stone-50: #fafaf9;
-  --color-stone-100: #f5f5f4;
-  --color-stone-200: #e7e5e4;
-  --color-stone-300: #d6d3d1;
-  --color-stone-400: #a8a29e;
-  --color-stone-500: #78716c;
-  --color-stone-600: #57534e;
-  --color-stone-700: #44403c;
-  --color-stone-800: #292524;
-  --color-stone-900: #1c1917;
-  --color-stone-950: #0c0a09;
+  /* Lens.xyz Inspired Palette - Clean, Technical, Vibrant */
+  --color-stone-50: #fdfdfd;
+  /* Lens Off-White */
+  --color-stone-100: #f4f4f5;
+  --color-stone-200: #e4e4e7;
+  --color-stone-300: #d4d4d8;
+  --color-stone-400: #a1a1aa;
+  --color-stone-500: #71717a;
+  --color-stone-600: #52525b;
+  --color-stone-700: #3f3f46;
+  --color-stone-800: #27272a;
+  --color-stone-900: #1a1a1a;
+  /* Lens Black */
+  --color-stone-950: #0a0a0a;
 
-  /* Adeton Emerald Action */
-  --color-emerald-50: #ecfdf5;
-  --color-emerald-100: #d1fae5;
-  --color-emerald-200: #a7f3d0;
-  --color-emerald-300: #6ee7b7;
-  --color-emerald-400: #34d399;
-  --color-emerald-500: #10b981;
-  --color-emerald-600: #059669;
-  --color-emerald-700: #047857;
-  --color-emerald-800: #065f46;
-  --color-emerald-900: #064e3b;
-  --color-emerald-950: #022c22;
+  /* Lens Mint (Replaced Emerald) */
+  --color-mint-50: #effef7;
+  --color-mint-100: #dafeec;
+  --color-mint-200: #b8fcdb;
+  --color-mint-300: #81f4c3;
+  --color-mint-400: #43e5a0;
+  --color-mint-500: #00d2a0;
+  /* Primary Lens Accent (approx) */
+  --color-mint-600: #00a881;
+  --color-mint-700: #008669;
+  --color-mint-800: #026b56;
+  --color-mint-900: #025848;
+  --color-mint-950: #00332c;
 
-  --color-primary-50: var(--color-emerald-50);
-  --color-primary-100: var(--color-emerald-100);
-  --color-primary-200: var(--color-emerald-200);
-  --color-primary-300: var(--color-emerald-300);
-  --color-primary-400: var(--color-emerald-400);
-  --color-primary-500: var(--color-emerald-500);
-  --color-primary-600: var(--color-emerald-600);
-  --color-primary-700: var(--color-emerald-700);
-  --color-primary-800: var(--color-emerald-800);
-  --color-primary-900: var(--color-emerald-900);
-  --color-primary-950: var(--color-emerald-950);
+  /* Map to Functional Colors */
+  --color-primary-50: var(--color-mint-50);
+  --color-primary-100: var(--color-mint-100);
+  --color-primary-200: var(--color-mint-200);
+  --color-primary-300: var(--color-mint-300);
+  --color-primary-400: var(--color-mint-400);
+  --color-primary-500: var(--color-mint-500);
+  --color-primary-600: var(--color-mint-600);
+  --color-primary-700: var(--color-mint-700);
+  --color-primary-800: var(--color-mint-800);
+  --color-primary-900: var(--color-mint-900);
+  --color-primary-950: var(--color-mint-950);
 
+  /* Gray Scale */
   --color-gray-50: var(--color-stone-50);
   --color-gray-100: var(--color-stone-100);
   --color-gray-200: var(--color-stone-200);
@@ -52,17 +57,36 @@
   --color-gray-900: var(--color-stone-900);
   --color-gray-950: var(--color-stone-950);
 
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Inter', sans-serif;
+  /* Modern Designer Fonts */
+  --font-sans: 'Outfit', 'Inter', sans-serif;
+  --font-display: 'Outfit', sans-serif;
 }
 
 /* Custom Utilities */
 @utility text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400;
+  @apply bg-clip-text text-transparent bg-linear-to-r from-mint-600 to-mint-400;
 }
 
-@utility card-hover {
-  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+@utility bg-grid-pattern {
+  background-size: 64px 64px;
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+@utility bg-grid-pattern-dark {
+  background-size: 64px 64px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+@utility btn-pill {
+  @apply rounded-full px-8 py-4 font-semibold transition-all duration-300 active:scale-95;
+}
+
+@utility card-lens {
+  @apply rounded-[32px] bg-white/50 dark:bg-stone-900/50 backdrop-blur-md border border-stone-200/50 dark:border-stone-800/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-mint-500/5 hover:-translate-y-1;
 }
 
 /* Base Styles */
@@ -73,27 +97,33 @@ html {
 }
 
 body {
-  @apply font-sans bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 tracking-tight antialiased;
+  @apply font-sans bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 tracking-tight antialiased;
+  @apply bg-grid-pattern dark:bg-grid-pattern-dark;
+}
+
+/* Selection Color */
+::selection {
+  @apply bg-mint-200 text-mint-900;
 }
 
 /* Page Transitions */
 .page-enter-active,
 .page-leave-active {
-  transition: all 0.2s ease-out;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .page-enter-from,
 .page-leave-to {
   opacity: 0;
-  transform: translateY(4px);
-  filter: blur(2px);
+  transform: translateY(12px) scale(0.99);
+  filter: blur(4px);
 }
 
 /* Animations */
-@keyframes fade-in {
+@keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(24px);
   }
 
   to {
@@ -103,7 +133,7 @@ body {
 }
 
 @utility animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
+  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @utility delay-100 {

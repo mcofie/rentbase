@@ -101,17 +101,25 @@ export function useAuth() {
      * Fetch user profile
      */
     async function fetchProfile(): Promise<Profile | null> {
-        if (!user.value) return null
+        // Early return if no user or user.id is not available
+        if (!user.value || !user.value.id) {
+            return null
+        }
+
+        const userId = user.value.id
 
         try {
-            const { data, error } = await supabase
-                .from('profiles')
+            const { data, error } = await (supabase
+                .from('profiles') as any)
                 .select('*')
-                .eq('id', user.value.id)
+                .eq('id', userId)
                 .single()
 
             if (error) {
-                console.error('Error fetching profile:', error)
+                // Don't log error if profile simply doesn't exist yet
+                if (error.code !== 'PGRST116') {
+                    console.error('Error fetching profile:', error)
+                }
                 return null
             }
 
@@ -147,14 +155,14 @@ export function useAuth() {
 
     // Initialize profile on mount
     onMounted(async () => {
-        if (user.value) {
+        if (user.value?.id) {
             await fetchProfile()
         }
     })
 
     // Watch for user changes
     watch(user, async (newUser) => {
-        if (newUser) {
+        if (newUser?.id) {
             await fetchProfile()
         } else {
             profile.value = null

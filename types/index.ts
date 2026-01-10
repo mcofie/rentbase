@@ -82,10 +82,21 @@ export interface ContractDetails {
 
 export interface Contract {
     id: string
-    user_id: string
+    user_id: string | null
+    customer_email: string | null
     payment_ref: string | null
     details: ContractDetails
     is_finalized: boolean
+
+    // Digital Signature Fields
+    landlord_signature: string | null
+    landlord_signed_at: string | null
+    landlord_sign_token: string
+    tenant_signature: string | null
+    tenant_signed_at: string | null
+    tenant_sign_token: string
+    is_fully_signed: boolean
+
     created_at: string
 }
 
@@ -96,13 +107,17 @@ export interface ReportImage {
     id: number
     report_id: string
     image_url: string
+    room_name: string | null
     defect_description: string | null
 }
 
 export interface ConditionReport {
     id: string
-    user_id: string
+    user_id: string | null
+    customer_email: string | null
     payment_ref: string | null
+    property_address: string | null
+    report_type: 'move_in' | 'move_out' | null
     is_finalized: boolean
     report_date: string
     images?: ReportImage[]

@@ -15,11 +15,17 @@ export default defineNuxtConfig({
     supabase: {
         url: process.env.NUXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
         key: process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder',
+        // Use custom 'rentbase' schema instead of 'public'
+        clientOptions: {
+            db: {
+                schema: 'rentbase',
+            },
+        },
         redirectOptions: {
             login: '/auth/login',
             callback: '/auth/confirm',
-            include: ['/dashboard(.*)', '/contract/new', '/deposit/new'],
-            exclude: ['/', '/contract/preview/*'],
+            include: ['/dashboard(.*)'],
+            exclude: ['/', '/contract/preview/*', '/contract/new', '/deposit/new'],
             cookieRedirect: false,
         },
     },

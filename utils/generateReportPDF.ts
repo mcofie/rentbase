@@ -38,17 +38,41 @@ export async function generateConditionReportPDF(
 
     doc.setFontSize(12)
     doc.setFont('helvetica', 'normal')
-    doc.text('Deposit Shield - Move-In Snapshot', pageWidth / 2, yPos, { align: 'center' })
+    const reportTypeText = report.report_type === 'move_out' ? 'Move-Out Inspection' : 'Move-In Snapshot'
+    doc.text(`Deposit Shield - ${reportTypeText}`, pageWidth / 2, yPos, { align: 'center' })
     yPos += 15
 
-    // Report Details
+    // Report Details Box
+    doc.setFillColor(245, 245, 245)
+    doc.rect(margin, yPos - 5, pageWidth - margin * 2, report.property_address ? 40 : 30, 'F')
+
     doc.setFontSize(10)
-    doc.text(`Report ID: ${report.id}`, margin, yPos)
-    yPos += 6
-    doc.text(`Date: ${new Date(report.report_date).toLocaleDateString('en-GB')} at ${new Date(report.report_date).toLocaleTimeString('en-GB')}`, margin, yPos)
-    yPos += 6
-    doc.text(`Status: ${report.is_finalized ? 'FINALIZED' : 'DRAFT'}`, margin, yPos)
-    yPos += 15
+    doc.text(`Report ID: ${report.id}`, margin + 5, yPos + 2)
+    doc.text(`Date: ${new Date(report.report_date).toLocaleDateString('en-GB')} at ${new Date(report.report_date).toLocaleTimeString('en-GB')}`, margin + 5, yPos + 10)
+    doc.text(`Status: ${report.is_finalized ? 'FINALIZED ✓' : 'DRAFT'}`, margin + 5, yPos + 18)
+
+    if (report.property_address) {
+        doc.setFont('helvetica', 'bold')
+        doc.text(`Property: ${report.property_address}`, margin + 5, yPos + 28)
+        doc.setFont('helvetica', 'normal')
+        yPos += 45
+    } else {
+        yPos += 35
+    }
+
+    yPos += 5
+
+    // Data Retention Notice
+    doc.setFillColor(240, 253, 244) // Light green
+    doc.rect(margin, yPos, pageWidth - margin * 2, 18, 'F')
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(22, 163, 74) // Green text
+    doc.text('DATA RETENTION: This report and all photos are securely stored for 2 YEARS.', margin + 5, yPos + 7)
+    doc.setFont('helvetica', 'normal')
+    doc.text('Retrieve anytime using your Report ID and registered email.', margin + 5, yPos + 13)
+    doc.setTextColor(0, 0, 0)
+    yPos += 25
 
     // Divider
     doc.setDrawColor(200, 200, 200)

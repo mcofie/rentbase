@@ -202,12 +202,78 @@
                   </div>
 
                   <div v-else class="space-y-4">
-                    <div class="w-16 h-16 bg-green-50 dark:bg-green-950/20 rounded-2xl flex items-center justify-center mb-6">
-                      <UIcon name="i-lucide-check-circle-2" class="w-10 h-10 text-green-500" />
+                    <!-- Signature Status Card -->
+                    <div class="mb-6">
+                      <div v-if="contract.is_fully_signed" class="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-800">
+                        <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-emerald-500" />
+                        <div>
+                          <p class="font-bold text-emerald-700 dark:text-emerald-300">Fully Signed</p>
+                          <p class="text-xs text-emerald-600 dark:text-emerald-400">Both parties have signed this agreement</p>
+                        </div>
+                      </div>
+                      <div v-else class="flex items-center gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-100 dark:border-amber-800">
+                        <UIcon name="i-lucide-clock" class="w-8 h-8 text-amber-500" />
+                        <div>
+                          <p class="font-bold text-amber-700 dark:text-amber-300">Awaiting Signatures</p>
+                          <p class="text-xs text-amber-600 dark:text-amber-400">Share signing links with both parties</p>
+                        </div>
+                      </div>
                     </div>
-                    <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2 tracking-tight">Official Document</h3>
-                    <p class="text-sm font-medium text-gray-500 mb-8 leading-relaxed">This contract is finalized and ready for signatures.</p>
-                    
+
+                    <!-- Signature Status List -->
+                    <div class="space-y-3 mb-6">
+                      <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                        <div class="flex items-center gap-3">
+                          <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                            <UIcon name="i-lucide-user" class="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div>
+                            <p class="text-sm font-bold text-gray-900 dark:text-white">Landlord</p>
+                            <p class="text-xs text-gray-500">{{ details.landlord_name }}</p>
+                          </div>
+                        </div>
+                        <div v-if="contract.landlord_signature" class="flex items-center gap-2 text-emerald-500">
+                          <UIcon name="i-lucide-check-circle" class="w-5 h-5" />
+                          <span class="text-xs font-bold">Signed</span>
+                        </div>
+                        <UButton 
+                          v-else 
+                          size="xs" 
+                          variant="soft"
+                          icon="i-lucide-send"
+                          @click="copySigningLink('landlord')"
+                        >
+                          {{ copiedLink === 'landlord' ? 'Copied!' : 'Copy Link' }}
+                        </UButton>
+                      </div>
+
+                      <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                        <div class="flex items-center gap-3">
+                          <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                            <UIcon name="i-lucide-user-check" class="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          </div>
+                          <div>
+                            <p class="text-sm font-bold text-gray-900 dark:text-white">Tenant</p>
+                            <p class="text-xs text-gray-500">{{ details.tenant_name }}</p>
+                          </div>
+                        </div>
+                        <div v-if="contract.tenant_signature" class="flex items-center gap-2 text-emerald-500">
+                          <UIcon name="i-lucide-check-circle" class="w-5 h-5" />
+                          <span class="text-xs font-bold">Signed</span>
+                        </div>
+                        <UButton 
+                          v-else 
+                          size="xs" 
+                          variant="soft"
+                          icon="i-lucide-send"
+                          @click="copySigningLink('tenant')"
+                        >
+                          {{ copiedLink === 'tenant' ? 'Copied!' : 'Copy Link' }}
+                        </UButton>
+                      </div>
+                    </div>
+
+                    <!-- Download Button -->
                     <UButton
                       block
                       size="xl"
@@ -215,18 +281,33 @@
                       icon="i-lucide-download"
                       @click="downloadFinal"
                     >
-                      Download Final PDF
+                      Download {{ contract.is_fully_signed ? 'Signed' : 'Final' }} PDF
                     </UButton>
-                     <UButton
+                    
+                    <!-- Share via WhatsApp -->
+                    <UButton
                       variant="outline"
                       block
-                      size="xl"
-                      class="rounded-2xl font-black py-4 mt-2"
-                      icon="i-lucide-share"
-                      @click="shareContract"
+                      size="lg"
+                      class="rounded-xl font-bold"
+                      icon="i-lucide-message-circle"
+                      @click="shareSigningLinks"
                     >
-                      Share with Landlord
+                      Share via WhatsApp
                     </UButton>
+
+                    <!-- Send via SMS -->
+                    <SMSSender
+                      v-if="!contract.is_fully_signed"
+                      variant="outline"
+                      size="lg"
+                      icon="i-lucide-smartphone"
+                      button-class="w-full rounded-xl font-bold"
+                      description="Send signing link via SMS"
+                      :message="smsMessage"
+                    >
+                      Send via SMS
+                    </SMSSender>
                   </div>
                </div>
 
@@ -235,7 +316,7 @@
                   <div class="flex items-start gap-4">
                     <UIcon name="i-lucide-shield-check" class="w-6 h-6 text-uni-600 dark:text-uni-400 flex-shrink-0" />
                     <p class="text-xs font-medium text-uni-700 dark:text-uni-300 leading-relaxed">
-                      All RentBase documents are cryptographically hashed. This ensures that the terms cannot be altered after both parties have downloaded the document.
+                      All signatures are cryptographically timestamped and securely stored. The signed document cannot be altered after both parties have signed.
                     </p>
                   </div>
                </div>
@@ -266,10 +347,12 @@ import type { ContractDetails } from '~/types'
 
 const route = useRoute()
 const router = useRouter()
+const config = useRuntimeConfig()
 const { fetchContract, finalizeContract, shareViaWhatsApp, loading, error, currentContract: contract } = useContractGenerator()
 const { user } = useAuth()
 
 const showAuthModal = ref(false)
+const copiedLink = ref<'landlord' | 'tenant' | null>(null)
 
 const userEmail = computed(() => {
   if (!user.value) return null
@@ -312,7 +395,7 @@ function downloadDraft() {
 
 function downloadFinal() {
   if (contract.value) {
-    downloadContractPDF(details.value, false)
+    downloadContractPDF(details.value, false, contract.value.landlord_signature, contract.value.tenant_signature)
   }
 }
 
@@ -329,6 +412,46 @@ function handleAuthSuccess() {
   showAuthModal.value = false
   // Payment will be triggered by user clicking the Paystack button which is now visible
 }
+
+async function copySigningLink(party: 'landlord' | 'tenant') {
+  if (!contract.value) return
+  
+  const baseUrl = config.public.appUrl || 'http://localhost:3000'
+  const token = party === 'landlord' ? contract.value.landlord_sign_token : contract.value.tenant_sign_token
+  const url = `${baseUrl}/contract/sign/${token}`
+  
+  await navigator.clipboard.writeText(url)
+  copiedLink.value = party
+  setTimeout(() => { copiedLink.value = null }, 2000)
+}
+
+function shareSigningLinks() {
+  if (!contract.value) return
+  
+  const baseUrl = config.public.appUrl || 'http://localhost:3000'
+  const landlordUrl = `${baseUrl}/contract/sign/${contract.value.landlord_sign_token}`
+  const tenantUrl = `${baseUrl}/contract/sign/${contract.value.tenant_sign_token}`
+  
+  const message = `*TENANCY AGREEMENT - DIGITAL SIGNATURE REQUIRED*\n\n` +
+    `📍 Property: ${details.value.property_address}\n\n` +
+    `Please sign the agreement using your unique link:\n\n` +
+    `👤 *Landlord* (${details.value.landlord_name}):\n${landlordUrl}\n\n` +
+    `👤 *Tenant* (${details.value.tenant_name}):\n${tenantUrl}\n\n` +
+    `_Powered by RentBase - The Carfax for Rentals_`
+  
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank')
+}
+
+const smsMessage = computed(() => {
+  if (!contract.value) return ''
+  const baseUrl = config.public.appUrl || 'http://localhost:3000'
+  const landlordUrl = `${baseUrl}/contract/sign/${contract.value.landlord_sign_token}`
+  
+  return `SIGN YOUR TENANCY AGREEMENT\n` +
+    `Property: ${details.value.property_address}\n` +
+    `Sign here: ${landlordUrl}\n` +
+    `- RentBase`
+})
 
 onMounted(async () => {
   const id = route.params.id as string

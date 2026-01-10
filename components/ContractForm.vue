@@ -221,10 +221,10 @@
         type="submit"
         size="lg"
         :loading="loading"
-        icon="i-lucide-file-text"
+        icon="i-lucide-eye"
         class="order-1 sm:order-2"
       >
-        Generate Draft
+        Preview Agreement
       </UButton>
     </div>
   </form>
@@ -233,8 +233,9 @@
 <script setup lang="ts">
 import type { ContractDetails } from '~/types'
 
-defineProps<{
+const props = defineProps<{
   loading?: boolean
+  initialData?: ContractDetails | null
 }>()
 
 defineEmits<{
@@ -254,27 +255,35 @@ const allUtilities = ['Water', 'Electricity', 'Internet', 'Gas', 'Security', 'Tr
 
 const roomCount = ref(1)
 
+// Initialize with provided data or defaults
 const formData = reactive<ContractDetails>({
-  landlord_name: '',
-  landlord_phone: '',
-  landlord_id_type: '',
-  landlord_id_number: '',
-  tenant_name: '',
-  tenant_phone: '',
-  tenant_id_type: '',
-  tenant_id_number: '',
-  property_address: '',
-  property_type: '',
-  property_description: '',
-  rent_amount: 0,
-  rent_currency: 'GHS',
-  payment_frequency: 'monthly',
-  security_deposit: 0,
-  lease_start_date: '',
-  lease_duration_months: 12,
-  utilities_included: [],
-  special_terms: '',
+  landlord_name: props.initialData?.landlord_name || '',
+  landlord_phone: props.initialData?.landlord_phone || '',
+  landlord_id_type: props.initialData?.landlord_id_type || '',
+  landlord_id_number: props.initialData?.landlord_id_number || '',
+  tenant_name: props.initialData?.tenant_name || '',
+  tenant_phone: props.initialData?.tenant_phone || '',
+  tenant_id_type: props.initialData?.tenant_id_type || '',
+  tenant_id_number: props.initialData?.tenant_id_number || '',
+  property_address: props.initialData?.property_address || '',
+  property_type: props.initialData?.property_type || '',
+  property_description: props.initialData?.property_description || '',
+  rent_amount: props.initialData?.rent_amount || 0,
+  rent_currency: props.initialData?.rent_currency || 'GHS',
+  payment_frequency: props.initialData?.payment_frequency || 'monthly',
+  security_deposit: props.initialData?.security_deposit || 0,
+  lease_start_date: props.initialData?.lease_start_date || '',
+  lease_duration_months: props.initialData?.lease_duration_months || 12,
+  utilities_included: props.initialData?.utilities_included || [],
+  special_terms: props.initialData?.special_terms || '',
 })
+
+// Watch for changes to initialData and update form
+watch(() => props.initialData, (newData) => {
+  if (newData) {
+    Object.assign(formData, newData)
+  }
+}, { deep: true })
 
 function toggleUtility(utility: string) {
   const index = formData.utilities_included.indexOf(utility)
@@ -285,3 +294,4 @@ function toggleUtility(utility: string) {
   }
 }
 </script>
+

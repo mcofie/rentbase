@@ -1,218 +1,321 @@
 <template>
-  <div class="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
-    <!-- Dot Pattern Background -->
-    <div class="fixed inset-0 z-0 pointer-events-none opacity-[0.4] bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:16px_16px]"></div>
-
+  <div class="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300">
     <div class="relative z-10 flex flex-col min-h-screen">
       <!-- Header -->
-      <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-4 py-4 sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto flex items-center justify-between">
-          <NuxtLink to="/" class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-lime-400 rounded-lg flex items-center justify-center transform -rotate-6 shadow-sm">
-              <span class="text-lg">⚡</span>
-            </div>
-            <span class="font-bold text-gray-900 dark:text-white tracking-tighter text-lg">RentBase</span>
-          </NuxtLink>
-          
-          <div class="flex items-center gap-3">
-            <ColorSchemeButton />
-            <UButton 
-              variant="ghost"
-              color="neutral"
-              icon="i-lucide-arrow-left" 
-              size="sm"
-              class="rounded-full hidden sm:flex"
-              @click="$router.back()"
-            >
-              Back
-            </UButton>
-            <div v-if="user" class="sm:ml-2">
-              <UserDropdown />
-            </div>
+      <nav class="max-w-5xl mx-auto w-full px-6 py-8 flex items-center justify-between">
+        <NuxtLink to="/" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
+            <span class="text-white text-xl">⚡</span>
           </div>
+          <span class="text-2xl font-black text-stone-900 dark:text-white tracking-tighter">RentBase</span>
+        </NuxtLink>
+        <div class="flex items-center gap-4">
+          <ColorSchemeButton />
+          <UButton 
+            variant="ghost"
+            color="neutral"
+            icon="i-lucide-arrow-left" 
+            size="sm"
+            class="rounded-full"
+            @click="handleBack"
+          >
+            Back
+          </UButton>
         </div>
-      </header>
+      </nav>
       
-      <main class="px-4 py-8 sm:py-12">
-        <div class="max-w-3xl mx-auto">
+      <main class="px-6 py-8 sm:py-12 flex-grow">
+        <div :class="['mx-auto', step === 2 ? 'max-w-5xl' : 'max-w-3xl']">
           <!-- Page Header -->
-          <div class="text-center mb-10">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-uni-50 dark:bg-uni-900/20 rounded-[20px] sm:rounded-[24px] flex items-center justify-center mx-auto mb-6 shadow-sm border border-uni-100 dark:border-uni-900/30">
-              <span class="text-3xl sm:text-4xl">🛡️</span>
-            </div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-2 tracking-tight">
-              Deposit Shield
+          <div class="text-center mb-10 animate-fade-in">
+            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-4">Deposit Shield</p>
+            <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white mb-3 tracking-tighter">
+              {{ stepTitles[step - 1] }}
             </h1>
-            <p class="text-gray-500 dark:text-gray-400 text-base sm:text-lg font-medium">
-              Document property conditions before moving in to protect your deposit
+            <p class="text-stone-500 dark:text-stone-400 font-medium">
+              {{ stepDescriptions[step - 1] }}
             </p>
           </div>
           
-          <!-- Progress Steps (Responsive) -->
+          <!-- Progress Steps -->
           <div class="flex items-center justify-center gap-2 sm:gap-4 mb-12">
-            <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-              <div 
-                :class="[
-                  'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all shadow-sm',
-                  step >= 1 ? 'bg-uni-500 text-white shadow-uni-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600'
-                ]"
-              >
-                1
-              </div>
-              <span :class="step >= 1 ? 'text-[10px] sm:text-sm font-bold text-gray-900 dark:text-white' : 'text-[10px] sm:text-sm text-gray-400 dark:text-gray-600'">Photos</span>
+            <div class="flex items-center gap-2">
+              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 1 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">1</div>
+              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 1 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Photos</span>
             </div>
-            <div class="w-6 sm:w-12 h-px bg-gray-200 dark:bg-gray-800"></div>
-            <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-              <div 
-                :class="[
-                  'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all shadow-sm',
-                  step >= 2 ? 'bg-uni-500 text-white shadow-uni-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600'
-                ]"
-              >
-                2
-              </div>
-              <span :class="step >= 2 ? 'text-[10px] sm:text-sm font-bold text-gray-900 dark:text-white' : 'text-[10px] sm:text-sm text-gray-400 dark:text-gray-600'">Review</span>
+            <div class="w-6 sm:w-8 h-px bg-stone-200 dark:bg-stone-800"></div>
+            <div class="flex items-center gap-2">
+              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 2 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">2</div>
+              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 2 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Preview</span>
             </div>
-            <div class="w-6 sm:w-12 h-px bg-gray-200 dark:bg-gray-800"></div>
-            <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-              <div 
-                :class="[
-                  'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all shadow-sm',
-                  step >= 3 ? 'bg-uni-500 text-white shadow-uni-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600'
-                ]"
-              >
-                3
-              </div>
-              <span :class="step >= 3 ? 'text-[10px] sm:text-sm font-bold text-gray-900 dark:text-white' : 'text-[10px] sm:text-sm text-gray-400 dark:text-gray-600'">Final</span>
+            <div class="w-6 sm:w-8 h-px bg-stone-200 dark:bg-stone-800"></div>
+            <div class="flex items-center gap-2">
+              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 3 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">3</div>
+              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 3 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Pay</span>
+            </div>
+            <div class="w-6 sm:w-8 h-px bg-stone-200 dark:bg-stone-800"></div>
+            <div class="flex items-center gap-2">
+              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 4 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">4</div>
+              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 4 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Done</span>
             </div>
           </div>
           
           <!-- Step 1: Upload Photos -->
-          <div v-if="step === 1" class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
-            <h2 class="text-lg font-bold mb-4 dark:text-white">Upload Property Photos</h2>
-            <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">
-              Take photos of any existing damage, defects, or notable conditions in the property. 
-              Add descriptions to each photo for clarity.
+          <div v-if="step === 1" class="bg-white dark:bg-stone-900 rounded-[40px] p-8 border border-stone-200 dark:border-stone-800 animate-fade-in">
+            <h2 class="text-xl font-black text-stone-900 dark:text-white mb-2 tracking-tighter uppercase">Document Property Conditions</h2>
+            <p class="text-stone-500 dark:text-stone-400 text-sm mb-6">
+              Take photos of any existing damage, defects, or notable conditions before moving in.
             </p>
             
-            <PhotoUploader 
+            <!-- Property Address Input -->
+            <div class="mb-8">
+              <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-3 block">Property Address (Optional)</label>
+              <input 
+                v-model="propertyAddress"
+                type="text"
+                placeholder="e.g., 123 Main Street, Accra"
+                class="w-full px-5 py-4 bg-stone-50 dark:bg-stone-950/50 border border-stone-100 dark:border-stone-800 rounded-xl text-base font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-stone-300"
+              />
+            </div>
+            
+            <!-- Room-by-Room Photo Uploader -->
+            <RoomPhotoUploader 
               :report-id="reportId"
               @uploaded="handlePhotosUploaded"
             />
             
-            <div v-if="uploadedPhotos.length > 0" class="mt-6 pt-6 border-t dark:border-gray-800">
-              <UButton 
-                size="lg" 
-                class="w-full"
-                @click="step = 2"
+            <div v-if="uploadedPhotos.length > 0" class="mt-8 pt-8 border-t border-stone-100 dark:border-stone-800">
+              <button 
+                class="w-full py-5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-black rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                @click="goToPreview"
               >
-                Continue to Review ({{ uploadedPhotos.length }} photos)
-              </UButton>
+                Preview Report ({{ uploadedPhotos.length }} photos in {{ uniqueRooms }} rooms)
+                <UIcon name="i-lucide-arrow-right" class="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Preview -->
+          <div v-else-if="step === 2" class="animate-fade-in">
+            <div class="grid lg:grid-cols-3 gap-8">
+              <!-- Preview -->
+              <div class="lg:col-span-2 order-2 lg:order-1">
+                <DepositPreview 
+                  :report-id="reportId"
+                  :photos="uploadedPhotos"
+                  :property-address="propertyAddress"
+                />
+              </div>
+
+              <!-- Action Sidebar -->
+              <div class="space-y-6 order-1 lg:order-2">
+                <!-- Summary Card -->
+                <div class="bg-gradient-to-br from-stone-900 to-stone-800 dark:from-stone-800 dark:to-stone-900 rounded-[24px] p-6 text-white">
+                  <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center">
+                      <UIcon name="i-lucide-shield-check" class="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 class="font-black">Report Summary</h3>
+                      <p class="text-xs text-stone-400">Deposit Shield</p>
+                    </div>
+                  </div>
+                  
+                  <div class="space-y-3">
+                    <div class="flex justify-between py-2 border-b border-stone-700/50">
+                      <span class="text-sm text-stone-300">Photos</span>
+                      <span class="font-bold">{{ uploadedPhotos.length }}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-stone-700/50">
+                      <span class="text-sm text-stone-300">Storage</span>
+                      <span class="font-bold text-emerald-400">2 Years</span>
+                    </div>
+                    <div class="flex justify-between py-2">
+                      <span class="text-sm text-stone-300">Report Fee</span>
+                      <span class="font-bold text-xl">GH₵ 25</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Approval Card -->
+                <div class="bg-white dark:bg-stone-900 rounded-[24px] p-6 border border-stone-200 dark:border-stone-800">
+                  <h3 class="font-black text-stone-900 dark:text-white mb-4">Looks Good?</h3>
+                  
+                  <div class="space-y-3">
+                    <UButton
+                      block
+                      size="xl"
+                      class="rounded-2xl font-black py-4"
+                      icon="i-lucide-credit-card"
+                      @click="step = 3"
+                    >
+                      Continue to Payment
+                    </UButton>
+                    <UButton
+                      variant="ghost"
+                      color="neutral"
+                      block
+                      size="lg"
+                      class="rounded-xl font-bold"
+                      icon="i-lucide-plus"
+                      @click="step = 1"
+                    >
+                      Add More Photos
+                    </UButton>
+                  </div>
+                </div>
+
+                <!-- Download Draft -->
+                <div class="bg-white dark:bg-stone-900 rounded-[24px] p-6 border border-stone-200 dark:border-stone-800">
+                  <p class="text-xs font-black text-stone-400 uppercase tracking-widest mb-4">Draft Options</p>
+                  <UButton
+                    variant="outline"
+                    color="neutral"
+                    block
+                    size="lg"
+                    class="rounded-xl font-bold"
+                    icon="i-lucide-download"
+                    @click="downloadDraftReport"
+                  >
+                    Download Draft PDF
+                  </UButton>
+                  <p class="text-xs text-stone-400 mt-3 text-center">
+                    Draft contains watermark. Pay to get official report.
+                  </p>
+                </div>
+
+                <!-- Info Card -->
+                <div class="p-5 rounded-2xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
+                  <div class="flex items-start gap-3">
+                    <UIcon name="i-lucide-info" class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p class="text-xs font-bold text-blue-700 dark:text-blue-300 mb-1">Secure Storage</p>
+                      <p class="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
+                        Your photos are stored for 2 years. Retrieve anytime with your email or report ID.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           
-          <!-- Step 2: Review & Pay -->
-          <div v-else-if="step === 2" class="space-y-6">
-            <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
-              <h2 class="text-lg font-bold mb-4 dark:text-white">Review Your Photos</h2>
-              
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div 
-                  v-for="(photo, index) in uploadedPhotos" 
-                  :key="index"
-                  class="rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-800 border dark:border-gray-700"
-                >
-                  <img 
-                    :src="photo.url" 
-                    :alt="`Photo ${index + 1}`"
-                    class="w-full h-32 object-cover"
-                  />
-                  <div class="p-2 text-xs font-medium dark:text-gray-300">
-                    {{ photo.description || 'No description' }}
-                  </div>
+          <!-- Step 3: Email & Payment -->
+          <div v-else-if="step === 3" class="animate-fade-in space-y-6 max-w-xl mx-auto">
+            <!-- Payment Card -->
+            <div class="bg-white dark:bg-stone-900 rounded-[40px] p-8 border border-stone-200 dark:border-stone-800">
+              <div class="flex items-center justify-center mb-6">
+                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center">
+                  <UIcon name="i-lucide-credit-card" class="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
                 </div>
               </div>
-            </div>
-            
-            <!-- Payment Card -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
-              <h2 class="text-lg font-bold mb-4 dark:text-white">Generate Your Report</h2>
               
-              <div class="bg-uni-50 dark:bg-uni-900/10 rounded-xl p-4 mb-6">
+              <h2 class="text-2xl font-black text-stone-900 dark:text-white mb-2 tracking-tighter text-center">Complete Payment</h2>
+              <p class="text-stone-500 text-center mb-8 text-sm">Secure payment via Paystack</p>
+              
+              <div class="bg-stone-50 dark:bg-stone-950/50 rounded-3xl p-6 mb-8">
                 <div class="flex justify-between items-center">
                   <div>
-                    <p class="font-bold dark:text-white">Deposit Shield Report</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ uploadedPhotos.length }} photos documented</p>
+                    <p class="font-bold text-stone-900 dark:text-white">Deposit Shield Report</p>
+                    <p class="text-xs text-stone-500">{{ uploadedPhotos.length }} photos • 2 years storage</p>
                   </div>
-                  <p class="text-2xl font-black text-uni-600 dark:text-uni-400">GH₵ 25</p>
+                  <p class="text-3xl font-black text-emerald-500">GH₵ 25</p>
                 </div>
               </div>
-              
-              <div class="space-y-3">
-                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <UIcon name="i-lucide-check-circle-2" class="text-uni-500" />
-                  Timestamped PDF report
-                </div>
-                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <UIcon name="i-lucide-check-circle-2" class="text-uni-500" />
-                  All photos included with descriptions
-                </div>
-                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <UIcon name="i-lucide-check-circle-2" class="text-uni-500" />
-                  Legal evidence for deposit disputes
-                </div>
+
+              <!-- Email Input -->
+              <div class="mb-8">
+                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-3 block">Your Email (for receipt & retrieval)</label>
+                <input 
+                  v-model="customerEmail"
+                  type="email"
+                  placeholder="you@example.com"
+                  class="w-full px-5 py-4 bg-stone-50 dark:bg-stone-950/50 border border-stone-100 dark:border-stone-800 rounded-xl text-base font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-stone-300"
+                />
+                <p class="text-xs text-stone-400 mt-2">
+                  💡 Use this email to retrieve your report anytime in the next 2 years
+                </p>
               </div>
-              
-              <div class="mt-6 flex gap-3">
-                <UButton 
-                  variant="outline" 
-                  size="lg"
-                  @click="step = 1"
-                >
-                  Back
-                </UButton>
-                
+
+              <div class="flex gap-3">
+                <UButton variant="outline" size="lg" class="rounded-xl" @click="step = 2">Back</UButton>
                 <PaystackButton
-                  v-if="userEmail"
+                  v-if="customerEmail && reportId"
                   feature-type="deposit_report"
-                  :email="userEmail"
+                  :email="customerEmail"
                   :item-id="reportId"
                   class="flex-1"
                   @success="handlePaymentSuccess"
                 >
-                  Pay & Generate Report
+                  Pay GH₵ 25
                 </PaystackButton>
+                <button 
+                  v-else
+                  disabled
+                  class="flex-1 py-4 bg-stone-100 dark:bg-stone-800 text-stone-400 font-black rounded-xl cursor-not-allowed text-sm"
+                >
+                  Enter Email to Continue
+                </button>
               </div>
             </div>
           </div>
           
-          <!-- Step 3: Success -->
-          <div v-else-if="step === 3" class="text-center py-12">
-            <div class="w-20 h-20 bg-lime-100 dark:bg-lime-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span class="text-4xl text-lime-600">✅</span>
+          <!-- Step 4: Success -->
+          <div v-else-if="step === 4" class="text-center py-16 animate-fade-in">
+            <div class="w-24 h-24 bg-emerald-50 dark:bg-emerald-950/30 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce-in">
+              <UIcon name="i-lucide-check-circle-2" class="w-14 h-14 text-emerald-500" />
             </div>
             
-            <h2 class="text-2xl font-black mb-2 dark:text-white">Report Generated!</h2>
-            <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-sm mx-auto">
-              Your condition report has been created and is ready for download.
+            <h2 class="text-3xl font-black text-stone-900 dark:text-white mb-4 tracking-tighter uppercase">Report Ready!</h2>
+            <p class="text-stone-500 dark:text-stone-400 mb-6 max-w-sm mx-auto font-medium">
+              Your condition report has been securely stored and is ready for download.
             </p>
+
+            <!-- Retrieval Info -->
+            <div class="bg-white dark:bg-stone-900 rounded-[24px] p-6 border border-stone-200 dark:border-stone-800 max-w-md mx-auto mb-10">
+              <div class="flex items-center gap-3 mb-4">
+                <UIcon name="i-lucide-key" class="w-5 h-5 text-emerald-500" />
+                <span class="font-black text-stone-900 dark:text-white text-sm">Your Report ID</span>
+              </div>
+              <div class="bg-stone-50 dark:bg-stone-800 rounded-xl p-4 font-mono text-sm text-stone-700 dark:text-stone-300 break-all">
+                {{ reportId }}
+              </div>
+              <p class="text-xs text-stone-400 mt-3">
+                Save this ID! Use it with your email ({{ customerEmail }}) to retrieve your report anytime before {{ retrievalDeadline }}.
+              </p>
+            </div>
             
-            <div class="flex flex-col sm:flex-row gap-3 justify-center">
-              <UButton
-                size="lg"
-                icon="i-lucide-download"
+            <div class="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
+              <button 
+                class="px-8 py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-black rounded-2xl hover:scale-105 transition-transform shadow-xl flex items-center justify-center gap-2"
                 @click="downloadReport"
               >
+                <UIcon name="i-lucide-download" class="w-5 h-5" />
                 Download PDF
-              </UButton>
-              
-              <UButton
-                variant="ghost"
-                size="lg"
+              </button>
+              <button 
+                @click="shareViaWhatsApp"
+                class="px-8 py-4 bg-emerald-500 text-white font-black rounded-2xl hover:scale-105 transition-transform shadow-xl flex items-center justify-center gap-2"
+              >
+                <UIcon name="i-lucide-message-circle" class="w-5 h-5" />
+                WhatsApp
+              </button>
+              <SMSSender
+                variant="soft"
+                size="xl"
+                icon="i-lucide-smartphone"
+                button-class="px-8 py-4 font-black rounded-2xl"
+                description="Send report info via SMS"
+                :message="reportSmsMessage"
+              >
+                SMS
+              </SMSSender>
+              <NuxtLink 
                 to="/"
+                class="px-8 py-4 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-bold rounded-2xl hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
               >
                 Go Home
-              </UButton>
+              </NuxtLink>
             </div>
           </div>
           
@@ -235,35 +338,61 @@
 import { downloadConditionReportPDF } from '~/utils/generateReportPDF'
 import type { ConditionReport, ReportImage } from '~/types'
 
-definePageMeta({
-  middleware: 'auth',
-})
-
+const router = useRouter()
+const config = useRuntimeConfig()
 const supabase = useSupabaseClient()
-const { user } = useAuth()
 
 const step = ref(1)
 const error = ref<string | null>(null)
 const reportId = ref('')
-const uploadedPhotos = ref<{ url: string; description: string }[]>([])
+const propertyAddress = ref('')
+const customerEmail = ref('')
+const uploadedPhotos = ref<{ url: string; description: string; room?: string }[]>([])
 const paymentRef = ref<string | null>(null)
 
-// Generate unique report ID on mount
-const userEmail = computed(() => {
-  if (!user.value) return null
-  return user.value.email || `${user.value.phone?.replace(/\+/g, '')}@rentbase.app`
+const stepTitles = [
+  'Document Conditions',
+  'Preview Report',
+  'Complete Payment',
+  'Report Ready!'
+]
+
+const stepDescriptions = [
+  'Take photos of property conditions before moving in.',
+  'Review your photos and report details.',
+  'Pay to secure your report for 2 years.',
+  'Download and share your official report.'
+]
+
+const retrievalDeadline = computed(() => {
+  const date = new Date()
+  date.setFullYear(date.getFullYear() + 2)
+  return date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
 })
 
-// Create report on mount
+const uniqueRooms = computed(() => {
+  const rooms = new Set(uploadedPhotos.value.map(p => p.room || 'other'))
+  return rooms.size
+})
+
+const reportSmsMessage = computed(() => {
+  return `DEPOSIT SHIELD REPORT\n` +
+    `Property: ${propertyAddress.value || 'N/A'}\n` +
+    `Photos: ${uploadedPhotos.value.length}\n` +
+    `Report ID: ${reportId.value.slice(0, 8)}...\n` +
+    `Retrieve at: rentbase.app/retrieve\n` +
+    `- RentBase`
+})
+
+// Create a report ID on mount
 onMounted(async () => {
-  if (!user.value) return
-  
   try {
-    const { data, error: dbError } = await supabase
-      .from('condition_reports')
+    const { data, error: dbError } = await (supabase
+      .from('condition_reports') as any)
       .insert({
-        user_id: user.value.id,
         is_finalized: false,
+        property_address: propertyAddress.value || null,
+        report_type: 'move_in',
       })
       .select()
       .single()
@@ -272,60 +401,74 @@ onMounted(async () => {
     
     reportId.value = data.id
   } catch (err: any) {
-    error.value = err.message || 'Failed to create report'
+    error.value = err.message || 'Failed to initialize report'
   }
 })
 
-// Handle photos uploaded
-async function handlePhotosUploaded(photos: { url: string; description: string }[]) {
-  uploadedPhotos.value = photos
-  
-  // Save images to database
-  try {
-    const imagesToInsert = photos.map(photo => ({
-      report_id: reportId.value,
-      image_url: photo.url,
-      defect_description: photo.description || null,
-    }))
-    
-    const { error: dbError } = await supabase
-      .from('report_images')
-      .insert(imagesToInsert)
-    
-    if (dbError) throw dbError
-  } catch (err: any) {
-    error.value = err.message || 'Failed to save images'
+function handleBack() {
+  if (step.value > 1) {
+    step.value--
+  } else {
+    router.back()
   }
 }
 
-// Handle payment success
+function handlePhotosUploaded(photos: { url: string; description: string }[]) {
+  uploadedPhotos.value = photos
+}
+
+async function goToPreview() {
+  // Update property address if provided
+  if (propertyAddress.value && reportId.value) {
+    await (supabase.from('condition_reports') as any)
+      .update({ property_address: propertyAddress.value })
+      .eq('id', reportId.value)
+  }
+  step.value = 2
+}
+
 async function handlePaymentSuccess(reference: string) {
   paymentRef.value = reference
   
   try {
     // Update report as finalized
-    const { error: dbError } = await supabase
-      .from('condition_reports')
+    const { error: dbError } = await (supabase
+      .from('condition_reports') as any)
       .update({
         is_finalized: true,
         payment_ref: reference,
+        customer_email: customerEmail.value,
+        property_address: propertyAddress.value || null,
       })
       .eq('id', reportId.value)
     
     if (dbError) throw dbError
     
-    step.value = 3
+    // Save images to database
+    if (uploadedPhotos.value.length > 0) {
+      const imagesToInsert = uploadedPhotos.value.map(photo => ({
+        report_id: reportId.value,
+        image_url: photo.url,
+        defect_description: photo.description || null,
+      }))
+      
+      await (supabase.from('report_images') as any).insert(imagesToInsert)
+    }
+    
+    step.value = 4
   } catch (err: any) {
     error.value = err.message || 'Failed to finalize report'
   }
 }
 
-// Download the report
 async function downloadReport() {
   const report: ConditionReport = {
     id: reportId.value,
-    user_id: user.value?.id || '',
+    user_id: null,
+    customer_email: customerEmail.value,
     payment_ref: paymentRef.value,
+    property_address: propertyAddress.value,
+    report_type: 'move_in',
     is_finalized: true,
     report_date: new Date().toISOString(),
   }
@@ -334,9 +477,66 @@ async function downloadReport() {
     id: index,
     report_id: reportId.value,
     image_url: photo.url,
+    room_name: null,
     defect_description: photo.description || null,
   }))
   
   await downloadConditionReportPDF(report, images, false)
 }
+
+async function downloadDraftReport() {
+  const report: ConditionReport = {
+    id: reportId.value,
+    user_id: null,
+    customer_email: null,
+    payment_ref: null,
+    property_address: propertyAddress.value,
+    report_type: 'move_in',
+    is_finalized: false,
+    report_date: new Date().toISOString(),
+  }
+  
+  const images: ReportImage[] = uploadedPhotos.value.map((photo, index) => ({
+    id: index,
+    report_id: reportId.value,
+    image_url: photo.url,
+    room_name: null,
+    defect_description: photo.description || null,
+  }))
+  
+  await downloadConditionReportPDF(report, images, true)
+}
+
+function shareViaWhatsApp() {
+  const baseUrl = config.public.appUrl || 'http://localhost:3000'
+  const message = `*DEPOSIT SHIELD - CONDITION REPORT*\n\n` +
+    `📍 Property: ${propertyAddress.value || 'Not specified'}\n` +
+    `📸 Photos: ${uploadedPhotos.value.length} documented\n` +
+    `🔒 Storage: 7 years\n\n` +
+    `Report ID: ${reportId.value}\n\n` +
+    `_Powered by RentBase - Deposit Shield_`
+  
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank')
+}
 </script>
+
+<style scoped>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce-in {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+</style>
