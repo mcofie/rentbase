@@ -18,8 +18,8 @@ export default defineNuxtConfig({
         redirectOptions: {
             login: '/auth/login',
             callback: '/auth/confirm',
-            include: ['/dashboard(.*)', '/contract/new', '/deposit/new'],
-            exclude: ['/', '/contract/preview/*'],
+            include: ['/dashboard(.*)'],
+            exclude: ['/', '/contract/preview/*', '/contract/new', '/deposit/new'],
             cookieRedirect: false,
         },
     },

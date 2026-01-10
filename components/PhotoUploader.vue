@@ -191,11 +191,6 @@ function removePhoto(index: number) {
 }
 
 async function uploadAll() {
-  if (!user.value) {
-    error.value = 'You must be logged in to upload photos'
-    return
-  }
-  
   uploading.value = true
   error.value = null
   
@@ -210,9 +205,9 @@ async function uploadAll() {
     photo.uploading = true
     
     try {
-      // Generate unique filename
+      // Generate unique filename using reportId (no user required)
       const ext = photo.file.name.split('.').pop()
-      const filename = `${user.value.id}/${props.reportId}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
+      const filename = `anonymous/${props.reportId}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
       
       // Upload to Supabase Storage
       const { data, error: uploadError } = await supabase

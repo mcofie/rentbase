@@ -1,29 +1,34 @@
 export default defineAppConfig({
     ui: {
-        primary: 'uni',
-        gray: 'zinc',
+        primary: 'primary',
+        gray: 'stone',
         button: {
-            default: {
-                size: 'lg',
-                radius: 'rounded-full',
+            defaultVariants: {
+                size: 'xl',
+                variant: 'solid',
+            },
+            slots: {
+                base: 'rounded-full px-8 py-4',
             }
         },
         input: {
-            default: {
-                size: 'lg',
-                radius: 'rounded-2xl',
+            defaultVariants: {
+                size: 'xl',
+                variant: 'outline',
+                color: 'gray',
+            },
+            slots: {
+                base: 'rounded-2xl',
             }
         },
         card: {
-            default: {
-                radius: 'rounded-3xl',
+            slots: {
+                root: 'rounded-3xl ring-1 ring-stone-200 dark:ring-white/10 shadow-sm hover:shadow-xl transition-shadow duration-300',
             }
         },
         modal: {
-            default: {
-                overlay: {
-                    background: 'bg-gray-900/40 backdrop-blur-sm'
-                }
+            slots: {
+                overlay: 'bg-purple-950/20 backdrop-blur-md',
             }
         }
     }

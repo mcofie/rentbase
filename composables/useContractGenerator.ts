@@ -11,24 +11,31 @@ export function useContractGenerator() {
 
     /**
      * Create a new contract draft
+     * Can work with or without a logged-in user
      */
-    async function createDraft(details: ContractDetails): Promise<Contract | null> {
-        if (!user.value) {
-            error.value = 'You must be logged in to create a contract'
-            return null
-        }
-
+    async function createDraft(details: ContractDetails, email?: string): Promise<Contract | null> {
         loading.value = true
         error.value = null
 
         try {
-            const { data, error: dbError } = await supabase
-                .from('contracts')
-                .insert({
-                    user_id: user.value.id,
-                    details,
-                    is_finalized: false,
-                })
+            const insertData: any = {
+                details,
+                is_finalized: false,
+            }
+
+            // If user is logged in, associate with user
+            if (user.value) {
+                insertData.user_id = user.value.id
+            }
+
+            // Always store email if provided (for anonymous users)
+            if (email) {
+                insertData.customer_email = email
+            }
+
+            const { data, error: dbError } = await (supabase
+                .from('contracts') as any)
+                .insert(insertData)
                 .select()
                 .single()
 

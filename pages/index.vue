@@ -1,85 +1,112 @@
 <template>
-  <div class="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300 antialiased">
+  <div class="min-h-screen relative overflow-hidden">
+    <!-- Blueprint Grid Background is in body, but we add a local overlay for depth -->
+    <div class="fixed inset-0 pointer-events-none z-0 bg-stone-50/50 dark:bg-stone-950/50 backdrop-blur-[1px]"></div>
+
     <div class="relative z-10 flex flex-col min-h-screen">
       <!-- Minimalist Navbar -->
-      <nav class="max-w-5xl mx-auto w-full px-6 py-8 flex items-center justify-between">
-        <NuxtLink to="/" class="flex items-center gap-2 group">
-          <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
-            <span class="text-white text-xl">⚡</span>
-          </div>
-          <span class="text-2xl font-black text-stone-900 dark:text-white tracking-tighter">RentBase</span>
-        </NuxtLink>
+      <nav class="sticky top-0 z-50 w-full border-b border-stone-200/50 dark:border-stone-800/50 bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <NuxtLink to="/" class="flex items-center gap-3 group">
+            <div class="w-10 h-10 bg-mint-500 rounded-full flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300 shadow-lg shadow-mint-500/20">
+              <UIcon name="i-lucide-box" class="text-white w-6 h-6" />
+            </div>
+            <span class="text-2xl font-display font-bold text-stone-900 dark:text-white tracking-tight">RentBase</span>
+          </NuxtLink>
 
-        <div class="flex items-center gap-6">
-          <div class="hidden md:flex items-center gap-8 text-sm font-bold text-stone-500 uppercase tracking-widest">
-            <NuxtLink to="/contract" class="hover:text-emerald-500 transition-colors">Legal</NuxtLink>
-            <NuxtLink to="/deposit" class="hover:text-emerald-500 transition-colors">Deposits</NuxtLink>
-          </div>
-          <div class="h-6 w-px bg-stone-200 dark:bg-stone-800 hidden md:block"></div>
-          <div class="flex items-center gap-4">
-            <ColorSchemeButton />
-            <template v-if="user">
-               <UserDropdown />
-            </template>
-            <template v-else>
-              <NuxtLink 
-                to="/auth/login"
-                class="px-8 py-3 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-black rounded-full hover:scale-105 transition-all text-sm shadow-xl shadow-stone-900/10"
-              >
-                Sign In
-              </NuxtLink>
-            </template>
+          <div class="flex items-center gap-8">
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-200 transition-colors">
+              <NuxtLink to="/contract" class="hover:text-mint-600 dark:hover:text-mint-400 transition-colors">Legal</NuxtLink>
+              <NuxtLink to="/deposit" class="hover:text-mint-600 dark:hover:text-mint-400 transition-colors">Deposits</NuxtLink>
+            </div>
+            
+            <div class="flex items-center gap-4">
+              <ColorSchemeButton />
+              <template v-if="user">
+                 <UserDropdown />
+              </template>
+              <template v-else>
+                <NuxtLink 
+                  to="/auth/login"
+                  class="btn-pill bg-stone-900 dark:bg-white text-white dark:text-stone-900 hover:shadow-lg hover:shadow-mint-500/20 hover:-translate-y-0.5 text-sm"
+                >
+                  Sign In
+                </NuxtLink>
+              </template>
+            </div>
           </div>
         </div>
       </nav>
 
-      <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 pb-40">
-        <!-- Straightforward Hero -->
-        <div class="text-center max-w-4xl mx-auto animate-fade-in">
-           <h1 class="text-5xl sm:text-7xl lg:text-8xl font-black text-stone-900 dark:text-white mb-8 tracking-tighter leading-[0.95] text-balance">
+      <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 pb-40 relative">
+        <!-- Technical Decorators -->
+        <div class="absolute top-0 left-1/4 h-full w-px bg-gradient-to-b from-stone-200/0 via-stone-200/50 to-stone-200/0 dark:from-stone-800/0 dark:via-stone-800/50 dark:to-stone-800/0 pointer-events-none dashed-line"></div>
+        <div class="absolute top-0 right-1/4 h-full w-px bg-gradient-to-b from-stone-200/0 via-stone-200/50 to-stone-200/0 dark:from-stone-800/0 dark:via-stone-800/50 dark:to-stone-800/0 pointer-events-none dashed-line"></div>
+
+        <!-- Hero Section -->
+        <div class="text-center max-w-5xl mx-auto animate-fade-in relative z-20">
+           <!-- Soft Glow Behind Hero -->
+           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-mint-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 mb-8 animate-fade-in">
+             <span class="flex h-2 w-2 rounded-full bg-mint-500"></span>
+             <span class="text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">The Renting Protocol</span>
+           </div>
+
+           <h1 class="text-6xl sm:text-8xl lg:text-9xl font-display font-medium text-stone-900 dark:text-white mb-8 tracking-tighter leading-[0.9] text-balance">
              Rent with <br class="hidden sm:block"/>
-             <span class="text-emerald-500">Confidence.</span>
+             <span class="text-gradient">Confidence.</span>
            </h1>
-           <p class="text-stone-500 dark:text-stone-400 text-xl sm:text-2xl font-medium max-w-2xl mx-auto leading-relaxed mb-16 text-balance">
-             The essential protocol for verifying agents, drafting legal agreement, and securing your security deposit.
+           <p class="text-stone-500 dark:text-stone-400 text-xl sm:text-2xl font-light max-w-2xl mx-auto leading-relaxed mb-16 text-balance">
+             The essential protocol for verifying agents, drafting legal agreements, and securing your security deposit.
            </p>
 
            <!-- Primary Search Tool -->
-           <div class="w-full max-w-lg mx-auto mb-20">
+           <div class="w-full max-w-lg mx-auto mb-24 relative z-30">
              <AgentSearchBar @write-review="handleWriteReview" @view-reviews="handleViewReviews" />
            </div>
         </div>
 
-        <!-- Feature Pills (Adeton-like) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl w-full animate-fade-in delay-100">
-           <NuxtLink to="/contract" class="group bg-white dark:bg-stone-900 p-8 rounded-[40px] border border-stone-100 dark:border-stone-800 hover:border-emerald-500/50 transition-all hover:shadow-2xl hover:shadow-emerald-500/5">
-              <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-stone-50 dark:bg-stone-800 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">📜</div>
-                <UIcon name="i-lucide-arrow-up-right" class="w-6 h-6 text-stone-300 group-hover:text-emerald-500 transition-colors" />
+        <!-- Feature Cards Grid (Lens Bento Style) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full animate-fade-in delay-100 z-20">
+           <NuxtLink to="/contract" class="card-lens group p-10 relative overflow-hidden">
+              <div class="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                 <UIcon name="i-lucide-arrow-up-right" class="w-12 h-12 text-mint-500" />
               </div>
-              <h3 class="text-2xl font-black text-stone-900 dark:text-white mb-2 uppercase tracking-tighter">Pocket Lawyer</h3>
-              <p class="text-stone-500 dark:text-stone-400 font-medium leading-relaxed">Swift, legal tenancy agreements.</p>
+              
+              <div class="w-16 h-16 bg-mint-50 dark:bg-mint-900/20 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
+                <UIcon name="i-lucide-scroll-text" class="w-8 h-8 text-mint-600 dark:text-mint-400" />
+              </div>
+              
+              <h3 class="text-3xl font-display font-bold text-stone-900 dark:text-white mb-2 tracking-tight group-hover:text-mint-600 dark:group-hover:text-mint-400 transition-colors">Pocket Lawyer</h3>
+              <p class="text-stone-500 dark:text-stone-400 font-medium text-lg leading-relaxed max-w-xs">Generate effortless, legal tenancy agreements in seconds.</p>
            </NuxtLink>
 
-           <NuxtLink to="/deposit" class="group bg-white dark:bg-stone-900 p-8 rounded-[40px] border border-stone-100 dark:border-stone-800 hover:border-emerald-500/50 transition-all hover:shadow-2xl hover:shadow-emerald-500/5">
-              <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-stone-50 dark:bg-stone-800 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">🛡️</div>
-                <UIcon name="i-lucide-arrow-up-right" class="w-6 h-6 text-stone-300 group-hover:text-emerald-500 transition-colors" />
+           <NuxtLink to="/deposit" class="card-lens group p-10 relative overflow-hidden">
+              <div class="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                 <UIcon name="i-lucide-arrow-up-right" class="w-12 h-12 text-mint-500" />
               </div>
-              <h3 class="text-2xl font-black text-stone-900 dark:text-white mb-2 uppercase tracking-tighter">Deposit Shield</h3>
-              <p class="text-stone-500 dark:text-stone-400 font-medium leading-relaxed">Secure proof for your deposit.</p>
+
+              <div class="w-16 h-16 bg-mint-50 dark:bg-mint-900/20 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
+                <UIcon name="i-lucide-shield-check" class="w-8 h-8 text-mint-600 dark:text-mint-400" />
+              </div>
+
+              <h3 class="text-3xl font-display font-bold text-stone-900 dark:text-white mb-2 tracking-tight group-hover:text-mint-600 dark:group-hover:text-mint-400 transition-colors">Deposit Shield</h3>
+              <p class="text-stone-500 dark:text-stone-400 font-medium text-lg leading-relaxed max-w-xs">Secure proof for your deposit payments on the blockchain.</p>
            </NuxtLink>
         </div>
       </main>
       
       <!-- Minimalist Footer -->
-      <footer class="py-12 border-t border-stone-200 dark:border-stone-800">
-         <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-2 opacity-40">
-               <div class="w-6 h-6 bg-stone-900 dark:bg-white rounded-lg"></div>
-               <span class="font-bold text-stone-900 dark:text-white tracking-widest text-[10px] uppercase">RentBase Protocol</span>
+      <footer class="py-12 border-t border-stone-200/50 dark:border-stone-800/50 bg-white/30 dark:bg-black/30 backdrop-blur-sm">
+         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
+               <div class="w-8 h-8 bg-stone-900 dark:bg-white rounded-lg flex items-center justify-center">
+                  <UIcon name="i-lucide-box" class="text-white dark:text-stone-900 w-4 h-4" />
+               </div>
+               <span class="font-bold font-display text-stone-900 dark:text-white tracking-widest text-xs uppercase">RentBase Protocol</span>
             </div>
-            <p class="text-[10px] text-stone-400 font-black uppercase tracking-[0.3em]">© 2025 Protocol Labs Ghana.</p>
+            <p class="text-xs text-stone-400 font-bold uppercase tracking-[0.2em]">© 2025 Protocol Labs Ghana.</p>
          </div>
       </footer>
       
@@ -89,7 +116,6 @@
         @success="handleAuthSuccess"
       />
     </div>
-
   </div>
 </template>
 
@@ -123,21 +149,10 @@ function handleViewReviews(phone: string) {
 </script>
 
 <style scoped>
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(1.05); }
+/* Scoped styles for unique decorations */
+.dashed-line {
+  background-image: linear-gradient(to bottom, currentColor 50%, transparent 50%);
+  background-size: 1px 16px; /* spacing for the dash */
+  opacity: 0.1;
 }
-.animate-pulse-slow {
-  animation: pulse-slow 8s ease-in-out infinite;
-}
-
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-in {
-  animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
 </style>
