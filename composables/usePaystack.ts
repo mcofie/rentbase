@@ -16,6 +16,11 @@ export function usePaystack() {
     const loading = ref(false)
     const error = ref<string | null>(null)
 
+    // Check configuration on init
+    if (config.public.paystackPublicKey.includes('placeholder')) {
+        console.warn('Paystack Public Key is not configured (placeholder detected).')
+    }
+
     /**
      * Generate a unique payment reference
      */
@@ -123,9 +128,21 @@ export function usePaystack() {
             return
         }
 
+        // Debugging Key
+        const publicKey = config.public.paystackPublicKey
+        console.log('Initializing Paystack with key:', publicKey?.substring(0, 10) + '...')
+
+        if (!publicKey || publicKey.includes('placeholder')) {
+            const msg = 'Invalid Paystack Key. Please RESTART your development server (npm run dev) to load the new .env file.'
+            error.value = msg
+            alert(msg) // Force user attention
+            loading.value = false
+            return
+        }
+
         try {
             const handler = window.PaystackPop.setup({
-                key: config.public.paystackPublicKey,
+                key: publicKey,
                 email: options.email,
                 amount: pricing.pesewas, // Amount in pesewas
                 currency: 'GHS',
@@ -134,17 +151,19 @@ export function usePaystack() {
                     feature_type: options.featureType,
                     ...options.metadata,
                 },
-                callback: async (response: PaystackResponse) => {
+                callback: function (response: PaystackResponse) {
                     // Update transaction status
-                    await updateTransactionStatus(reference, 'success')
-                    loading.value = false
-                    options.onSuccess(response.reference)
+                    updateTransactionStatus(reference, 'success').then(() => {
+                        loading.value = false
+                        options.onSuccess(response.reference)
+                    })
                 },
-                onClose: () => {
+                onClose: function () {
                     // Update transaction status to failed if closed without payment
-                    updateTransactionStatus(reference, 'failed')
-                    loading.value = false
-                    options.onClose?.()
+                    updateTransactionStatus(reference, 'failed').then(() => {
+                        loading.value = false
+                        if (options.onClose) options.onClose()
+                    })
                 },
             })
 

@@ -1,30 +1,12 @@
 <template>
-  <div class="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300">
-    <div class="relative z-10 flex flex-col min-h-screen">
-      <!-- Header -->
-      <nav class="max-w-5xl mx-auto w-full px-6 py-8 flex items-center justify-between">
-        <NuxtLink to="/" class="flex items-center gap-2 group">
-          <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
-            <span class="text-white text-xl">⚡</span>
-          </div>
-          <span class="text-2xl font-black text-stone-900 dark:text-white tracking-tighter">RentBase</span>
-        </NuxtLink>
-        <div class="flex items-center gap-4">
-          <ColorSchemeButton />
-          <NuxtLink to="/" class="text-sm text-stone-500 hover:text-stone-900 dark:hover:text-white font-medium">
-            Home
-          </NuxtLink>
-        </div>
-      </nav>
-
-      <main class="flex-grow px-6 py-8 sm:py-12">
+  <main class="mx-auto px-6 py-8 sm:py-12 flex-grow">
         <div class="max-w-2xl mx-auto">
           <!-- Page Header -->
           <div class="text-center mb-10 animate-fade-in">
-            <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <UIcon name="i-lucide-search" class="w-8 h-8 text-blue-600 dark:text-blue-400" />
+            <div class="w-12 h-12 bg-stone-100 dark:bg-stone-800 rounded-lg flex items-center justify-center mx-auto mb-6">
+              <UIcon name="i-lucide-search" class="w-6 h-6 text-stone-600 dark:text-stone-400" />
             </div>
-            <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white mb-3 tracking-tighter">
+            <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white mb-3 tracking-tight font-serif">
               Retrieve Your Report
             </h1>
             <p class="text-stone-500 dark:text-stone-400 font-medium max-w-md mx-auto">
@@ -33,24 +15,24 @@
           </div>
 
           <!-- Search Form -->
-          <div v-if="!result" class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800 animate-fade-in">
+          <div v-if="!result" class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 animate-fade-in shadow-sm">
             <form @submit.prevent="searchDocument">
               <!-- Document Type -->
               <div class="mb-6">
-                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-3 block">Document Type</label>
+                <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-3 block">Document Type</label>
                 <div class="grid grid-cols-2 gap-3">
                   <button
                     type="button"
                     @click="docType = 'deposit'"
                     :class="[
-                      'p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2',
+                      'p-4 rounded-lg border transition-all flex flex-col items-center gap-2',
                       docType === 'deposit' 
-                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' 
-                        : 'border-stone-200 dark:border-stone-700 hover:border-stone-300'
+                        ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' 
+                        : 'border-stone-200 dark:border-stone-800 hover:border-stone-300 hover:bg-stone-50'
                     ]"
                   >
-                    <UIcon name="i-lucide-shield-check" :class="['w-6 h-6', docType === 'deposit' ? 'text-emerald-600' : 'text-stone-400']" />
-                    <span :class="['font-bold text-sm', docType === 'deposit' ? 'text-emerald-700 dark:text-emerald-300' : 'text-stone-600 dark:text-stone-400']">
+                    <UIcon name="i-lucide-shield-check" :class="['w-5 h-5', docType === 'deposit' ? 'text-purple-600' : 'text-stone-400']" />
+                    <span :class="['font-medium text-sm', docType === 'deposit' ? 'text-purple-700 dark:text-purple-300' : 'text-stone-600 dark:text-stone-400']">
                       Condition Report
                     </span>
                   </button>
@@ -58,14 +40,14 @@
                     type="button"
                     @click="docType = 'contract'"
                     :class="[
-                      'p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2',
+                      'p-4 rounded-lg border transition-all flex flex-col items-center gap-2',
                       docType === 'contract' 
                         ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' 
-                        : 'border-stone-200 dark:border-stone-700 hover:border-stone-300'
+                        : 'border-stone-200 dark:border-stone-800 hover:border-stone-300 hover:bg-stone-50'
                     ]"
                   >
-                    <UIcon name="i-lucide-file-text" :class="['w-6 h-6', docType === 'contract' ? 'text-emerald-600' : 'text-stone-400']" />
-                    <span :class="['font-bold text-sm', docType === 'contract' ? 'text-emerald-700 dark:text-emerald-300' : 'text-stone-600 dark:text-stone-400']">
+                    <UIcon name="i-lucide-file-text" :class="['w-5 h-5', docType === 'contract' ? 'text-emerald-600' : 'text-stone-400']" />
+                    <span :class="['font-medium text-sm', docType === 'contract' ? 'text-emerald-700 dark:text-emerald-300' : 'text-stone-600 dark:text-stone-400']">
                       Tenancy Agreement
                     </span>
                   </button>
@@ -74,25 +56,25 @@
 
               <!-- Email -->
               <div class="mb-6">
-                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-3 block">Your Email</label>
+                <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-3 block">Your Email</label>
                 <input
                   v-model="email"
                   type="email"
                   placeholder="you@example.com"
                   required
-                  class="w-full px-5 py-4 bg-stone-50 dark:bg-stone-950/50 border border-stone-100 dark:border-stone-800 rounded-xl text-base font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-stone-300"
+                  class="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800 rounded-lg text-sm font-medium text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-400 focus:border-stone-400 transition-all placeholder-stone-300"
                 />
               </div>
 
               <!-- Report ID -->
               <div class="mb-8">
-                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-3 block">Report / Contract ID</label>
+                <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-3 block">Report / Contract ID</label>
                 <input
                   v-model="documentId"
                   type="text"
                   placeholder="e.g., a1b2c3d4-e5f6-..."
                   required
-                  class="w-full px-5 py-4 bg-stone-50 dark:bg-stone-950/50 border border-stone-100 dark:border-stone-800 rounded-xl text-base font-medium font-mono text-stone-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-stone-300"
+                  class="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800 rounded-lg text-sm font-medium font-mono text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-400 focus:border-stone-400 transition-all placeholder-stone-300"
                 />
               </div>
 
@@ -107,33 +89,31 @@
               />
 
               <!-- Submit -->
-              <UButton
+              <button
                 type="submit"
-                block
-                size="xl"
-                :loading="loading"
-                class="rounded-2xl font-black py-4"
-                icon="i-lucide-search"
+                :disabled="loading"
+                class="w-full py-4 bg-stone-900 text-white font-medium rounded-lg hover:bg-stone-800 transition-all flex items-center justify-center gap-2 shadow-sm"
               >
-                Find My Document
-              </UButton>
+                <UIcon v-if="loading" name="i-lucide-loader-2" class="w-4 h-4 animate-spin" />
+                 <span v-else>Find My Document</span>
+              </button>
             </form>
 
             <p class="text-xs text-stone-400 text-center mt-6">
-              Can't find your document? <a href="mailto:support@rentbase.app" class="text-emerald-500 font-bold hover:underline">Contact Support</a>
+              Can't find your document? <a href="mailto:support@rentbase.app" class="text-stone-900 font-bold hover:underline">Contact Support</a>
             </p>
           </div>
 
           <!-- Result Found -->
           <div v-else class="animate-fade-in">
             <!-- Success Card -->
-            <div class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800 mb-6">
+            <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 mb-6 shadow-sm">
               <div class="flex items-center gap-4 mb-6">
-                <div class="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center">
-                  <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-emerald-500" />
+                <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex items-center justify-center">
+                  <UIcon name="i-lucide-check-circle-2" class="w-6 h-6 text-emerald-600" />
                 </div>
                 <div>
-                  <h2 class="text-xl font-black text-stone-900 dark:text-white">Document Found!</h2>
+                  <h2 class="text-xl font-bold text-stone-900 dark:text-white font-serif">Document Found!</h2>
                   <p class="text-sm text-stone-500">Your {{ docType === 'deposit' ? 'condition report' : 'tenancy agreement' }} is ready.</p>
                 </div>
               </div>
@@ -164,21 +144,21 @@
               <div class="space-y-3">
                 <NuxtLink
                   :to="docType === 'deposit' ? `/deposit/view/${result.id}` : `/contract/preview/${result.id}`"
-                  class="w-full py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-black rounded-2xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
+                  class="w-full py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-medium rounded-lg hover:bg-stone-800 transition-all flex items-center justify-center gap-2"
                 >
-                  <UIcon name="i-lucide-eye" class="w-5 h-5" />
+                  <UIcon name="i-lucide-eye" class="w-4 h-4" />
                   View Document
                 </NuxtLink>
                 <button
                   @click="downloadDocument"
-                  class="w-full py-4 bg-emerald-500 text-white font-black rounded-2xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
+                  class="w-full py-4 bg-white border border-stone-200 text-stone-900 font-medium rounded-lg hover:bg-stone-50 transition-all flex items-center justify-center gap-2"
                 >
-                  <UIcon name="i-lucide-download" class="w-5 h-5" />
+                  <UIcon name="i-lucide-download" class="w-4 h-4" />
                   Download PDF
                 </button>
                 <button
                   @click="result = null"
-                  class="w-full py-3 text-stone-500 font-bold hover:text-stone-900 dark:hover:text-white transition-colors"
+                  class="w-full py-3 text-stone-500 font-medium hover:text-stone-900 dark:hover:text-white transition-colors text-sm"
                 >
                   Search for Another
                 </button>
@@ -186,12 +166,12 @@
             </div>
 
             <!-- Expiry Notice -->
-            <div class="p-5 rounded-2xl bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30">
+            <div class="p-4 rounded-lg bg-red-50 dark:bg-red-900/10 border border-stone-100 dark:border-stone-800">
               <div class="flex items-start gap-3">
-                <UIcon name="i-lucide-clock" class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                <UIcon name="i-lucide-clock" class="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p class="text-xs font-bold text-amber-700 dark:text-amber-300 mb-1">Storage Expiry</p>
-                  <p class="text-xs text-amber-600 dark:text-amber-400 leading-relaxed">
+                  <p class="text-xs font-bold text-red-700 dark:text-red-300 mb-1">Storage Expiry</p>
+                  <p class="text-xs text-red-600 dark:text-red-400 leading-relaxed">
                     This document will be stored until {{ expiryDate }}. Download a copy for your permanent records.
                   </p>
                 </div>
@@ -200,8 +180,6 @@
           </div>
         </div>
       </main>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">

@@ -1,16 +1,16 @@
 <template>
   <div class="w-full max-w-[480px] mx-auto">
     <!-- Minimalist Input Box -->
-    <div class="bg-white dark:bg-stone-900 rounded-[32px] p-2 border border-stone-200 dark:border-stone-800 shadow-sm">
+    <div class="bg-white dark:bg-stone-900 rounded-xl p-2 border border-stone-200 dark:border-stone-800 shadow-sm">
       <form @submit.prevent="handleSearch" class="relative">
         <!-- Phone Input -->
-        <div class="bg-stone-50 dark:bg-stone-950/50 rounded-[28px] p-6 focus-within:bg-white dark:focus-within:bg-stone-950 transition-all">
-          <label class="block text-[10px] font-black text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em] mb-3 ml-1 text-center">Enter Line Number</label>
+        <div class="bg-white dark:bg-stone-900 rounded-lg p-4 border border-stone-200 dark:border-stone-800 focus-within:border-stone-900 focus-within:ring-1 focus-within:ring-stone-900 transition-all">
+          <label class="block text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-2 text-center">Enter Line Number</label>
           <input
             v-model="searchPhone"
             placeholder="0XX XXX XXXX"
             type="tel"
-            class="block w-full bg-transparent border-none p-0 text-3xl sm:text-4xl font-black text-stone-900 dark:text-white placeholder-stone-200 dark:placeholder-stone-800 focus:ring-0 text-center tracking-tight"
+            class="block w-full bg-transparent border-none p-0 text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white placeholder-stone-200 dark:placeholder-stone-800 focus:ring-0 text-center tracking-tight"
           />
         </div>
 
@@ -19,8 +19,8 @@
           <button
             type="submit"
             :disabled="!searchPhone || loading"
-            class="w-full py-5 rounded-[28px] text-lg font-black transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            :class="!searchPhone ? 'bg-stone-100 text-stone-400 dark:bg-stone-800 dark:text-stone-700' : 'bg-stone-900 text-white dark:bg-white dark:text-stone-900 hover:scale-[1.01] active:scale-[0.99]'"
+            class="w-full py-3 rounded-lg text-lg font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            :class="!searchPhone ? 'bg-stone-100 text-stone-400 dark:bg-stone-800 dark:text-stone-700' : 'bg-stone-900 text-white hover:bg-stone-700 active:scale-[0.98]'"
           >
             <span v-if="loading" class="flex items-center justify-center gap-2">
               <UIcon name="i-lucide-loader-2" class="animate-spin" />
@@ -71,7 +71,7 @@
       >
         <div class="text-center mb-6">
           <div class="w-16 h-16 bg-amber-50 dark:bg-amber-900/20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner">
-            <span class="text-3xl">🕵️</span>
+             <UIcon name="i-lucide-search-x" class="w-8 h-8 text-amber-500/50" />
           </div>
           <h4 class="text-xl font-black text-stone-900 dark:text-white mb-2 tracking-tighter uppercase">Unknown Agent</h4>
           <p class="text-stone-500 dark:text-stone-400 text-sm font-medium leading-relaxed">

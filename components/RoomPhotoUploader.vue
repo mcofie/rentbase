@@ -205,12 +205,12 @@ interface Photo {
 const supabase = useSupabaseClient()
 
 const rooms = [
-  { id: 'living', name: 'Living Room', icon: '🛋️' },
-  { id: 'bedroom', name: 'Bedroom', icon: '🛏️' },
-  { id: 'kitchen', name: 'Kitchen', icon: '🍳' },
-  { id: 'bathroom', name: 'Bathroom', icon: '🚿' },
-  { id: 'exterior', name: 'Exterior', icon: '🏠' },
-  { id: 'other', name: 'Other', icon: '📦' },
+  { id: 'living', name: 'Living Room', icon: 'i-lucide-sofa' },
+  { id: 'bedroom', name: 'Bedroom', icon: 'i-lucide-bed-double' },
+  { id: 'kitchen', name: 'Kitchen', icon: 'i-lucide-chef-hat' },
+  { id: 'bathroom', name: 'Bathroom', icon: 'i-lucide-bath' },
+  { id: 'exterior', name: 'Exterior', icon: 'i-lucide-home' },
+  { id: 'other', name: 'Other', icon: 'i-lucide-box' },
 ]
 
 const selectedRoom = ref('living')

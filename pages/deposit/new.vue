@@ -1,34 +1,23 @@
 <template>
-  <div class="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300">
-    <div class="relative z-10 flex flex-col min-h-screen">
-      <!-- Header -->
-      <nav class="max-w-5xl mx-auto w-full px-6 py-8 flex items-center justify-between">
-        <NuxtLink to="/" class="flex items-center gap-2 group">
-          <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
-            <span class="text-white text-xl">⚡</span>
-          </div>
-          <span class="text-2xl font-black text-stone-900 dark:text-white tracking-tighter">RentBase</span>
-        </NuxtLink>
-        <div class="flex items-center gap-4">
-          <ColorSchemeButton />
-          <UButton 
-            variant="ghost"
-            color="neutral"
-            icon="i-lucide-arrow-left" 
-            size="sm"
-            class="rounded-full"
-            @click="handleBack"
-          >
-            Back
-          </UButton>
-        </div>
-      </nav>
+    <!-- Back Button Row -->
+    <div class="max-w-5xl mx-auto w-full px-6 pt-12 pb-4 flex items-center justify-between animate-fade-in">
+        <UButton 
+          variant="ghost"
+          color="neutral"
+          icon="i-lucide-arrow-left" 
+          size="sm"
+          class="rounded-full hover:bg-stone-100 dark:hover:bg-white/10"
+          @click="handleBack"
+        >
+          Back
+        </UButton>
+      </div>
       
       <main class="px-6 py-8 sm:py-12 flex-grow">
         <div :class="['mx-auto', step === 2 ? 'max-w-5xl' : 'max-w-3xl']">
           <!-- Page Header -->
           <div class="text-center mb-10 animate-fade-in">
-            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-4">Deposit Shield</p>
+            <p class="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] mb-4 bg-purple-50 inline-block px-3 py-1 rounded-full">Deposit Shield</p>
             <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white mb-3 tracking-tighter">
               {{ stepTitles[step - 1] }}
             </h1>
@@ -38,43 +27,40 @@
           </div>
           
           <!-- Progress Steps -->
-          <div class="flex items-center justify-center gap-2 sm:gap-4 mb-12">
-            <div class="flex items-center gap-2">
-              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 1 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">1</div>
-              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 1 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Photos</span>
-            </div>
-            <div class="w-6 sm:w-8 h-px bg-stone-200 dark:bg-stone-800"></div>
-            <div class="flex items-center gap-2">
-              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 2 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">2</div>
-              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 2 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Preview</span>
-            </div>
-            <div class="w-6 sm:w-8 h-px bg-stone-200 dark:bg-stone-800"></div>
-            <div class="flex items-center gap-2">
-              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 3 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">3</div>
-              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 3 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Pay</span>
-            </div>
-            <div class="w-6 sm:w-8 h-px bg-stone-200 dark:bg-stone-800"></div>
-            <div class="flex items-center gap-2">
-              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 4 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">4</div>
-              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 4 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Done</span>
-            </div>
+          <!-- Progress Steps (Notion Style: Minimal) -->
+          <div class="flex items-center justify-center gap-4 mb-12 text-xs font-medium text-stone-400">
+             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 1 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
+               <span>1. Photos</span>
+             </div>
+             <span class="text-stone-300">/</span>
+             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 2 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
+               <span>2. Preview</span>
+             </div>
+             <span class="text-stone-300">/</span>
+             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 3 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
+               <span>3. Pay</span>
+             </div>
+             <span class="text-stone-300">/</span>
+             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 4 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400' : '']">
+               <span>4. Done</span>
+             </div>
           </div>
           
           <!-- Step 1: Upload Photos -->
-          <div v-if="step === 1" class="bg-white dark:bg-stone-900 rounded-[40px] p-8 border border-stone-200 dark:border-stone-800 animate-fade-in">
-            <h2 class="text-xl font-black text-stone-900 dark:text-white mb-2 tracking-tighter uppercase">Document Property Conditions</h2>
+          <div v-if="step === 1" class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 shadow-sm animate-fade-in">
+            <h2 class="text-xl font-bold text-stone-900 dark:text-white mb-2 font-serif">Document Property Conditions</h2>
             <p class="text-stone-500 dark:text-stone-400 text-sm mb-6">
               Take photos of any existing damage, defects, or notable conditions before moving in.
             </p>
             
             <!-- Property Address Input -->
             <div class="mb-8">
-              <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-3 block">Property Address (Optional)</label>
+              <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 block">Property Address (Optional)</label>
               <input 
                 v-model="propertyAddress"
                 type="text"
                 placeholder="e.g., 123 Main Street, Accra"
-                class="w-full px-5 py-4 bg-stone-50 dark:bg-stone-950/50 border border-stone-100 dark:border-stone-800 rounded-xl text-base font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-stone-300"
+                class="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800 rounded-lg text-sm text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-400 focus:border-stone-400 transition-all placeholder-stone-300"
               />
             </div>
             
@@ -84,13 +70,13 @@
               @uploaded="handlePhotosUploaded"
             />
             
-            <div v-if="uploadedPhotos.length > 0" class="mt-8 pt-8 border-t border-stone-100 dark:border-stone-800">
+            <div v-if="uploadedPhotos.length > 0" class="mt-8 pt-6 border-t border-stone-100 dark:border-stone-800">
               <button 
-                class="w-full py-5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-black rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                class="w-full py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-medium rounded-lg hover:bg-stone-800 transition-all flex items-center justify-center gap-2"
                 @click="goToPreview"
               >
-                Preview Report ({{ uploadedPhotos.length }} photos in {{ uniqueRooms }} rooms)
-                <UIcon name="i-lucide-arrow-right" class="w-5 h-5" />
+                Preview Report ({{ uploadedPhotos.length }} photos)
+                <UIcon name="i-lucide-arrow-right" class="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -110,42 +96,43 @@
               <!-- Action Sidebar -->
               <div class="space-y-6 order-1 lg:order-2">
                 <!-- Summary Card -->
-                <div class="bg-gradient-to-br from-stone-900 to-stone-800 dark:from-stone-800 dark:to-stone-900 rounded-[24px] p-6 text-white">
+                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
                   <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center">
-                      <UIcon name="i-lucide-shield-check" class="w-5 h-5" />
+                    <div class="w-8 h-8 rounded-md bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
+                      <UIcon name="i-lucide-shield-check" class="w-4 h-4 text-purple-700" />
                     </div>
                     <div>
-                      <h3 class="font-black">Report Summary</h3>
+                      <h3 class="font-bold text-stone-900 dark:text-white">Report Summary</h3>
                       <p class="text-xs text-stone-400">Deposit Shield</p>
                     </div>
                   </div>
                   
                   <div class="space-y-3">
-                    <div class="flex justify-between py-2 border-b border-stone-700/50">
-                      <span class="text-sm text-stone-300">Photos</span>
-                      <span class="font-bold">{{ uploadedPhotos.length }}</span>
+                    <div class="flex justify-between py-2 border-b border-stone-100 dark:border-stone-800">
+                      <span class="text-sm text-stone-500">Photos</span>
+                      <span class="font-bold text-stone-900 dark:text-white">{{ uploadedPhotos.length }}</span>
                     </div>
-                    <div class="flex justify-between py-2 border-b border-stone-700/50">
-                      <span class="text-sm text-stone-300">Storage</span>
-                      <span class="font-bold text-emerald-400">2 Years</span>
+                    <div class="flex justify-between py-2 border-b border-stone-100 dark:border-stone-800">
+                      <span class="text-sm text-stone-500">Storage</span>
+                      <span class="font-bold text-purple-600">2 Years</span>
                     </div>
                     <div class="flex justify-between py-2">
-                      <span class="text-sm text-stone-300">Report Fee</span>
-                      <span class="font-bold text-xl">GH₵ 25</span>
+                      <span class="text-sm text-stone-500">Report Fee</span>
+                      <span class="font-bold text-lg text-stone-900 dark:text-white">GH₵ 25</span>
                     </div>
                   </div>
                 </div>
 
                 <!-- Approval Card -->
-                <div class="bg-white dark:bg-stone-900 rounded-[24px] p-6 border border-stone-200 dark:border-stone-800">
-                  <h3 class="font-black text-stone-900 dark:text-white mb-4">Looks Good?</h3>
+                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
+                  <h3 class="font-bold text-stone-900 dark:text-white mb-4">Looks Good?</h3>
                   
                   <div class="space-y-3">
                     <UButton
                       block
-                      size="xl"
-                      class="rounded-2xl font-black py-4"
+                      size="lg"
+                      class="rounded-lg font-medium"
+                      color="primary"
                       icon="i-lucide-credit-card"
                       @click="step = 3"
                     >
@@ -156,7 +143,7 @@
                       color="neutral"
                       block
                       size="lg"
-                      class="rounded-xl font-bold"
+                      class="rounded-lg font-medium"
                       icon="i-lucide-plus"
                       @click="step = 1"
                     >
@@ -166,14 +153,14 @@
                 </div>
 
                 <!-- Download Draft -->
-                <div class="bg-white dark:bg-stone-900 rounded-[24px] p-6 border border-stone-200 dark:border-stone-800">
-                  <p class="text-xs font-black text-stone-400 uppercase tracking-widest mb-4">Draft Options</p>
+                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
+                  <p class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Draft Options</p>
                   <UButton
                     variant="outline"
                     color="neutral"
                     block
                     size="lg"
-                    class="rounded-xl font-bold"
+                    class="rounded-lg font-medium"
                     icon="i-lucide-download"
                     @click="downloadDraftReport"
                   >
@@ -185,9 +172,9 @@
                 </div>
 
                 <!-- Info Card -->
-                <div class="p-5 rounded-2xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
+                <div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-stone-100 dark:border-stone-800">
                   <div class="flex items-start gap-3">
-                    <UIcon name="i-lucide-info" class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <UIcon name="i-lucide-info" class="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                     <div>
                       <p class="text-xs font-bold text-blue-700 dark:text-blue-300 mb-1">Secure Storage</p>
                       <p class="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
@@ -203,34 +190,34 @@
           <!-- Step 3: Email & Payment -->
           <div v-else-if="step === 3" class="animate-fade-in space-y-6 max-w-xl mx-auto">
             <!-- Payment Card -->
-            <div class="bg-white dark:bg-stone-900 rounded-[40px] p-8 border border-stone-200 dark:border-stone-800">
+            <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 shadow-sm">
               <div class="flex items-center justify-center mb-6">
-                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center">
-                  <UIcon name="i-lucide-credit-card" class="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+                <div class="w-10 h-10 bg-purple-50 dark:bg-purple-900/20 rounded-md flex items-center justify-center">
+                  <UIcon name="i-lucide-credit-card" class="w-5 h-5 text-purple-700" />
                 </div>
               </div>
               
-              <h2 class="text-2xl font-black text-stone-900 dark:text-white mb-2 tracking-tighter text-center">Complete Payment</h2>
+              <h2 class="text-2xl font-bold text-stone-900 dark:text-white mb-2 text-center font-serif">Complete Payment</h2>
               <p class="text-stone-500 text-center mb-8 text-sm">Secure payment via Paystack</p>
               
-              <div class="bg-stone-50 dark:bg-stone-950/50 rounded-3xl p-6 mb-8">
+              <div class="bg-stone-50 dark:bg-stone-950/50 rounded-lg p-6 mb-8 border border-stone-100 dark:border-stone-800">
                 <div class="flex justify-between items-center">
                   <div>
                     <p class="font-bold text-stone-900 dark:text-white">Deposit Shield Report</p>
                     <p class="text-xs text-stone-500">{{ uploadedPhotos.length }} photos • 2 years storage</p>
                   </div>
-                  <p class="text-3xl font-black text-emerald-500">GH₵ 25</p>
+                  <p class="text-xl font-bold text-stone-900 dark:text-white">GH₵ 25</p>
                 </div>
               </div>
 
               <!-- Email Input -->
               <div class="mb-8">
-                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-3 block">Your Email (for receipt & retrieval)</label>
+                <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 block">Your Email</label>
                 <input 
                   v-model="customerEmail"
                   type="email"
                   placeholder="you@example.com"
-                  class="w-full px-5 py-4 bg-stone-50 dark:bg-stone-950/50 border border-stone-100 dark:border-stone-800 rounded-xl text-base font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-stone-300"
+                  class="w-full px-4 py-3 bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-lg text-sm text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-400 focus:border-stone-400 transition-all placeholder-stone-300"
                 />
                 <p class="text-xs text-stone-400 mt-2">
                   💡 Use this email to retrieve your report anytime in the next 2 years
@@ -238,7 +225,7 @@
               </div>
 
               <div class="flex gap-3">
-                <UButton variant="outline" size="lg" class="rounded-xl" @click="step = 2">Back</UButton>
+                <UButton variant="ghost" color="neutral" size="lg" class="rounded-lg" @click="step = 2">Back</UButton>
                 <PaystackButton
                   v-if="customerEmail && reportId"
                   feature-type="deposit_report"
@@ -252,9 +239,9 @@
                 <button 
                   v-else
                   disabled
-                  class="flex-1 py-4 bg-stone-100 dark:bg-stone-800 text-stone-400 font-black rounded-xl cursor-not-allowed text-sm"
+                  class="flex-1 py-3 bg-stone-100 dark:bg-stone-800 text-stone-400 font-medium rounded-lg cursor-not-allowed text-sm"
                 >
-                  Enter Email to Continue
+                  Enter Email
                 </button>
               </div>
             </div>
@@ -262,22 +249,22 @@
           
           <!-- Step 4: Success -->
           <div v-else-if="step === 4" class="text-center py-16 animate-fade-in">
-            <div class="w-24 h-24 bg-emerald-50 dark:bg-emerald-950/30 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce-in">
-              <UIcon name="i-lucide-check-circle-2" class="w-14 h-14 text-emerald-500" />
+            <div class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-emerald-600" />
             </div>
             
-            <h2 class="text-3xl font-black text-stone-900 dark:text-white mb-4 tracking-tighter uppercase">Report Ready!</h2>
+            <h2 class="text-3xl font-bold text-stone-900 dark:text-white mb-4 font-serif">Report Ready!</h2>
             <p class="text-stone-500 dark:text-stone-400 mb-6 max-w-sm mx-auto font-medium">
               Your condition report has been securely stored and is ready for download.
             </p>
 
             <!-- Retrieval Info -->
-            <div class="bg-white dark:bg-stone-900 rounded-[24px] p-6 border border-stone-200 dark:border-stone-800 max-w-md mx-auto mb-10">
+            <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 max-w-md mx-auto mb-10 shadow-sm">
               <div class="flex items-center gap-3 mb-4">
-                <UIcon name="i-lucide-key" class="w-5 h-5 text-emerald-500" />
-                <span class="font-black text-stone-900 dark:text-white text-sm">Your Report ID</span>
+                <UIcon name="i-lucide-key" class="w-4 h-4 text-emerald-500" />
+                <span class="font-bold text-stone-900 dark:text-white text-sm">Your Report ID</span>
               </div>
-              <div class="bg-stone-50 dark:bg-stone-800 rounded-xl p-4 font-mono text-sm text-stone-700 dark:text-stone-300 break-all">
+              <div class="bg-stone-50 dark:bg-stone-800 rounded-md p-3 font-mono text-xs text-stone-700 dark:text-stone-300 break-all border border-stone-200 dark:border-stone-700">
                 {{ reportId }}
               </div>
               <p class="text-xs text-stone-400 mt-3">
@@ -287,32 +274,22 @@
             
             <div class="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
               <button 
-                class="px-8 py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-black rounded-2xl hover:scale-105 transition-transform shadow-xl flex items-center justify-center gap-2"
+                class="px-6 py-3 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors flex items-center justify-center gap-2 font-medium"
                 @click="downloadReport"
               >
-                <UIcon name="i-lucide-download" class="w-5 h-5" />
+                <UIcon name="i-lucide-download" class="w-4 h-4" />
                 Download PDF
               </button>
               <button 
                 @click="shareViaWhatsApp"
-                class="px-8 py-4 bg-emerald-500 text-white font-black rounded-2xl hover:scale-105 transition-transform shadow-xl flex items-center justify-center gap-2"
+                class="px-6 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2 font-medium"
               >
-                <UIcon name="i-lucide-message-circle" class="w-5 h-5" />
+                <UIcon name="i-lucide-message-circle" class="w-4 h-4" />
                 WhatsApp
               </button>
-              <SMSSender
-                variant="soft"
-                size="xl"
-                icon="i-lucide-smartphone"
-                button-class="px-8 py-4 font-black rounded-2xl"
-                description="Send report info via SMS"
-                :message="reportSmsMessage"
-              >
-                SMS
-              </SMSSender>
               <NuxtLink 
                 to="/"
-                class="px-8 py-4 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-bold rounded-2xl hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
+                class="px-6 py-3 text-stone-500 hover:text-stone-900 rounded-lg transition-colors font-medium"
               >
                 Go Home
               </NuxtLink>
@@ -330,8 +307,6 @@
           />
         </div>
       </main>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">

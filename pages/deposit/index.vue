@@ -1,84 +1,65 @@
 <template>
-  <div class="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300">
-    <div class="relative z-10 flex flex-col min-h-screen">
-      <!-- Minimalist Navbar -->
-      <nav class="max-w-5xl mx-auto w-full px-6 py-8 flex items-center justify-between">
-        <NuxtLink to="/" class="flex items-center gap-2 group">
-          <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
-            <span class="text-white text-xl">⚡</span>
+  <div class="px-6 py-12 md:py-20 animate-fade-in">
+    <div class="max-w-3xl mx-auto text-center">
+       <div class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex items-center justify-center mx-auto mb-8">
+          <span class="text-3xl">🛡️</span>
+       </div>
+       
+       <h1 class="text-4xl md:text-5xl font-bold text-stone-900 dark:text-white mb-6 font-serif tracking-tight">
+         Get your <br/>money back.
+       </h1>
+       
+       <p class="text-stone-500 dark:text-stone-400 text-lg md:text-xl font-medium max-w-xl mx-auto leading-relaxed mb-10">
+         Professional, timestamped condition reports that protect your security deposit from unfair deductions.
+       </p>
+
+       <div class="flex flex-col items-center gap-6 mb-20">
+          <NuxtLink to="/deposit/new" class="w-full sm:w-auto px-8 py-4 bg-emerald-500 text-white text-lg font-medium rounded-lg hover:bg-emerald-600 hover:translate-y-[-2px] transition-all shadow-sm flex items-center justify-center gap-2">
+            <span>Secure Deposit</span>
+            <UIcon name="i-lucide-arrow-right" class="w-5 h-5" />
+          </NuxtLink>
+          <p class="text-sm font-medium text-stone-400">
+            Standard Protocol Fee: <span class="text-stone-900 dark:text-white">GH₵ 25</span>
+          </p>
+       </div>
+
+       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+          <div class="p-6 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900/50">
+            <div class="w-10 h-10 bg-stone-50 dark:bg-stone-800 rounded-md flex items-center justify-center mb-4">
+              <UIcon name="i-lucide-camera" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <h3 class="font-bold text-stone-900 dark:text-white mb-2">Photo Logs</h3>
+            <p class="text-stone-500 text-sm leading-relaxed">High-res, timestamped proof of every defect and appliance before you move in.</p>
           </div>
-          <span class="text-2xl font-black text-stone-900 dark:text-white tracking-tighter">RentBase</span>
-        </NuxtLink>
-        <div class="flex items-center gap-4">
-          <ColorSchemeButton />
-          <UserDropdown v-if="user" />
-          <NuxtLink v-else to="/auth/login" class="text-sm font-black text-stone-900 dark:text-white uppercase tracking-widest hover:text-emerald-500 transition-colors">Sign In</NuxtLink>
-        </div>
-      </nav>
-
-      <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 text-balance">
-        <div class="max-w-3xl w-full text-center animate-fade-in">
-           <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-8">Deposit Shield Protocol</p>
-           
-           <h1 class="text-5xl sm:text-7xl font-black text-stone-900 dark:text-white mb-8 tracking-tighter leading-[0.95]">
-             Get your <br/>
-             <span class="text-stone-400">money back.</span>
-           </h1>
-           
-           <p class="text-stone-500 dark:text-stone-400 text-xl font-medium max-w-xl mx-auto leading-relaxed mb-12">
-             Professional, timestamped condition reports that protect your security deposit from unfair deductions.
-           </p>
-
-           <div class="flex flex-col items-center gap-6 mb-20">
-              <NuxtLink to="/deposit/new" class="w-full sm:w-auto px-12 py-5 bg-emerald-500 text-white dark:text-stone-900 text-xl font-black rounded-full hover:scale-105 transition-transform shadow-2xl shadow-emerald-500/10">
-                Secure Deposit
-              </NuxtLink>
-              <div class="flex items-center gap-2">
-                 <span class="text-[10px] font-black text-stone-300 uppercase tracking-widest">Protocol Fee:</span>
-                 <span class="text-[10px] font-black text-stone-900 dark:text-white uppercase tracking-widest">GH₵ 25</span>
-              </div>
-           </div>
-
-           <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center border-t border-stone-200 dark:border-stone-800 pt-20">
-              <div class="space-y-4">
-                <p class="text-2xl">📸</p>
-                <h3 class="text-sm font-black text-stone-900 dark:text-white uppercase tracking-widest">Photo Logs</h3>
-                <p class="text-stone-500 dark:text-stone-400 text-xs font-medium leading-relaxed">High-res proof of every defect and appliance.</p>
-              </div>
-              <div class="space-y-4">
-                <p class="text-2xl">🛡️</p>
-                <h3 class="text-sm font-black text-stone-900 dark:text-white uppercase tracking-widest">Hard Evidence</h3>
-                <p class="text-stone-500 dark:text-stone-400 text-xs font-medium leading-relaxed">Tamper-proof PDF reports for any dispute.</p>
-              </div>
-              <div class="space-y-4">
-                <p class="text-2xl">💼</p>
-                <h3 class="text-sm font-black text-stone-900 dark:text-white uppercase tracking-widest">Legal Ready</h3>
-                <p class="text-stone-500 dark:text-stone-400 text-xs font-medium leading-relaxed">Structured for Rent Control standards.</p>
-              </div>
-           </div>
-        </div>
-      </main>
-
-      <footer class="py-12 border-t border-stone-200 dark:border-stone-800 mt-auto">
-         <div class="max-w-5xl mx-auto px-6 flex items-center justify-between opacity-40">
-            <span class="font-bold text-stone-900 dark:text-white tracking-widest text-[10px] uppercase">RentBase</span>
-            <p class="text-[10px] text-stone-400 font-black uppercase tracking-[0.2em]">© 2025</p>
-         </div>
-      </footer>
+          <div class="p-6 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900/50">
+            <div class="w-10 h-10 bg-stone-50 dark:bg-stone-800 rounded-md flex items-center justify-center mb-4">
+              <UIcon name="i-lucide-shield-check" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <h3 class="font-bold text-stone-900 dark:text-white mb-2">Evidence</h3>
+            <p class="text-stone-500 text-sm leading-relaxed">Tamper-proof PDF reports that serve as hard evidence in any dispute.</p>
+          </div>
+          <div class="p-6 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900/50">
+            <div class="w-10 h-10 bg-stone-50 dark:bg-stone-800 rounded-md flex items-center justify-center mb-4">
+              <UIcon name="i-lucide-briefcase" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <h3 class="font-bold text-stone-900 dark:text-white mb-2">Legal Ready</h3>
+            <p class="text-stone-500 text-sm leading-relaxed">Structured specifically for Rent Control standards to protect your rights.</p>
+          </div>
+       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { user } = useAuth()
+// Page meta if needed
 </script>
 
 <style scoped>
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-in {
-  animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fade-in 0.6s ease-out forwards;
 }
 </style>

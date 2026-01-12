@@ -2,8 +2,10 @@
   <form @submit.prevent="$emit('submit', formData)" class="space-y-6 sm:space-y-8">
     <!-- Section: Landlord Information -->
     <div class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800 transition-colors">
-      <h3 class="text-lg font-black mb-6 flex items-center gap-2 text-stone-900 dark:text-white uppercase tracking-tighter">
-        <span class="text-2xl">🏠</span>
+      <h3 class="text-lg font-black mb-6 flex items-center gap-3 text-stone-900 dark:text-white uppercase tracking-tighter">
+        <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+           <UIcon name="i-lucide-home" class="w-5 h-5" />
+        </div>
         Landlord
       </h3>
       
@@ -34,9 +36,11 @@
     </div>
     
     <!-- Section: Tenant Information -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">👤</span>
+    <div class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800 transition-colors">
+      <h3 class="text-lg font-black mb-6 flex items-center gap-3 text-stone-900 dark:text-white uppercase tracking-tighter">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+           <UIcon name="i-lucide-user" class="w-5 h-5" />
+        </div>
         Tenant Information
       </h3>
       
@@ -67,9 +71,11 @@
     </div>
     
     <!-- Section: Property Details -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">🏢</span>
+    <div class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800 transition-colors">
+      <h3 class="text-lg font-black mb-6 flex items-center gap-3 text-stone-900 dark:text-white uppercase tracking-tighter">
+        <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+           <UIcon name="i-lucide-building-2" class="w-5 h-5" />
+        </div>
         Property Details
       </h3>
       
@@ -105,9 +111,11 @@
     </div>
     
     <!-- Section: Rental Terms -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">💰</span>
+    <div class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800 transition-colors">
+      <h3 class="text-lg font-black mb-6 flex items-center gap-3 text-stone-900 dark:text-white uppercase tracking-tighter">
+        <div class="w-8 h-8 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-600 dark:text-stone-400">
+           <UIcon name="i-lucide-banknote" class="w-5 h-5" />
+        </div>
         Rental Terms
       </h3>
       
@@ -171,9 +179,11 @@
     </div>
     
     <!-- Section: Utilities -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">⚡</span>
+    <div class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800 transition-colors">
+      <h3 class="text-lg font-black mb-6 flex items-center gap-3 text-stone-900 dark:text-white uppercase tracking-tighter">
+        <div class="w-8 h-8 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
+           <UIcon name="i-lucide-plug" class="w-5 h-5" />
+        </div>
         Utilities Included
       </h3>
       
@@ -189,9 +199,11 @@
     </div>
     
     <!-- Section: Special Terms -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">📝</span>
+    <div class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800 transition-colors">
+      <h3 class="text-lg font-black mb-6 flex items-center gap-3 text-stone-900 dark:text-white uppercase tracking-tighter">
+        <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
+           <UIcon name="i-lucide-scroll" class="w-5 h-5" />
+        </div>
         Special Terms & Conditions
       </h3>
       
