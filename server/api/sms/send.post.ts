@@ -1,20 +1,51 @@
 /**
  * Hubtel SMS API endpoint
  * POST /api/sms/send
+ * 
+ * SECURITY: This endpoint should only be called from server-side code
+ * Rate limited to prevent abuse
  */
 
+import { rateLimit, ipRateLimitKey } from '~/server/utils/rateLimit'
+import { validatePhone, validateText } from '~/server/utils/validation'
+
 export default defineEventHandler(async (event) => {
+    // Rate limit: 10 SMS per IP per hour
+    await rateLimit(event, {
+        max: 10,
+        windowMs: 60 * 60 * 1000, // 1 hour
+        message: 'SMS limit reached. Please try again later.'
+    })
+
     const body = await readBody(event)
     const config = useRuntimeConfig()
 
     const { to, message } = body
 
-    if (!to || !message) {
+    // Validate phone number
+    const phoneValidation = validatePhone(to)
+    if (!phoneValidation.valid) {
         throw createError({
             statusCode: 400,
-            message: 'Missing required fields: to, message'
+            message: phoneValidation.error || 'Invalid phone number'
         })
     }
+
+    // Validate message
+    const messageValidation = validateText(message, {
+        required: true,
+        minLength: 1,
+        maxLength: 160
+    })
+    if (!messageValidation.valid) {
+        throw createError({
+            statusCode: 400,
+            message: messageValidation.error || 'Invalid message'
+        })
+    }
+
+    const validatedPhone = phoneValidation.value.replace('+', '')
+    const validatedMessage = messageValidation.value
 
     // Hubtel credentials from environment
     const clientId = config.hubtelClientId
@@ -23,7 +54,7 @@ export default defineEventHandler(async (event) => {
 
     if (!clientId || !clientSecret) {
         console.warn('Hubtel credentials not configured, SMS will be logged only')
-        console.log(`[SMS] To: ${to}, Message: ${message}`)
+        console.log(`[SMS] To: ${validatedPhone}, Message: ${validatedMessage}`)
         return {
             success: true,
             messageId: `mock_${Date.now()}`,
@@ -43,8 +74,8 @@ export default defineEventHandler(async (event) => {
             },
             body: {
                 From: senderId,
-                To: to,
-                Content: message.slice(0, 160), // SMS limit
+                To: validatedPhone,
+                Content: validatedMessage,
                 RegisteredDelivery: true
             }
         })
@@ -57,10 +88,9 @@ export default defineEventHandler(async (event) => {
     } catch (error: any) {
         console.error('Hubtel SMS error:', error)
 
-        // Still return success for demo purposes, but log the error
         return {
             success: false,
-            error: error.message || 'Failed to send SMS',
+            error: 'Failed to send SMS',
             fallback: true
         }
     }

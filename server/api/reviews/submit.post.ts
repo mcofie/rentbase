@@ -1,49 +1,135 @@
 import { serverSupabaseClient } from '#supabase/server'
+import { rateLimit, phoneRateLimitKey } from '~/server/utils/rateLimit'
+import { validatePhone, validateRating, validateText, sanitizeForDb } from '~/server/utils/validation'
+import { performSpamCheck } from '~/server/utils/captcha'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
-    const { agent_phone, rating, comment, reviewer_phone, reviewer_id } = body
+    const config = useRuntimeConfig()
 
-    if (!agent_phone || !rating) {
+    const {
+        agent_phone,
+        rating,
+        comment,
+        reviewer_phone,
+        reviewer_id,
+        // Anti-spam fields
+        _hp, // Honeypot field (should be empty)
+        _ts, // Form load timestamp
+        _captcha // Turnstile token
+    } = body
+
+    // Get client IP for spam checks
+    const clientIp = getRequestHeader(event, 'x-forwarded-for') ||
+        getRequestHeader(event, 'x-real-ip') ||
+        event.node.req.socket?.remoteAddress ||
+        undefined
+
+    // Perform spam/bot detection checks
+    const spamCheck = await performSpamCheck({
+        honeypotValue: _hp,
+        formLoadTime: _ts ? parseInt(_ts) : undefined,
+        turnstileToken: _captcha,
+        turnstileSecret: config.turnstileSecretKey,
+        clientIp,
+        minSubmitTime: 3000 // Minimum 3 seconds to fill form
+    })
+
+    if (spamCheck.isSpam) {
+        console.log(`[Review Spam] Blocked submission: ${spamCheck.reason}`)
         throw createError({
             statusCode: 400,
-            statusMessage: 'Missing required fields'
+            statusMessage: spamCheck.reason || 'Spam detected'
         })
     }
 
-    // Basic Self-Review Check
-    if (reviewer_phone && agent_phone === reviewer_phone) {
+    // Validate required fields
+    const agentPhoneValidation = validatePhone(agent_phone)
+    if (!agentPhoneValidation.valid) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: agentPhoneValidation.error || 'Invalid agent phone number'
+        })
+    }
+
+    const ratingValidation = validateRating(rating)
+    if (!ratingValidation.valid) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: ratingValidation.error || 'Invalid rating'
+        })
+    }
+
+    // Validate optional fields
+    let validatedReviewerPhone: string | null = null
+    if (reviewer_phone) {
+        const reviewerPhoneValidation = validatePhone(reviewer_phone)
+        if (!reviewerPhoneValidation.valid) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'Invalid reviewer phone number'
+            })
+        }
+        validatedReviewerPhone = reviewerPhoneValidation.value
+    }
+
+    const commentValidation = validateText(comment, { maxLength: 2000 })
+    const validatedComment = commentValidation.value
+
+    const validatedAgentPhone = agentPhoneValidation.value
+    const validatedRating = ratingValidation.value
+
+    // Self-Review Check
+    if (validatedReviewerPhone && validatedAgentPhone === validatedReviewerPhone) {
         throw createError({
             statusCode: 400,
             statusMessage: 'You cannot review yourself'
         })
     }
 
+    // Rate limit: 3 reviews per IP per hour, 1 review per agent per IP per day
+    await rateLimit(event, {
+        max: 3,
+        windowMs: 60 * 60 * 1000, // 1 hour
+        message: 'Too many reviews submitted. Please try again later.'
+    })
+
+    // Additional rate limit: 1 review per agent per IP per day
+    await rateLimit(event, {
+        max: 1,
+        windowMs: 24 * 60 * 60 * 1000, // 24 hours
+        keyGenerator: () => phoneRateLimitKey(event, validatedAgentPhone),
+        message: 'You have already reviewed this agent recently.'
+    })
+
     const client = await serverSupabaseClient(event)
 
-    // Get IP for spam prevention (simplified)
-    const ip = getRequestHeader(event, 'x-forwarded-for') || event.node.req.socket.remoteAddress
+    // Get IP for audit trail
+    const ip = getRequestHeader(event, 'x-forwarded-for') ||
+        getRequestHeader(event, 'x-real-ip') ||
+        event.node.req.socket?.remoteAddress ||
+        null
 
-    // TODO: Rate limiting check could go here (e.g. check last review from this IP for this agent)
+    // Prepare sanitized data for insertion
+    const reviewData = sanitizeForDb({
+        agent_phone: validatedAgentPhone,
+        reviewer_id: reviewer_id || null,
+        reviewer_phone: validatedReviewerPhone,
+        rating: validatedRating,
+        comment: validatedComment || null,
+        ip_address: ip,
+        session_id: null
+    })
 
-    const { error } = await client
-        .schema("rentbase")
-        .from('reviews')
-        .insert({
-            agent_phone,
-            reviewer_id: reviewer_id || null, // Optional for anonymous
-            reviewer_phone: reviewer_phone || null,
-            rating,
-            comment,
-            ip_address: ip,
-            session_id: null // Can be added later if we use session tracking
-        } as any)
+    const { error } = await (client
+        .from('reviews') as any)
+        .insert(reviewData)
 
     if (error) {
         console.error('Review submission error:', error)
         throw createError({
             statusCode: 500,
-            statusMessage: error.message
+            statusMessage: 'Failed to submit review. Please try again.'
         })
     }
 

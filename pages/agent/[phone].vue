@@ -92,8 +92,8 @@
             <div v-for="i in 3" :key="i" class="h-24 bg-stone-50 dark:bg-stone-900 rounded-lg animate-pulse border border-stone-100"></div>
           </div>
 
-          <div v-else-if="reviews.length > 0" class="grid grid-cols-1 gap-4">
-            <div v-for="review in reviews" :key="review.id" class="bg-white dark:bg-stone-900/50 p-6 rounded-lg border border-stone-200 dark:border-stone-800 transition-all hover:border-stone-300">
+          <div v-else-if="reviews.length > 0" class="space-y-4">
+            <div v-for="review in paginatedReviews" :key="review.id" class="bg-white dark:bg-stone-900/50 p-6 rounded-lg border border-stone-200 dark:border-stone-800 transition-all hover:border-stone-300">
                <div class="flex items-start justify-between mb-4">
                   <div class="flex items-center gap-3">
                     <!-- Avatar Placeholder -->
@@ -134,6 +134,34 @@
                <p class="text-stone-600 dark:text-stone-300 text-sm leading-relaxed pl-13">
                  "{{ review.comment }}"
                </p>
+            </div>
+            
+            <!-- Pagination Controls -->
+            <div v-if="totalPages > 1" class="flex items-center justify-between pt-6 border-t border-stone-100 dark:border-stone-800">
+              <p class="text-xs text-stone-400">
+                Showing {{ (currentPage - 1) * pageSize + 1 }}-{{ Math.min(currentPage * pageSize, reviews.length) }} of {{ reviews.length }} reviews
+              </p>
+              <div class="flex items-center gap-2">
+                <button 
+                  @click="currentPage--"
+                  :disabled="currentPage === 1"
+                  class="px-3 py-1.5 text-sm font-medium rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  :class="currentPage === 1 ? 'text-stone-400' : 'text-stone-600 hover:bg-stone-100 dark:hover:bg-stone-800'"
+                >
+                  <UIcon name="i-lucide-chevron-left" class="w-4 h-4" />
+                </button>
+                <span class="text-sm font-medium text-stone-600 dark:text-stone-300">
+                  {{ currentPage }} / {{ totalPages }}
+                </span>
+                <button 
+                  @click="currentPage++"
+                  :disabled="currentPage === totalPages"
+                  class="px-3 py-1.5 text-sm font-medium rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  :class="currentPage === totalPages ? 'text-stone-400' : 'text-stone-600 hover:bg-stone-100 dark:hover:bg-stone-800'"
+                >
+                  <UIcon name="i-lucide-chevron-right" class="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -197,17 +225,25 @@
                   </div>
                 </div>
 
-                <div class="space-y-2">
-                  <label class="text-[10px] font-bold text-stone-400 dark:text-stone-500 uppercase tracking-widest ml-1">Evidence / Comment</label>
+                <div class="w-full">
+                  <label class="block text-[10px] font-bold text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-2">Evidence / Comment</label>
                   <UTextarea 
                     v-model="newReview.comment"
                     placeholder="Details of interaction..."
                     :rows="4"
                     variant="none"
-                    class="bg-stone-50 dark:bg-stone-950/50 rounded-lg p-4 text-sm font-medium text-stone-900 dark:text-white border border-stone-200 dark:border-stone-800 focus:border-stone-400 transition-all"
+                    class="w-full bg-stone-50 dark:bg-stone-950/50 rounded-lg p-4 text-sm font-medium text-stone-900 dark:text-white border border-stone-200 dark:border-stone-800 focus:border-stone-400 transition-all resize-none"
                     autofocus
                   />
                 </div>
+
+                <!-- Anti-Spam Protection (invisible honeypot, optional visible CAPTCHA) -->
+                <TurnstileCaptcha 
+                  ref="captchaRef"
+                  theme="light"
+                  @verified="onCaptchaVerified"
+                  @error="onCaptchaError"
+                />
 
                 <div class="flex flex-col gap-3">
                    <button 
@@ -416,6 +452,17 @@ const sendingInvite = ref(false)
 const reviews = ref<Review[]>([])
 const summary = ref<AgentReviewSummary | null>(null)
 
+// Pagination state
+const currentPage = ref(1)
+const pageSize = 5 // Reviews per page
+
+const totalPages = computed(() => Math.ceil(reviews.value.length / pageSize))
+const paginatedReviews = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  const end = start + pageSize
+  return reviews.value.slice(start, end)
+})
+
 const isRegisteredAgent = ref(false)
 const agentProfile = ref<any>(null)
 
@@ -423,6 +470,26 @@ const newReview = reactive({
   rating: 5,
   comment: ''
 })
+
+// CAPTCHA / Anti-spam
+const captchaRef = ref<InstanceType<typeof TurnstileCaptcha> | null>(null)
+const captchaToken = ref('')
+
+function onCaptchaVerified(token: string) {
+  captchaToken.value = token
+}
+
+function onCaptchaError(error: string) {
+  console.warn('CAPTCHA error:', error)
+  toast.add({
+    title: 'Verification Error',
+    description: 'Please try again',
+    color: 'warning'
+  })
+}
+
+// Import TurnstileCaptcha component type
+import type TurnstileCaptcha from '~/components/TurnstileCaptcha.vue'
 
 const inviteSmsMessage = computed(() => {
   const baseUrl = config.public.appUrl || 'https://rentbase.app'
@@ -571,12 +638,15 @@ async function verifyAndSubmit() {
       body: { phone: e164, code: otpCode.value }
     })
     
-    // 2. Submit Review
+    // 2. Submit Review with anti-spam data
+    const antiSpamData = captchaRef.value?.getAntiSpamData() || {}
+    
     const body: any = {
       agent_phone: formatPhoneE164(phone),
       rating: newReview.rating,
       comment: newReview.comment,
-      reviewer_phone: e164
+      reviewer_phone: e164,
+      ...antiSpamData
     }
 
     await $fetch('/api/reviews/submit', {
@@ -601,6 +671,8 @@ function resetReviewForm() {
     reviewerPhone.value = ''
     otpCode.value = ''
     otpSent.value = false
+    captchaToken.value = ''
+    captchaRef.value?.reset()
     fetchAgentData()
 }
 
@@ -608,10 +680,15 @@ async function submitReview() {
   // Direct submission for authenticated users
   submitting.value = true
   try {
+    // Get anti-spam data from captcha component
+    const antiSpamData = captchaRef.value?.getAntiSpamData() || {}
+    
     const body: any = {
       agent_phone: formatPhoneE164(phone),
       rating: newReview.rating,
-      comment: newReview.comment
+      comment: newReview.comment,
+      // Include anti-spam fields
+      ...antiSpamData
     }
 
     if (user.value) {

@@ -17,8 +17,11 @@
         <div :class="['mx-auto', step === 2 ? 'max-w-5xl' : 'max-w-3xl']">
           <!-- Page Header -->
           <div class="text-center mb-10 animate-fade-in">
-            <p class="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] mb-4 bg-purple-50 inline-block px-3 py-1 rounded-full">Deposit Shield</p>
-            <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white mb-3 tracking-tighter">
+             <div class="inline-flex items-center gap-2 px-3 py-1 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-md text-[10px] font-bold uppercase tracking-widest mb-4">
+               <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+               Deposit Shield
+             </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white mb-3 tracking-tight font-serif">
               {{ stepTitles[step - 1] }}
             </h1>
             <p class="text-stone-500 dark:text-stone-400 font-medium">
@@ -26,31 +29,30 @@
             </p>
           </div>
           
-          <!-- Progress Steps -->
           <!-- Progress Steps (Notion Style: Minimal) -->
           <div class="flex items-center justify-center gap-4 mb-12 text-xs font-medium text-stone-400">
-             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 1 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
+             <div :class="['flex items-center gap-2 px-2.5 py-1 rounded-md transition-all', step === 1 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white font-bold' : 'hover:text-stone-600']">
                <span>1. Photos</span>
              </div>
-             <span class="text-stone-300">/</span>
-             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 2 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
+             <span class="text-stone-200 dark:text-stone-700">/</span>
+             <div :class="['flex items-center gap-2 px-2.5 py-1 rounded-md transition-all', step === 2 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white font-bold' : 'hover:text-stone-600']">
                <span>2. Preview</span>
              </div>
-             <span class="text-stone-300">/</span>
-             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 3 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
+             <span class="text-stone-200 dark:text-stone-700">/</span>
+             <div :class="['flex items-center gap-2 px-2.5 py-1 rounded-md transition-all', step === 3 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white font-bold' : 'hover:text-stone-600']">
                <span>3. Pay</span>
              </div>
-             <span class="text-stone-300">/</span>
-             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 4 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400' : '']">
+             <span class="text-stone-200 dark:text-stone-700">/</span>
+             <div :class="['flex items-center gap-2 px-2.5 py-1 rounded-md transition-all', step === 4 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 font-bold' : 'hover:text-stone-600']">
                <span>4. Done</span>
              </div>
           </div>
           
           <!-- Step 1: Upload Photos -->
           <div v-if="step === 1" class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 shadow-sm animate-fade-in">
-            <h2 class="text-xl font-bold text-stone-900 dark:text-white mb-2 font-serif">Document Property Conditions</h2>
-            <p class="text-stone-500 dark:text-stone-400 text-sm mb-6">
-              Take photos of any existing damage, defects, or notable conditions before moving in.
+            <h2 class="text-xl font-bold text-stone-900 dark:text-white mb-2 font-serif">Document Property</h2>
+            <p class="text-stone-500 dark:text-stone-400 text-sm mb-6 max-w-lg">
+              Take clear photos of any existing damage, defects, or notable conditions before moving in.
             </p>
             
             <!-- Property Address Input -->
@@ -60,7 +62,7 @@
                 v-model="propertyAddress"
                 type="text"
                 placeholder="e.g., 123 Main Street, Accra"
-                class="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800 rounded-lg text-sm text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-400 focus:border-stone-400 transition-all placeholder-stone-300"
+                class="w-full px-4 py-3 bg-white dark:bg-stone-950/50 border border-stone-200 dark:border-stone-700 rounded-lg text-sm text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-900 dark:focus:ring-white focus:border-stone-900 transition-all placeholder-stone-300"
               />
             </div>
             
@@ -72,7 +74,7 @@
             
             <div v-if="uploadedPhotos.length > 0" class="mt-8 pt-6 border-t border-stone-100 dark:border-stone-800">
               <button 
-                class="w-full py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-medium rounded-lg hover:bg-stone-800 transition-all flex items-center justify-center gap-2"
+                class="w-full py-3.5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-bold rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-sm"
                 @click="goToPreview"
               >
                 Preview Report ({{ uploadedPhotos.length }} photos)

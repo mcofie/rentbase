@@ -1,6 +1,20 @@
-import { jsPDF } from 'jspdf'
+// Lazy load jsPDF to reduce initial bundle size
+// jsPDF is ~500KB, so we only load it when actually generating a PDF
+import type { jsPDF as JsPDFType } from 'jspdf'
 import type { ContractDetails } from '~/types'
 
+// Cached module reference
+let jsPDFModule: typeof import('jspdf') | null = null
+
+/**
+ * Lazy load jsPDF module
+ */
+async function getJsPDF(): Promise<typeof JsPDFType> {
+    if (!jsPDFModule) {
+        jsPDFModule = await import('jspdf')
+    }
+    return jsPDFModule.jsPDF
+}
 /**
  * Convert number to words for legal documents
  */
@@ -99,12 +113,13 @@ function getPaymentPeriod(frequency: string): string {
  * @param tenantSignature - Base64 encoded tenant signature image
  * @returns The generated PDF document
  */
-export function generateContractPDF(
+export async function generateContractPDF(
     contract: ContractDetails,
     isDraft: boolean = true,
     landlordSignature?: string | null,
     tenantSignature?: string | null
-): jsPDF {
+): Promise<InstanceType<typeof JsPDFType>> {
+    const jsPDF = await getJsPDF()
     const doc = new jsPDF()
     const pageWidth = doc.internal.pageSize.getWidth()
     const pageHeight = doc.internal.pageSize.getHeight()
@@ -495,13 +510,13 @@ export function generateContractPDF(
  * @param landlordSignature - Optional landlord signature
  * @param tenantSignature - Optional tenant signature
  */
-export function downloadContractPDF(
+export async function downloadContractPDF(
     contract: ContractDetails,
     isDraft: boolean = true,
     landlordSignature?: string | null,
     tenantSignature?: string | null
-): void {
-    const doc = generateContractPDF(contract, isDraft, landlordSignature, tenantSignature)
+): Promise<void> {
+    const doc = await generateContractPDF(contract, isDraft, landlordSignature, tenantSignature)
     const filename = isDraft
         ? `RentBase_Draft_${Date.now()}.pdf`
         : `RentBase_Agreement_${contract.landlord_name}_${contract.tenant_name}.pdf`

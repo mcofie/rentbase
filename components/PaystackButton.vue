@@ -2,9 +2,9 @@
   <UButton
     :loading="loading"
     :disabled="disabled"
-    size="xl"
+    size="lg"
     block
-    class="rounded-2xl font-black bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl shadow-emerald-500/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+    class="rounded-lg font-bold bg-stone-900 dark:bg-white text-white dark:text-stone-900 border border-stone-900 dark:border-white shadow-sm transition-all duration-200 hover:opacity-90 active:scale-[0.99]"
     @click="handlePayment"
   >
     <template #leading>

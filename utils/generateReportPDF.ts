@@ -1,5 +1,19 @@
-import { jsPDF } from 'jspdf'
+// Lazy load jsPDF to reduce initial bundle size
+import type { jsPDF as JsPDFType } from 'jspdf'
 import type { ConditionReport, ReportImage } from '~/types'
+
+// Cached module reference
+let jsPDFModule: typeof import('jspdf') | null = null
+
+/**
+ * Lazy load jsPDF module
+ */
+async function getJsPDF(): Promise<typeof JsPDFType> {
+    if (!jsPDFModule) {
+        jsPDFModule = await import('jspdf')
+    }
+    return jsPDFModule.jsPDF
+}
 
 /**
  * Generate a condition report PDF with images
@@ -12,7 +26,8 @@ export async function generateConditionReportPDF(
     report: ConditionReport,
     images: ReportImage[],
     isDraft: boolean = true
-): Promise<jsPDF> {
+): Promise<InstanceType<typeof JsPDFType>> {
+    const jsPDF = await getJsPDF()
     const doc = new jsPDF()
     const pageWidth = doc.internal.pageSize.getWidth()
     const pageHeight = doc.internal.pageSize.getHeight()
