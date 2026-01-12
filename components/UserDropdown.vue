@@ -1,8 +1,8 @@
 <template>
   <UDropdown :items="items" :popper="{ placement: 'bottom-end' }">
-    <button class="flex items-center gap-2 px-4 py-2 bg-stone-100 dark:bg-stone-800 rounded-full hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors border border-stone-200 dark:border-stone-700 shadow-sm">
-      <div class="w-6 h-6 bg-stone-900 dark:bg-white rounded-lg flex items-center justify-center">
-        <span class="text-[10px] text-white dark:text-stone-900 font-black">RB</span>
+    <button class="flex items-center gap-2 px-4 py-2 bg-[#F7F7F5] dark:bg-stone-800 rounded-lg hover:bg-[#E1E1E1] dark:hover:bg-stone-700 transition-colors border border-[#E1E1E1] dark:border-stone-700 shadow-sm">
+      <div class="w-6 h-6 bg-[#0075DE] dark:bg-white rounded flex items-center justify-center">
+        <span class="text-[10px] text-white dark:text-stone-900 font-bold">RB</span>
       </div>
       <span class="text-xs font-black text-stone-900 dark:text-white uppercase tracking-widest hidden sm:inline">{{ formattedPhone }}</span>
       <UIcon name="i-lucide-chevron-down" class="w-4 h-4 text-stone-400" />
@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { formatPhoneDisplay } from '~/utils/formatPhone'
 
-const { user, signOut } = useAuth()
+const { user, profile, signOut } = useAuth()
 const router = useRouter()
 const toast = useToast()
 
@@ -29,12 +29,12 @@ const formattedPhone = computed(() => {
   return formatPhoneDisplay(user.value.phone)
 })
 
-const items = [
+const items = computed(() => [
   [
     {
-      label: 'Dashboard',
+      label: profile.value?.role === 'admin' ? 'Admin Portal' : 'Dashboard',
       icon: 'i-lucide-layout-dashboard',
-      click: () => router.push('/dashboard')
+      click: () => router.push(profile.value?.role === 'admin' ? '/admin' : '/dashboard')
     },
     {
       label: 'New Contract',
@@ -65,5 +65,5 @@ const items = [
       }
     }
   ]
-]
+])
 </script>

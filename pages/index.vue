@@ -30,7 +30,7 @@
 
         <div class="grid md:grid-cols-3 gap-6">
           <!-- Card 1: Contracts -->
-          <NuxtLink to="/contract" class="group block p-6 rounded-lg border border-stone-200 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors">
+          <NuxtLink to="/contract" class="group block p-6 rounded-xl border border-stone-200 dark:border-stone-800 hover:border-[#0075DE] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-white dark:bg-stone-900">
             <div class="w-10 h-10 rounded-md bg-[#D3E5EF] dark:bg-blue-900/40 flex items-center justify-center text-stone-800 dark:text-blue-200 mb-4">
               <UIcon name="i-lucide-file-text" class="w-5 h-5" />
             </div>
@@ -41,7 +41,7 @@
           </NuxtLink>
 
           <!-- Card 2: Deposits -->
-          <NuxtLink to="/deposit" class="group block p-6 rounded-lg border border-stone-200 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors">
+          <NuxtLink to="/deposit" class="group block p-6 rounded-xl border border-stone-200 dark:border-stone-800 hover:border-[#0075DE] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-white dark:bg-stone-900">
             <div class="w-10 h-10 rounded-md bg-[#E8DEEE] dark:bg-purple-900/40 flex items-center justify-center text-stone-800 dark:text-purple-200 mb-4">
                <UIcon name="i-lucide-camera" class="w-5 h-5" />
             </div>
@@ -52,7 +52,7 @@
           </NuxtLink>
 
           <!-- Card 3: Agents -->
-          <NuxtLink to="/agent" class="group block p-6 rounded-lg border border-stone-200 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors">
+          <NuxtLink to="/agent" class="group block p-6 rounded-xl border border-stone-200 dark:border-stone-800 hover:border-[#0075DE] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-white dark:bg-stone-900">
             <div class="w-10 h-10 rounded-md bg-[#FDECC8] dark:bg-amber-900/40 flex items-center justify-center text-stone-800 dark:text-amber-200 mb-4">
                <UIcon name="i-lucide-users" class="w-5 h-5" />
             </div>
@@ -113,19 +113,5 @@ function handleAuthSuccess() {
 }
 
 // Add animation classes
-useHead({
-  style: [
-    {
-      innerHTML: `
-        .animate-fade-in {
-          animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `
-    }
-  ]
-})
+// Styles are now in assets/css/main.css
 </script>

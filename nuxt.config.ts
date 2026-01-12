@@ -111,7 +111,7 @@ export default defineNuxtConfig({
 
     // App configuration
     app: {
-        pageTransition: { name: 'page', mode: 'out-in' },
+        pageTransition: { name: 'page' },
         head: {
             title: 'RentBase - The Carfax for Rentals in Africa',
             htmlAttrs: {

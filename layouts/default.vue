@@ -28,16 +28,44 @@
              <UserDropdown />
           </template>
           <template v-else>
-            <NuxtLink 
-              to="/auth/login"
-              class="hidden sm:inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#0075DE] hover:bg-[#005BAB] rounded-lg transition-colors"
-            >
-              Log in
-            </NuxtLink>
+            <!-- Public login hidden: Admin access only via /auth/login -->
           </template>
+
+          <!-- Mobile Menu Button -->
+          <button 
+            @click="isMobileMenuOpen = !isMobileMenuOpen"
+            class="md:hidden p-2 text-[#666666] dark:text-stone-400 hover:bg-[#F7F7F5] dark:hover:bg-stone-800 rounded-lg transition-colors"
+          >
+            <UIcon :name="isMobileMenuOpen ? 'i-lucide-x' : 'i-lucide-menu'" class="w-6 h-6" />
+          </button>
         </div>
       </div>
     </header>
+
+    <!-- Mobile Navigation Menu -->
+    <div 
+      v-if="isMobileMenuOpen"
+      class="md:hidden fixed inset-x-0 top-16 bg-white dark:bg-stone-950 border-b border-[#E1E1E1] dark:border-stone-800 shadow-xl z-40 animate-fade-in-down"
+    >
+      <nav class="flex flex-col p-4 space-y-1">
+        <NuxtLink to="/contract" class="px-4 py-3 text-sm font-medium text-[#050505] dark:text-white hover:bg-[#F7F7F5] dark:hover:bg-stone-800 rounded-lg transition-colors flex items-center gap-3">
+          <UIcon name="i-lucide-file-text" class="w-5 h-5 text-[#0075DE]" />
+          Contract
+        </NuxtLink>
+        <NuxtLink to="/deposit" class="px-4 py-3 text-sm font-medium text-[#050505] dark:text-white hover:bg-[#F7F7F5] dark:hover:bg-stone-800 rounded-lg transition-colors flex items-center gap-3">
+          <UIcon name="i-lucide-shield-check" class="w-5 h-5 text-[#0075DE]" />
+          Deposit
+        </NuxtLink>
+        <NuxtLink to="/retrieve" class="px-4 py-3 text-sm font-medium text-[#050505] dark:text-white hover:bg-[#F7F7F5] dark:hover:bg-stone-800 rounded-lg transition-colors flex items-center gap-3">
+           <UIcon name="i-lucide-search" class="w-5 h-5 text-[#0075DE]" />
+           Retrieve
+        </NuxtLink>
+        <NuxtLink to="/agent" class="px-4 py-3 text-sm font-medium text-[#050505] dark:text-white hover:bg-[#F7F7F5] dark:hover:bg-stone-800 rounded-lg transition-colors flex items-center gap-3">
+           <UIcon name="i-lucide-user-check" class="w-5 h-5 text-[#0075DE]" />
+           Verify Agent
+        </NuxtLink>
+      </nav>
+    </div>
 
     <!-- Page Content -->
     <main class="flex-grow">
@@ -69,17 +97,17 @@
           <div>
              <h4 class="font-bold text-stone-900 dark:text-white mb-4 text-sm">Resources</h4>
              <ul class="space-y-3 text-sm text-stone-500">
-               <li><a href="#" class="hover:text-stone-900 dark:hover:text-white transition-colors">Guide</a></li>
-               <li><a href="#" class="hover:text-stone-900 dark:hover:text-white transition-colors">Templates</a></li>
-               <li><a href="#" class="hover:text-stone-900 dark:hover:text-white transition-colors">Support</a></li>
+               <li><NuxtLink to="/resources/guide" class="hover:text-stone-900 dark:hover:text-white transition-colors">Guide</NuxtLink></li>
+               <li><NuxtLink to="/resources/templates" class="hover:text-stone-900 dark:hover:text-white transition-colors">Templates</NuxtLink></li>
+               <li><NuxtLink to="/resources/support" class="hover:text-stone-900 dark:hover:text-white transition-colors">Support</NuxtLink></li>
              </ul>
           </div>
           
           <div>
              <h4 class="font-bold text-stone-900 dark:text-white mb-4 text-sm">Company</h4>
              <ul class="space-y-3 text-sm text-stone-500">
-               <li><a href="#" class="hover:text-stone-900 dark:hover:text-white transition-colors">Privacy</a></li>
-               <li><a href="#" class="hover:text-stone-900 dark:hover:text-white transition-colors">Terms</a></li>
+               <li><NuxtLink to="/company/privacy" class="hover:text-stone-900 dark:hover:text-white transition-colors">Privacy</NuxtLink></li>
+               <li><NuxtLink to="/company/terms" class="hover:text-stone-900 dark:hover:text-white transition-colors">Terms</NuxtLink></li>
              </ul>
           </div>
         </div>
@@ -101,6 +129,13 @@
 
 <script setup lang="ts">
 const { user } = useAuth()
+const route = useRoute()
+const isMobileMenuOpen = ref(false)
+
+// Close menu on route change
+watch(() => route.path, () => {
+  isMobileMenuOpen.value = false
+})
 </script>
 
 <style scoped>

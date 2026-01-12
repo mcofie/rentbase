@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300 flex flex-col items-center justify-center p-6 text-balance">
     <!-- Center Logo -->
     <NuxtLink to="/" class="mb-12 flex items-center gap-2 group">
-      <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-500">
+      <div class="w-12 h-12 bg-[#0075DE] rounded-xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-500">
         <span class="text-white text-2xl">⚡</span>
       </div>
     </NuxtLink>
@@ -13,7 +13,7 @@
         <p class="text-stone-500 dark:text-stone-400 font-medium">Enter your line to secure your session.</p>
       </div>
 
-      <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-[40px] p-2 shadow-sm animate-fade-in delay-100">
+      <div class="bg-white dark:bg-stone-900 border border-[#E1E1E1] dark:border-stone-800 rounded-2xl p-2 shadow-sm animate-fade-in delay-100">
         <div class="p-8">
           <form @submit.prevent="step === 'phone' ? handleRequestOtp() : handleVerifyOtp()" class="space-y-6">
             <!-- Step 1: Phone -->
@@ -26,7 +26,7 @@
                     v-model="phone"
                     type="tel"
                     placeholder="24 XXX XXXX"
-                    class="w-full pl-16 pr-6 py-5 bg-stone-50 dark:bg-stone-950/50 border-stone-100 dark:border-stone-800 rounded-3xl text-xl font-black text-stone-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-stone-200 dark:placeholder-stone-800"
+                    class="w-full pl-16 pr-6 py-4 bg-[#F7F7F5] dark:bg-stone-950/50 border-[#E1E1E1] dark:border-stone-800 rounded-lg text-lg font-medium text-[#050505] dark:text-white focus:ring-2 focus:ring-[#0075DE]/20 focus:border-[#0075DE] transition-all placeholder-[#999999] dark:placeholder-stone-800"
                     autofocus
                   />
                 </div>
@@ -35,7 +35,7 @@
               <button 
                 type="submit"
                 :disabled="loading || phone.length < 9"
-                class="w-full py-5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 text-lg font-black rounded-3xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-30 flex items-center justify-center gap-3 shadow-xl shadow-stone-900/10"
+                class="w-full py-4 bg-[#050505] dark:bg-white text-white dark:text-stone-900 text-lg font-bold rounded-lg hover:bg-stone-800 active:scale-[0.98] transition-all disabled:opacity-30 flex items-center justify-center gap-3 shadow-sm"
               >
                 <UIcon v-if="loading" name="i-lucide-loader-2" class="animate-spin" />
                 <span>Send Code</span>
@@ -47,14 +47,14 @@
               <div class="space-y-3">
                 <div class="flex items-center justify-between px-1">
                   <label class="text-[10px] font-black text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em]">6-Digit Code</label>
-                  <button @click="step = 'phone'" class="text-[10px] font-black text-emerald-500 uppercase tracking-widest hover:underline">Change Number</button>
+                  <button @click="step = 'phone'" class="text-[10px] font-bold text-[#0075DE] uppercase tracking-widest hover:underline">Change Number</button>
                 </div>
                 <input 
                   v-model="otp"
                   type="text"
                   maxlength="6"
                   placeholder="000000"
-                  class="w-full px-6 py-5 bg-stone-50 dark:bg-stone-950/50 border-stone-100 dark:border-stone-800 rounded-3xl text-3xl font-black text-stone-900 dark:text-white text-center tracking-[0.5em] focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-stone-200 dark:placeholder-stone-800"
+                  class="w-full px-6 py-4 bg-[#F7F7F5] dark:bg-stone-950/50 border-[#E1E1E1] dark:border-stone-800 rounded-lg text-2xl font-bold text-[#050505] dark:text-white text-center tracking-[0.5em] focus:ring-2 focus:ring-[#0075DE]/20 focus:border-[#0075DE] transition-all placeholder-[#999999] dark:placeholder-stone-800"
                   autofocus
                 />
               </div>
@@ -62,14 +62,14 @@
               <button 
                 type="submit"
                 :disabled="loading || otp.length < 6"
-                class="w-full py-5 bg-emerald-500 text-white text-lg font-black rounded-3xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-30 flex items-center justify-center gap-3 shadow-xl shadow-emerald-500/20"
+                class="w-full py-4 bg-[#0075DE] text-white text-lg font-bold rounded-lg hover:bg-[#005BAB] active:scale-[0.98] transition-all disabled:opacity-30 flex items-center justify-center gap-3 shadow-sm"
               >
                 <UIcon v-if="loading" name="i-lucide-loader-2" class="animate-spin" />
                 <span>Verify & Sign In</span>
               </button>
               
               <p class="text-center text-[10px] font-black text-stone-400 uppercase tracking-widest pt-2">
-                Didn't receive it? <button @click="handleRequestOtp" class="text-emerald-500 hover:underline">Resend</button>
+                Didn't receive it? <button @click="handleRequestOtp" class="text-[#0075DE] hover:underline">Resend</button>
               </p>
             </div>
           </form>
@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-const { verifyOTP, sendOTP, resendOTP } = useAuth()
+const { verifyOTP, sendOTP, resendOTP, profile, signOut } = useAuth()
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
@@ -115,11 +115,22 @@ async function handleVerifyOtp() {
     const success = await verifyOTP(otp.value)
     if (!success) throw new Error('Verification failed')
     
-    toast.add({ title: 'Welcome back!', color: 'success' })
-    const redirect = route.query.redirect as string || '/'
+    // Strict Admin Check
+    if (profile.value?.role !== 'admin') {
+      await signOut()
+      throw new Error('Access restricted. Only administrators can log in at this time.')
+    }
+    
+    toast.add({ title: 'Welcome Admin', color: 'success' })
+    const redirect = route.query.redirect as string || '/admin'
     router.push(redirect)
   } catch (err: any) {
-    toast.add({ title: 'Verification failed', description: err.message, color: 'error' })
+    toast.add({ title: 'Login Failed', description: err.message, color: 'error' })
+    // If it was the role error, we already signed them out
+    if (err.message.includes('Access restricted')) {
+      step.value = 'phone'
+      otp.value = ''
+    }
   } finally {
     loading.value = false
   }
