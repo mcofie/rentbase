@@ -30,7 +30,7 @@
           <template v-else>
             <NuxtLink 
               to="/auth/login"
-              class="hidden sm:inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-stone-900 dark:bg-white dark:text-stone-900 hover:bg-stone-700 dark:hover:bg-stone-200 rounded-md transition-colors shadow-sm"
+              class="hidden sm:inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#0075DE] hover:bg-[#005BAB] rounded-lg transition-colors"
             >
               Log in
             </NuxtLink>
@@ -93,6 +93,9 @@
         </div>
       </div>
     </footer>
+
+    <!-- PWA Install Prompt -->
+    <InstallPWAPrompt />
   </div>
 </template>
 

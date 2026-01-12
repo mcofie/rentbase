@@ -8,15 +8,15 @@
           :key="room.id"
           @click="selectedRoom = room.id"
           :class="[
-            'px-3 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 whitespace-nowrap',
+            'px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap',
             selectedRoom === room.id
-              ? 'bg-stone-900 dark:bg-white text-white dark:text-stone-900 shadow-sm'
-              : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700'
+              ? 'bg-[#0075DE] text-white'
+              : 'bg-white dark:bg-stone-800 text-[#050505] dark:text-stone-300 border border-[#E1E1E1] dark:border-stone-700 hover:bg-[#F7F7F5] dark:hover:bg-stone-700'
           ]"
         >
           <UIcon :name="room.icon" class="w-4 h-4" />
           <span>{{ room.name }}</span>
-          <span v-if="getPhotoCountForRoom(room.id) > 0" class="w-5 h-5 bg-stone-200 dark:bg-stone-700 text-stone-900 dark:text-white text-[10px] rounded-md flex items-center justify-center font-mono">
+          <span v-if="getPhotoCountForRoom(room.id) > 0" class="w-5 h-5 bg-white/20 text-white text-[10px] rounded-md flex items-center justify-center font-mono">
             {{ getPhotoCountForRoom(room.id) }}
           </span>
         </button>
@@ -166,13 +166,13 @@
           <div class="flex gap-3">
             <button
               @click="showDescriptionModal = false"
-              class="flex-1 py-2.5 bg-white border border-stone-200 dark:bg-stone-800 dark:border-stone-700 text-stone-600 dark:text-stone-300 font-bold rounded-lg hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors text-sm"
+              class="flex-1 py-2.5 bg-white border border-[#E1E1E1] dark:bg-stone-800 dark:border-stone-700 text-[#050505] dark:text-stone-300 font-medium rounded-lg hover:bg-[#F7F7F5] dark:hover:bg-stone-700 transition-colors text-sm"
             >
               Cancel
             </button>
             <button
               @click="saveDescription"
-              class="flex-1 py-2.5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-bold rounded-lg hover:opacity-90 transition-colors text-sm"
+              class="flex-1 py-2.5 bg-[#0075DE] text-white font-medium rounded-lg hover:bg-[#005BAB] transition-colors text-sm"
             >
               Save Note
             </button>

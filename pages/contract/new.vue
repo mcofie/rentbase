@@ -15,7 +15,7 @@
       
       <!-- Auto-save indicator -->
       <div v-if="autoSaveStatus" class="fixed bottom-6 right-6 z-50">
-        <div class="flex items-center gap-2 px-4 py-2 bg-stone-900 dark:bg-white text-white dark:text-stone-900 rounded-full text-xs font-bold shadow-xl animate-fade-in">
+        <div class="flex items-center gap-2 px-4 py-2 bg-[#0075DE] text-white rounded-lg text-xs font-medium shadow-lg animate-fade-in">
           <UIcon :name="autoSaveStatus === 'saving' ? 'i-lucide-loader-2' : 'i-lucide-check'" :class="{ 'animate-spin': autoSaveStatus === 'saving' }" class="w-4 h-4" />
           {{ autoSaveStatus === 'saving' ? 'Saving...' : 'Draft saved' }}
         </div>

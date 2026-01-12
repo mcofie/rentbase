@@ -2,18 +2,34 @@
 @import "@nuxt/ui";
 
 @theme {
-  /* Notion-Inspired Palette */
+  /* Notion-Exact Design System */
 
-  /* Usage: bg-[#F7F7F5] for 'default' backgrounds */
+  /* Backgrounds */
   --color-notion-bg: #FFFFFF;
   --color-notion-sidebar: #F7F7F5;
+  --color-notion-hover: #F7F7F5;
 
-  /* Pastels */
+  /* Notion Blue (Primary Action Color) */
+  --color-notion-blue: #0075DE;
+  --color-notion-blue-hover: #005BAB;
+  --color-notion-blue-light: #E6F3FE;
+  --color-notion-blue-text: #005BAB;
+
+  /* Borders */
+  --color-notion-border: #E1E1E1;
+  --color-notion-border-dark: #37352F;
+
+  /* Text */
+  --color-notion-text: #050505;
+  --color-notion-text-secondary: #666666;
+  --color-notion-placeholder: #999999;
+
+  /* Pastels (for badges/tags) */
   --color-notion-red: #FFE2DD;
   --color-notion-orange: #FADEC9;
   --color-notion-yellow: #FDECC8;
   --color-notion-green: #DBEDDB;
-  --color-notion-blue: #D3E5EF;
+  --color-notion-pastel-blue: #D3E5EF;
   --color-notion-purple: #E8DEEE;
   --color-notion-pink: #F5E0E9;
   --color-notion-gray: #F1F1EF;
@@ -22,22 +38,20 @@
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-serif: 'Lyon-Text', Georgia, Cambria, "Times New Roman", Times, serif;
 
-  /* Keep 'Brand' as a functional blue for links/highlights, but tailored */
+  /* Map brand colors to Notion Blue */
   --color-brand-50: #F5FBFF;
-  --color-brand-100: #E2ECF3;
+  --color-brand-100: #E6F3FE;
   --color-brand-200: #D3E5EF;
-  /* Notion Blue Background */
   --color-brand-300: #B7DDF9;
   --color-brand-400: #5EB1EF;
-  --color-brand-500: #2383E2;
-  /* Notion Marketing Blue */
-  --color-brand-600: #0B6ECA;
+  --color-brand-500: #0075DE;
+  --color-brand-600: #005BAB;
   --color-brand-700: #0055A4;
   --color-brand-800: #004284;
   --color-brand-900: #003060;
   --color-brand-950: #002040;
 
-  /* Map functional colors to Stone (Black/Gray) for that stark look */
+  /* Keep Stone for neutrals */
   --color-primary-50: var(--color-stone-50);
   --color-primary-100: var(--color-stone-100);
   --color-primary-200: var(--color-stone-200);
@@ -61,12 +75,27 @@
 
 /* Notion-style Cards */
 @utility card-notion {
-  @apply bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg shadow-sm hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200;
+  @apply bg-white dark:bg-stone-900 border border-[#E1E1E1] dark:border-stone-800 rounded-lg hover:bg-[#F7F7F5] dark:hover:bg-stone-800 transition-colors duration-200;
 }
 
-/* Notion-style Buttons */
+/* Notion-style Primary Button (Blue) */
 @utility btn-primary {
-  @apply bg-stone-900 text-white hover:bg-stone-700 active:bg-stone-800 rounded-lg px-4 py-2 font-medium transition-colors;
+  @apply bg-[#0075DE] text-white hover:bg-[#005BAB] active:bg-[#004284] rounded-lg px-4 py-2.5 font-medium transition-colors;
+}
+
+/* Notion-style Secondary Button (Light Blue) */
+@utility btn-secondary {
+  @apply bg-[#E6F3FE] text-[#005BAB] hover:bg-[#D3E5EF] active:bg-[#B7DDF9] rounded-lg px-4 py-2.5 font-medium transition-colors;
+}
+
+/* Notion-style Outline Button */
+@utility btn-outline {
+  @apply bg-white border border-[#E1E1E1] text-[#050505] hover:bg-[#F7F7F5] rounded-lg px-4 py-2.5 font-medium transition-colors;
+}
+
+/* Notion-style Input */
+@utility input-notion {
+  @apply w-full bg-white dark:bg-stone-900 border border-[#E1E1E1] dark:border-stone-700 rounded-lg px-3 py-2.5 text-[#050505] dark:text-white placeholder-[#999999] focus:border-[#0075DE] focus:ring-1 focus:ring-[#0075DE] focus:outline-none transition-all;
 }
 
 :root {
@@ -95,7 +124,7 @@ body {
 }
 
 .dark ::selection {
-  background-color: #2383E2;
+  background-color: #0075DE;
   color: #fff;
 }
 
@@ -139,6 +168,26 @@ body {
   }
 }
 
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  60% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @utility animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
+}
+
+@utility animate-bounce-in {
+  animation: bounce-in 0.3s ease-out forwards;
 }

@@ -5,13 +5,13 @@
        <p class="text-sm font-bold text-stone-400 uppercase tracking-widest animate-pulse">Fetching Document...</p>
     </div>
 
-    <div v-else-if="error" class="max-w-xl mx-auto text-center py-20 bg-white dark:bg-stone-900 rounded-lg border border-stone-200 dark:border-stone-800 shadow-sm">
+    <div v-else-if="error" class="max-w-xl mx-auto text-center py-20 bg-white dark:bg-stone-900 rounded-lg border border-[#E1E1E1] dark:border-stone-800">
        <div class="w-16 h-16 bg-red-50 dark:bg-red-950/20 rounded-lg flex items-center justify-center mx-auto mb-6">
          <span class="text-3xl">🚫</span>
        </div>
-       <h2 class="text-2xl font-bold text-stone-900 dark:text-white mb-2 tracking-tight font-serif">Document Not Found</h2>
-       <p class="text-stone-500 dark:text-stone-400 font-medium mb-8 px-8">{{ error }}</p>
-       <UButton size="xl" color="neutral" class="rounded-lg font-medium px-8" to="/dashboard">Back to Dashboard</UButton>
+       <h2 class="text-2xl font-bold text-[#050505] dark:text-white mb-2 tracking-tight font-serif">Document Not Found</h2>
+       <p class="text-[#666666] dark:text-stone-400 font-medium mb-8 px-8">{{ error }}</p>
+       <UButton size="xl" class="rounded-lg font-medium px-8 bg-[#0075DE] text-white hover:bg-[#005BAB]" to="/dashboard">Back to Dashboard</UButton>
     </div>
 
     <div v-else-if="contract" class="max-w-6xl mx-auto">
@@ -27,16 +27,16 @@
       <div class="grid lg:grid-cols-3 gap-8">
         <!-- Document View -->
         <div class="lg:col-span-2 space-y-6">
-           <div class="bg-white dark:bg-stone-900 rounded-lg shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden relative">
+           <div class="bg-white dark:bg-stone-900 rounded-lg border border-[#E1E1E1] dark:border-stone-800 overflow-hidden relative">
               <!-- Draft Watermark Overlay -->
               <div v-if="!contract.is_finalized" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] dark:opacity-[0.05] rotate-[-35deg]">
                 <span class="text-[120px] font-black tracking-tighter">DRAFT</span>
               </div>
 
               <!-- Document Header -->
-              <div class="p-8 sm:p-12 border-b border-stone-100 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-800/20">
+              <div class="p-8 sm:p-12 border-b border-[#E1E1E1] dark:border-stone-800 bg-[#F7F7F5] dark:bg-stone-800/20">
                 <div class="flex justify-between items-start mb-8">
-                   <div class="w-10 h-10 bg-stone-900 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-stone-900">
+                   <div class="w-10 h-10 bg-[#0075DE] rounded-lg flex items-center justify-center text-white">
                      <span class="text-lg">⚡</span>
                    </div>
                    <div class="text-right">
@@ -71,7 +71,7 @@
 
                 <!-- Property -->
                 <section>
-                  <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] mb-6 border-b border-stone-100 dark:border-stone-800 pb-2">The Premises</h4>
+                  <h4 class="text-[10px] font-bold text-[#666666] uppercase tracking-[0.2em] mb-6 border-b border-[#E1E1E1] dark:border-stone-800 pb-2">The Premises</h4>
                   <div class="grid sm:grid-cols-2 gap-8">
                     <div>
                        <p class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-1">Address</p>
@@ -86,30 +86,30 @@
 
                 <!-- Terms -->
                 <section>
-                  <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] mb-6 border-b border-stone-100 dark:border-stone-800 pb-2">The Terms</h4>
+                  <h4 class="text-[10px] font-bold text-[#666666] uppercase tracking-[0.2em] mb-6 border-b border-[#E1E1E1] dark:border-stone-800 pb-2">The Terms</h4>
                   <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div class="bg-stone-50 dark:bg-stone-800/40 p-4 rounded-lg">
-                       <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Rent</p>
-                       <p class="text-sm font-bold text-stone-900 dark:text-white">{{ details.rent_currency }} {{ details.rent_amount }}</p>
+                    <div class="bg-[#F7F7F5] dark:bg-stone-800/40 p-4 rounded-lg">
+                       <p class="text-[10px] font-bold text-[#666666] uppercase mb-1">Rent</p>
+                       <p class="text-sm font-medium text-[#050505] dark:text-white">{{ details.rent_currency }} {{ details.rent_amount }}</p>
                     </div>
-                    <div class="bg-stone-50 dark:bg-stone-800/40 p-4 rounded-lg">
-                       <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Deposit</p>
-                       <p class="text-sm font-bold text-stone-900 dark:text-white">{{ details.rent_currency }} {{ details.security_deposit }}</p>
+                    <div class="bg-[#F7F7F5] dark:bg-stone-800/40 p-4 rounded-lg">
+                       <p class="text-[10px] font-bold text-[#666666] uppercase mb-1">Deposit</p>
+                       <p class="text-sm font-medium text-[#050505] dark:text-white">{{ details.rent_currency }} {{ details.security_deposit }}</p>
                     </div>
-                    <div class="bg-stone-50 dark:bg-stone-800/40 p-4 rounded-lg">
-                       <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Starts</p>
-                       <p class="text-sm font-bold text-stone-900 dark:text-white">{{ formatDateSimple(details.lease_start_date) }}</p>
+                    <div class="bg-[#F7F7F5] dark:bg-stone-800/40 p-4 rounded-lg">
+                       <p class="text-[10px] font-bold text-[#666666] uppercase mb-1">Starts</p>
+                       <p class="text-sm font-medium text-[#050505] dark:text-white">{{ formatDateSimple(details.lease_start_date) }}</p>
                     </div>
-                    <div class="bg-stone-50 dark:bg-stone-800/40 p-4 rounded-lg">
-                       <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Duration</p>
-                       <p class="text-sm font-bold text-stone-900 dark:text-white">{{ details.lease_duration_months }} months</p>
+                    <div class="bg-[#F7F7F5] dark:bg-stone-800/40 p-4 rounded-lg">
+                       <p class="text-[10px] font-bold text-[#666666] uppercase mb-1">Duration</p>
+                       <p class="text-sm font-medium text-[#050505] dark:text-white">{{ details.lease_duration_months }} months</p>
                     </div>
                   </div>
                 </section>
               </div>
 
               <!-- Footer -->
-              <div class="p-6 bg-stone-50 dark:bg-stone-800/20 text-center text-[10px] font-bold text-stone-400 dark:text-stone-600 uppercase tracking-[0.3em]">
+              <div class="p-6 bg-[#F7F7F5] dark:bg-stone-800/20 text-center text-[10px] font-bold text-[#666666] dark:text-stone-600 uppercase tracking-[0.3em]">
                 RENTBASE PROTOCOL • IMMUTABLE DOCUMENT
               </div>
            </div>
@@ -117,7 +117,7 @@
 
         <!-- Action Sidebar -->
         <div class="space-y-6">
-           <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm relative sticky top-24">
+           <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-[#E1E1E1] dark:border-stone-800 relative sticky top-24">
               <div v-if="!contract.is_finalized" class="space-y-4">
                 <h3 class="text-xl font-bold text-stone-900 dark:text-white mb-2 tracking-tight font-serif">Finalize Document</h3>
                 <p class="text-sm font-medium text-stone-500 mb-8 leading-relaxed">Pay the protocol fee to remove the draft watermark and generate a legally-valid signed PDF.</p>
@@ -127,21 +127,17 @@
                   feature-type="contract"
                   :email="userEmail"
                   :item-id="contract.id"
-                  class="w-full py-3.5 !bg-stone-900 dark:!bg-white !text-white dark:!text-stone-900 !font-medium !rounded-lg !shadow-sm hover:!bg-stone-800 transition-colors flex items-center justify-center gap-2"
                   @success="handlePaymentSuccess"
                 >
                   Mint Official PDF (GH₵ 40)
                 </PaystackButton>
-                <UButton
+                <button
                   v-else
-                  block
-                  size="lg"
-                  color="neutral"
-                  class="rounded-lg font-medium py-3.5"
+                  class="w-full py-3.5 bg-[#0075DE] text-white font-medium rounded-lg hover:bg-[#005BAB] transition-colors"
                   @click="showAuthModal = true"
                 >
                   Sign In to Finalize
-                </UButton>
+                </button>
 
                 <div class="pt-4 space-y-3">
                   <UButton
@@ -188,7 +184,7 @@
 
                 <!-- Signature Status List -->
                 <div class="space-y-3 mb-6">
-                  <div class="flex items-center justify-between p-3 bg-stone-50 dark:bg-stone-800/50 rounded-lg border border-stone-100 dark:border-stone-800">
+                  <div class="flex items-center justify-between p-3 bg-[#F7F7F5] dark:bg-stone-800/50 rounded-lg border border-[#E1E1E1] dark:border-stone-800">
                     <div class="flex items-center gap-3">
                       <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                         <UIcon name="i-lucide-user" class="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -215,7 +211,7 @@
                     </UButton>
                   </div>
 
-                  <div class="flex items-center justify-between p-3 bg-stone-50 dark:bg-stone-800/50 rounded-lg border border-stone-100 dark:border-stone-800">
+                  <div class="flex items-center justify-between p-3 bg-[#F7F7F5] dark:bg-stone-800/50 rounded-lg border border-[#E1E1E1] dark:border-stone-800">
                     <div class="flex items-center gap-3">
                       <div class="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
                         <UIcon name="i-lucide-user-check" class="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
@@ -244,16 +240,13 @@
                 </div>
 
                 <!-- Download Button -->
-                <UButton
-                  block
-                  size="lg"
-                  color="neutral"
-                  class="rounded-lg font-medium py-3.5"
-                  icon="i-lucide-download"
+                <button
+                  class="w-full py-3.5 bg-[#0075DE] text-white font-medium rounded-lg hover:bg-[#005BAB] transition-colors flex items-center justify-center gap-2"
                   @click="downloadFinal"
                 >
+                  <UIcon name="i-lucide-download" class="w-5 h-5" />
                   Download {{ contract.is_fully_signed ? 'Signed' : 'Final' }} PDF
-                </UButton>
+                </button>
                 
                 <!-- Share via WhatsApp -->
                 <UButton

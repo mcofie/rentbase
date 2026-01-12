@@ -40,6 +40,9 @@ export default defineNuxtConfig({
         hubtelSenderId: process.env.HUBTEL_SENDER_ID || 'RentBase',
         // Cloudflare Turnstile (CAPTCHA) - server secret
         turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY || '',
+        // Email service API keys (choose one)
+        resendApiKey: process.env.RESEND_API_KEY || '',
+        sendgridApiKey: process.env.SENDGRID_API_KEY || '',
 
         // Public (client-side)
         public: {
@@ -116,7 +119,7 @@ export default defineNuxtConfig({
             },
             meta: [
                 { charset: 'utf-8' },
-                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
                 {
                     name: 'description',
                     content: 'Verify agents, generate legal contracts, and protect your deposits. The trusted platform for renters in Ghana.'
@@ -124,9 +127,21 @@ export default defineNuxtConfig({
                 // Security meta tags
                 { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
                 { name: 'format-detection', content: 'telephone=no' },
+                // PWA meta tags
+                { name: 'theme-color', content: '#0075DE' },
+                { name: 'apple-mobile-web-app-capable', content: 'yes' },
+                { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+                { name: 'apple-mobile-web-app-title', content: 'RentBase' },
+                { name: 'mobile-web-app-capable', content: 'yes' },
+                { name: 'application-name', content: 'RentBase' },
+                { name: 'msapplication-TileColor', content: '#0075DE' },
             ],
             link: [
                 { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+                // PWA manifest
+                { rel: 'manifest', href: '/manifest.json' },
+                // Apple touch icons
+                { rel: 'apple-touch-icon', sizes: '180x180', href: '/icons/icon-192x192.png' },
                 // Preconnect to external resources
                 { rel: 'preconnect', href: 'https://js.paystack.co' },
                 { rel: 'dns-prefetch', href: 'https://js.paystack.co' },

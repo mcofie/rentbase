@@ -47,13 +47,26 @@ Required variables:
 - `NUXT_PUBLIC_PAYSTACK_PUBLIC_KEY` - Paystack public key
 - `PAYSTACK_SECRET_KEY` - Paystack secret key
 
-Optional (for CAPTCHA anti-spam):
-- `NUXT_PUBLIC_TURNSTILE_SITE_KEY` - Cloudflare Turnstile site key (get free at dash.cloudflare.com)
+Optional (CAPTCHA anti-spam):
+- `NUXT_PUBLIC_TURNSTILE_SITE_KEY` - Cloudflare Turnstile site key (free at dash.cloudflare.com)
 - `TURNSTILE_SECRET_KEY` - Cloudflare Turnstile secret key
+
+Optional (SMS via Hubtel):
+- `HUBTEL_CLIENT_ID` - Hubtel API client ID
+- `HUBTEL_CLIENT_SECRET` - Hubtel API client secret
+- `HUBTEL_SENDER_ID` - SMS sender ID (default: 'RentBase')
+
+Optional (Email notifications - choose one):
+- `RESEND_API_KEY` - Resend API key (recommended)
+- `SENDGRID_API_KEY` - SendGrid API key (alternative)
+
+Optional (App URL for emails):
+- `NUXT_PUBLIC_APP_URL` - Full app URL (e.g., https://rentbase.app)
 
 ### 3. Setup Supabase Database
 
-Run the SQL migration in your Supabase SQL editor (see `database/schema.sql`).
+Run the SQL migrations in your Supabase SQL editor:
+- `supabase/migrations/*.sql` - All migration files in order
 
 ### 4. Development Server
 

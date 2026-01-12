@@ -61,18 +61,26 @@
                     <span v-else class="text-sm font-medium text-stone-400">Not enough data</span>
                  </div>
                  
-                 <div class="flex gap-3">
+                 <div class="flex gap-2 flex-wrap">
+                   <!-- Report Agent button -->
+                   <button 
+                    @click="showReportModal = true"
+                    class="px-4 py-2.5 bg-white border border-[#E1E1E1] text-[#666666] font-medium rounded-lg hover:bg-[#F7F7F5] hover:border-red-200 hover:text-red-600 transition-all text-sm flex items-center gap-2"
+                    title="Report this agent"
+                   >
+                     <UIcon name="i-lucide-flag" class="w-4 h-4" />
+                   </button>
                    <button 
                     v-if="!isRegisteredAgent"
                     @click="invokeInviteModal"
-                    class="px-5 py-2.5 bg-white border border-stone-200 text-stone-600 font-medium rounded-lg hover:bg-stone-50 transition-all text-sm flex items-center gap-2"
+                    class="px-5 py-2.5 bg-white border border-[#E1E1E1] text-[#050505] font-medium rounded-lg hover:bg-[#F7F7F5] transition-all text-sm flex items-center gap-2"
                    >
                      <UIcon name="i-lucide-send" class="w-4 h-4" />
                      <span>Invite</span>
                    </button>
                    <button 
                     @click="showReviewModal = true"
-                    class="px-5 py-2.5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-medium rounded-lg hover:bg-stone-800 transition-all text-sm"
+                    class="px-5 py-2.5 bg-[#0075DE] text-white font-medium rounded-lg hover:bg-[#005BAB] transition-all text-sm"
                    >
                      Write Report
                    </button>
@@ -248,7 +256,7 @@
                 <div class="flex flex-col gap-3">
                    <button 
                     type="submit" 
-                    class="w-full py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-bold rounded-lg hover:bg-stone-800 transition-all shadow-sm flex items-center justify-center gap-2"
+                    class="w-full py-3.5 bg-[#0075DE] text-white font-medium rounded-lg hover:bg-[#005BAB] transition-all flex items-center justify-center gap-2"
                    >
                      <span>Next Step</span>
                      <UIcon name="i-lucide-arrow-right" class="w-4 h-4" />
@@ -415,6 +423,9 @@
 
       <AuthModal v-model="showAuthModal" @success="handleAuthSuccess" />
 
+      <!-- Report Agent Modal -->
+      <ReportAgentModal v-model="showReportModal" :agent-phone="phone" />
+
     </div>
   </div>
 </template>
@@ -443,6 +454,7 @@ const loading = ref(true)
 const submitting = ref(false)
 const showReviewModal = ref(route.query.review === 'true')
 const showAuthModal = ref(false)
+const showReportModal = ref(false)
 
 // Invite state
 const showInviteModal = ref(false)

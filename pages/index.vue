@@ -87,14 +87,14 @@
     </section>
 
     <!-- Bottom CTA -->
-    <section class="py-24 bg-stone-50 dark:bg-stone-900/50">
+    <section class="py-24 bg-[#F7F7F5] dark:bg-stone-900/50">
       <div class="max-w-3xl mx-auto px-6 text-center">
         <h2 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white mb-6 font-serif tracking-tight">Start renting simply.</h2>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-           <NuxtLink to="/contract" class="inline-flex items-center justify-center px-6 py-3 text-base font-bold text-white bg-stone-900 dark:bg-white dark:text-stone-900 rounded-lg hover:bg-stone-700 dark:hover:bg-stone-200 transition-colors shadow-sm">
+           <NuxtLink to="/contract" class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-[#0075DE] rounded-lg hover:bg-[#005BAB] transition-colors">
              Create a Contract
            </NuxtLink>
-           <NuxtLink to="/agent" class="inline-flex items-center justify-center px-6 py-3 text-base font-bold text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors">
+           <NuxtLink to="/agent" class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-[#050505] dark:text-white bg-white dark:bg-stone-800 border border-[#E1E1E1] dark:border-stone-700 rounded-lg hover:bg-[#F7F7F5] dark:hover:bg-stone-700 transition-colors">
              Verify an Agent
            </NuxtLink>
         </div>

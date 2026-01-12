@@ -4,7 +4,7 @@
     :disabled="disabled"
     size="lg"
     block
-    class="rounded-lg font-bold bg-stone-900 dark:bg-white text-white dark:text-stone-900 border border-stone-900 dark:border-white shadow-sm transition-all duration-200 hover:opacity-90 active:scale-[0.99]"
+    class="rounded-lg font-medium bg-[#0075DE] text-white border-0 transition-all duration-200 hover:bg-[#005BAB] active:scale-[0.99]"
     @click="handlePayment"
   >
     <template #leading>

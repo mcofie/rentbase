@@ -50,13 +50,13 @@
         
         <div class="grid grid-cols-2 gap-3">
           <button
-            class="col-span-1 py-4 px-4 rounded-2xl bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 font-bold hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors"
+            class="col-span-1 py-3.5 px-4 rounded-lg bg-[#E6F3FE] text-[#005BAB] font-medium hover:bg-[#D3E5EF] transition-colors"
             @click="$emit('write-review', searchPhone)"
           >
             Review
           </button>
           <button
-            class="col-span-1 py-4 px-4 rounded-2xl bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-bold hover:opacity-90 transition-opacity"
+            class="col-span-1 py-3.5 px-4 rounded-lg bg-[#0075DE] text-white font-medium hover:bg-[#005BAB] transition-colors"
             @click="$emit('view-reviews', searchPhone)"
           >
             Details
@@ -83,7 +83,7 @@
         <div class="space-y-3">
           <!-- Write First Review -->
           <button
-            class="w-full py-3.5 rounded-lg bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-bold hover:bg-stone-800 dark:hover:bg-stone-200 transition-colors shadow-sm flex items-center justify-center gap-2"
+            class="w-full py-3.5 rounded-lg bg-[#0075DE] text-white font-medium hover:bg-[#005BAB] transition-colors flex items-center justify-center gap-2"
             @click="$emit('write-review', searchPhone)"
           >
             <UIcon name="i-lucide-pencil" class="w-4 h-4" />
@@ -93,7 +93,7 @@
           <!-- Invite Agent via SMS -->
           <button
             @click="showInviteModal = true"
-            class="w-full py-3.5 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white font-bold border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors flex items-center justify-center gap-2"
+            class="w-full py-3.5 rounded-lg bg-white dark:bg-stone-800 text-[#050505] dark:text-white font-medium border border-[#E1E1E1] dark:border-stone-700 hover:bg-[#F7F7F5] dark:hover:bg-stone-700 transition-colors flex items-center justify-center gap-2"
           >
             <UIcon name="i-lucide-smartphone" class="w-4 h-4" />
             Invite Agent to Verify

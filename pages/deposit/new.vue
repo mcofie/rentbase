@@ -72,9 +72,9 @@
               @uploaded="handlePhotosUploaded"
             />
             
-            <div v-if="uploadedPhotos.length > 0" class="mt-8 pt-6 border-t border-stone-100 dark:border-stone-800">
+            <div v-if="uploadedPhotos.length > 0" class="mt-8 pt-6 border-t border-[#E1E1E1] dark:border-stone-800">
               <button 
-                class="w-full py-3.5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-bold rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-sm"
+                class="w-full py-3.5 bg-[#0075DE] text-white font-medium rounded-lg hover:bg-[#005BAB] transition-all flex items-center justify-center gap-2"
                 @click="goToPreview"
               >
                 Preview Report ({{ uploadedPhotos.length }} photos)

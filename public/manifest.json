@@ -1,0 +1,113 @@
+{
+    "name": "RentBase",
+    "short_name": "RentBase",
+    "description": "The all-in-one platform to verify agents, generate contracts, and secure deposits in Ghana.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#F7F7F5",
+    "theme_color": "#0075DE",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/icons/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        }
+    ],
+    "categories": [
+        "business",
+        "productivity",
+        "utilities"
+    ],
+    "lang": "en-GH",
+    "dir": "ltr",
+    "screenshots": [
+        {
+            "src": "/screenshots/home.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "label": "RentBase Homepage"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Create Contract",
+            "short_name": "Contract",
+            "description": "Generate a new tenancy agreement",
+            "url": "/contract/new",
+            "icons": [
+                {
+                    "src": "/icons/contract.png",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "Verify Agent",
+            "short_name": "Verify",
+            "description": "Check an agent's reputation",
+            "url": "/agent",
+            "icons": [
+                {
+                    "src": "/icons/verify.png",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "Deposit Report",
+            "short_name": "Deposit",
+            "description": "Create a property condition report",
+            "url": "/deposit/new",
+            "icons": [
+                {
+                    "src": "/icons/deposit.png",
+                    "sizes": "96x96"
+                }
+            ]
+        }
+    ]
+}
