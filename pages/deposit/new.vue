@@ -49,7 +49,7 @@
           </div>
           
           <!-- Step 1: Upload Photos -->
-          <div v-if="step === 1" class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 shadow-sm animate-fade-in">
+          <div v-if="step === 1" class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 animate-fade-in">
             <h2 class="text-xl font-bold text-stone-900 dark:text-white mb-2 font-serif">Document Property</h2>
             <p class="text-stone-500 dark:text-stone-400 text-sm mb-6 max-w-lg">
               Take clear photos of any existing damage, defects, or notable conditions before moving in.
@@ -97,11 +97,11 @@
 
               <!-- Action Sidebar -->
               <div class="space-y-6 order-1 lg:order-2">
-                <!-- Summary Card -->
-                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
+                  <!-- Summary Card -->
+                <div class="bg-white dark:bg-stone-900 rounded-xl p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
                   <div class="flex items-center gap-3 mb-4">
-                    <div class="w-8 h-8 rounded-md bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
-                      <UIcon name="i-lucide-shield-check" class="w-4 h-4 text-purple-700" />
+                    <div class="w-8 h-8 rounded-lg bg-[#E6F3FE] dark:bg-stone-800 flex items-center justify-center border border-stone-100 dark:border-stone-700">
+                      <UIcon name="i-lucide-shield-check" class="w-4 h-4 text-[#0075DE]" />
                     </div>
                     <div>
                       <h3 class="font-bold text-stone-900 dark:text-white">Report Summary</h3>
@@ -116,7 +116,7 @@
                     </div>
                     <div class="flex justify-between py-2 border-b border-stone-100 dark:border-stone-800">
                       <span class="text-sm text-stone-500">Storage</span>
-                      <span class="font-bold text-purple-600">2 Years</span>
+                      <span class="font-bold text-[#0075DE]">2 Years</span>
                     </div>
                     <div class="flex justify-between py-2">
                       <span class="text-sm text-stone-500">Report Fee</span>
@@ -126,60 +126,49 @@
                 </div>
 
                 <!-- Approval Card -->
-                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
+                <div class="bg-white dark:bg-stone-900 rounded-xl p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
                   <h3 class="font-bold text-stone-900 dark:text-white mb-4">Looks Good?</h3>
                   
                   <div class="space-y-3">
-                    <UButton
-                      block
-                      size="lg"
-                      class="rounded-lg font-medium"
-                      color="primary"
-                      icon="i-lucide-credit-card"
+                    <button
+                      class="w-full py-3 bg-[#050505] text-white font-medium rounded-lg hover:bg-stone-800 transition-all flex items-center justify-center gap-2"
                       @click="step = 3"
                     >
+                      <UIcon name="i-lucide-credit-card" class="w-4 h-4" />
                       Continue to Payment
-                    </UButton>
-                    <UButton
-                      variant="ghost"
-                      color="neutral"
-                      block
-                      size="lg"
-                      class="rounded-lg font-medium"
-                      icon="i-lucide-plus"
+                    </button>
+                    <button
+                      class="w-full py-3 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-white font-medium rounded-lg hover:bg-stone-50 dark:hover:bg-stone-700 transition-all flex items-center justify-center gap-2"
                       @click="step = 1"
                     >
+                      <UIcon name="i-lucide-plus" class="w-4 h-4" />
                       Add More Photos
-                    </UButton>
+                    </button>
                   </div>
                 </div>
 
                 <!-- Download Draft -->
-                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
+                <div class="bg-white dark:bg-stone-900 rounded-xl p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
                   <p class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Draft Options</p>
-                  <UButton
-                    variant="outline"
-                    color="neutral"
-                    block
-                    size="lg"
-                    class="rounded-lg font-medium"
-                    icon="i-lucide-download"
+                  <button
+                    class="w-full py-3 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-white font-medium rounded-lg hover:bg-stone-50 dark:hover:bg-stone-700 transition-all flex items-center justify-center gap-2"
                     @click="downloadDraftReport"
                   >
+                    <UIcon name="i-lucide-download" class="w-4 h-3" />
                     Download Draft PDF
-                  </UButton>
+                  </button>
                   <p class="text-xs text-stone-400 mt-3 text-center">
                     Draft contains watermark. Pay to get official report.
                   </p>
                 </div>
 
                 <!-- Info Card -->
-                <div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-stone-100 dark:border-stone-800">
+                <div class="p-4 rounded-lg bg-stone-50 dark:bg-stone-800 border border-stone-100 dark:border-stone-700">
                   <div class="flex items-start gap-3">
-                    <UIcon name="i-lucide-info" class="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <UIcon name="i-lucide-info" class="w-4 h-4 text-stone-600 dark:text-stone-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p class="text-xs font-bold text-blue-700 dark:text-blue-300 mb-1">Secure Storage</p>
-                      <p class="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
+                      <p class="text-xs font-bold text-stone-700 dark:text-stone-300 mb-1">Secure Storage</p>
+                      <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
                         Your photos are stored for 2 years. Retrieve anytime with your email or report ID.
                       </p>
                     </div>
@@ -192,10 +181,10 @@
           <!-- Step 3: Email & Payment -->
           <div v-else-if="step === 3" class="animate-fade-in space-y-6 max-w-xl mx-auto">
             <!-- Payment Card -->
-            <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 shadow-sm">
+            <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 shadow-sm">
               <div class="flex items-center justify-center mb-6">
-                <div class="w-10 h-10 bg-purple-50 dark:bg-purple-900/20 rounded-md flex items-center justify-center">
-                  <UIcon name="i-lucide-credit-card" class="w-5 h-5 text-purple-700" />
+                <div class="w-10 h-10 bg-[#E6F3FE] dark:bg-stone-800 rounded-lg flex items-center justify-center border border-stone-100 dark:border-stone-700">
+                  <UIcon name="i-lucide-credit-card" class="w-5 h-5 text-[#0075DE]" />
                 </div>
               </div>
               
@@ -227,7 +216,12 @@
               </div>
 
               <div class="flex gap-3">
-                <UButton variant="ghost" color="neutral" size="lg" class="rounded-lg" @click="step = 2">Back</UButton>
+                <button
+                  class="px-6 py-3 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-medium rounded-lg hover:bg-stone-200 transition-colors"
+                  @click="step = 2"
+                >
+                  Back
+                </button>
                 <PaystackButton
                   v-if="customerEmail && reportId"
                   feature-type="deposit_report"
@@ -251,8 +245,8 @@
           
           <!-- Step 4: Success -->
           <div v-else-if="step === 4" class="text-center py-16 animate-fade-in">
-            <div class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-emerald-600" />
+            <div class="w-16 h-16 bg-stone-50 dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-6">
+              <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-[#050505] dark:text-white" />
             </div>
             
             <h2 class="text-3xl font-bold text-stone-900 dark:text-white mb-4 font-serif">Report Ready!</h2>
@@ -263,7 +257,7 @@
             <!-- Retrieval Info -->
             <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 max-w-md mx-auto mb-10 shadow-sm">
               <div class="flex items-center gap-3 mb-4">
-                <UIcon name="i-lucide-key" class="w-4 h-4 text-emerald-500" />
+                <UIcon name="i-lucide-key" class="w-4 h-4 text-stone-400" />
                 <span class="font-bold text-stone-900 dark:text-white text-sm">Your Report ID</span>
               </div>
               <div class="bg-stone-50 dark:bg-stone-800 rounded-md p-3 font-mono text-xs text-stone-700 dark:text-stone-300 break-all border border-stone-200 dark:border-stone-700">
@@ -276,7 +270,7 @@
             
             <div class="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
               <button 
-                class="px-6 py-3 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors flex items-center justify-center gap-2 font-medium"
+                class="px-6 py-3 bg-[#050505] text-white rounded-lg hover:bg-stone-800 transition-colors flex items-center justify-center gap-2 font-medium"
                 @click="downloadReport"
               >
                 <UIcon name="i-lucide-download" class="w-4 h-4" />
@@ -284,14 +278,14 @@
               </button>
               <button 
                 @click="shareViaWhatsApp"
-                class="px-6 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2 font-medium"
+                class="px-6 py-3 bg-[#25D366] text-white rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2 font-medium"
               >
                 <UIcon name="i-lucide-message-circle" class="w-4 h-4" />
                 WhatsApp
               </button>
               <NuxtLink 
                 to="/"
-                class="px-6 py-3 text-stone-500 hover:text-stone-900 rounded-lg transition-colors font-medium"
+                class="px-6 py-3 text-stone-500 hover:text-stone-900 rounded-lg transition-colors font-medium border border-transparent hover:border-stone-200"
               >
                 Go Home
               </NuxtLink>
