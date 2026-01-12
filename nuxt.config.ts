@@ -35,6 +35,9 @@ export default defineNuxtConfig({
         // Server-side only
         supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder',
         paystackSecretKey: process.env.PAYSTACK_SECRET_KEY || 'placeholder',
+        hubtelClientId: process.env.HUBTEL_CLIENT_ID || '',
+        hubtelClientSecret: process.env.HUBTEL_CLIENT_SECRET || '',
+        hubtelSenderId: process.env.HUBTEL_SENDER_ID || 'RentBase',
 
         // Public (client-side)
         public: {

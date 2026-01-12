@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     // Hubtel credentials from environment
     const clientId = config.hubtelClientId
     const clientSecret = config.hubtelClientSecret
-    const senderId = 'RentBase' // Your registered sender ID
+    const senderId = config.hubtelSenderId || 'RentBase'
 
     if (!clientId || !clientSecret) {
         console.warn('Hubtel credentials not configured, SMS will be logged only')
