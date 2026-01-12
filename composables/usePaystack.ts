@@ -34,16 +34,12 @@ export function usePaystack() {
         amount: number,
         featureType: FeatureType
     ): Promise<boolean> {
-        if (!user.value) {
-            error.value = 'You must be logged in to make a payment'
-            return false
-        }
-
+        // Allow anonymous payments -> user_id can be null or user.value.id
         try {
-            const { error: dbError } = await supabase
-                .from('transactions')
+            const { error: dbError } = await (supabase
+                .from('transactions') as any)
                 .insert({
-                    user_id: user.value.id,
+                    user_id: user.value?.id || null,
                     reference,
                     amount,
                     status: 'pending',
@@ -51,6 +47,7 @@ export function usePaystack() {
                 })
 
             if (dbError) {
+                console.error('Transaction creation error:', dbError)
                 error.value = dbError.message
                 return false
             }
@@ -70,8 +67,8 @@ export function usePaystack() {
         status: 'success' | 'failed'
     ): Promise<boolean> {
         try {
-            const { error: dbError } = await supabase
-                .from('transactions')
+            const { error: dbError } = await (supabase
+                .from('transactions') as any)
                 .update({ status })
                 .eq('reference', reference)
 

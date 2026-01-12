@@ -11,7 +11,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "seed:admin": "node scripts/seed_admin.js"
   },
   "dependencies": {
     "@nuxt/fonts": "^0.11.1",
@@ -24,6 +25,8 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@supabase/supabase-js": "^2.90.1",
+    "dotenv": "^17.2.3",
     "typescript": "^5.8.2",
     "vue-tsc": "^2.2.8"
   }
