@@ -1,28 +1,17 @@
 <template>
-  <div class="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300">
-    <div class="relative z-10 flex flex-col min-h-screen">
-      <!-- Header -->
-      <nav class="max-w-5xl mx-auto w-full px-6 py-8 flex items-center justify-between">
-        <NuxtLink to="/" class="flex items-center gap-2 group">
-          <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
-            <span class="text-white text-xl">⚡</span>
-          </div>
-          <span class="text-2xl font-black text-stone-900 dark:text-white tracking-tighter">RentBase</span>
-        </NuxtLink>
-        <div class="flex items-center gap-4">
-          <ColorSchemeButton />
-          <UButton 
-            variant="ghost"
-            color="neutral"
-            icon="i-lucide-arrow-left" 
-            size="sm"
-            class="rounded-full"
-            @click="handleBack"
-          >
-            Back
-          </UButton>
-        </div>
-      </nav>
+    <!-- Back Button Row -->
+    <div class="max-w-5xl mx-auto w-full px-6 pt-12 pb-4 flex items-center justify-between animate-fade-in">
+        <UButton 
+          variant="ghost"
+          color="neutral"
+          icon="i-lucide-arrow-left" 
+          size="sm"
+          class="rounded-full hover:bg-stone-100 dark:hover:bg-white/10"
+          @click="handleBack"
+        >
+          Back
+        </UButton>
+      </div>
       
       <!-- Auto-save indicator -->
       <div v-if="autoSaveStatus" class="fixed bottom-6 right-6 z-50">
@@ -37,8 +26,11 @@
         <div :class="['mx-auto', step === 2 ? 'max-w-6xl' : 'max-w-3xl']">
           <!-- Page Header -->
           <div class="text-center mb-10 animate-fade-in">
-            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-4">Pocket Lawyer</p>
-            <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white mb-3 tracking-tighter">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-md text-[10px] font-bold uppercase tracking-widest mb-4">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              Pocket Lawyer
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white mb-3 tracking-tight font-serif">
               {{ stepTitles[step - 1] }}
             </h1>
             <p class="text-stone-500 dark:text-stone-400 font-medium">
@@ -46,27 +38,23 @@
             </p>
           </div>
           
-          <!-- Progress Steps -->
-          <div class="flex items-center justify-center gap-2 sm:gap-4 mb-12">
-            <div class="flex items-center gap-2">
-              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 1 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">1</div>
-              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 1 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Details</span>
-            </div>
-            <div class="w-6 sm:w-8 h-px bg-stone-200 dark:bg-stone-800"></div>
-            <div class="flex items-center gap-2">
-              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 2 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">2</div>
-              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 2 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Preview</span>
-            </div>
-            <div class="w-6 sm:w-8 h-px bg-stone-200 dark:bg-stone-800"></div>
-            <div class="flex items-center gap-2">
-              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 3 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">3</div>
-              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 3 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Pay</span>
-            </div>
-            <div class="w-6 sm:w-8 h-px bg-stone-200 dark:bg-stone-800"></div>
-            <div class="flex items-center gap-2">
-              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-all', step >= 4 ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-400']">4</div>
-              <span :class="['text-xs font-bold uppercase tracking-widest hidden sm:inline', step >= 4 ? 'text-stone-900 dark:text-white' : 'text-stone-400']">Done</span>
-            </div>
+      <!-- Progress Steps (Notion Style: Minimal) -->
+          <div class="flex items-center justify-center gap-4 mb-12 text-xs font-medium text-stone-400">
+             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 1 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
+               <span>1. Details</span>
+             </div>
+             <span class="text-stone-300">/</span>
+             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 2 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
+               <span>2. Preview</span>
+             </div>
+             <span class="text-stone-300">/</span>
+             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 3 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
+               <span>3. Pay</span>
+             </div>
+             <span class="text-stone-300">/</span>
+             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 4 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400' : '']">
+               <span>4. Done</span>
+             </div>
           </div>
 
           <!-- Step 1: Contract Form -->
@@ -82,9 +70,9 @@
             <div v-if="hasSavedDraft" class="mt-4 text-center">
               <button 
                 @click="clearSavedDraft"
-                class="text-xs text-stone-400 hover:text-rose-500 transition-colors underline"
+                class="text-xs text-stone-400 hover:text-stone-900 transition-colors underline decoration-stone-200"
               >
-                Clear saved draft and start over
+                Clear saved draft
               </button>
             </div>
           </div>
@@ -103,13 +91,13 @@
                 <ContractSummaryCard :details="formData!" />
                 
                 <!-- Approval Card -->
-                <div class="bg-white dark:bg-stone-900 rounded-[24px] p-6 border border-stone-200 dark:border-stone-800 shadow-xl">
+                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
                   <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center">
-                      <UIcon name="i-lucide-check-circle" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                    <div class="w-8 h-8 bg-notion-green rounded-md flex items-center justify-center">
+                      <UIcon name="i-lucide-check-circle" class="w-4 h-4 text-emerald-700" />
                     </div>
                     <div>
-                      <h3 class="font-black text-stone-900 dark:text-white">Looks Good?</h3>
+                      <h3 class="font-bold text-stone-900 dark:text-white">Looks Good?</h3>
                       <p class="text-xs text-stone-500">Proceed to payment</p>
                     </div>
                   </div>
@@ -117,8 +105,8 @@
                   <div class="space-y-3">
                     <UButton
                       block
-                      size="xl"
-                      class="rounded-2xl font-black py-4"
+                      size="lg"
+                      class="rounded-lg font-medium btn-primary"
                       icon="i-lucide-credit-card"
                       :loading="loading"
                       @click="approvePreview"
@@ -130,7 +118,7 @@
                       color="neutral"
                       block
                       size="lg"
-                      class="rounded-xl font-bold"
+                      class="rounded-lg font-medium"
                       icon="i-lucide-pencil"
                       @click="step = 1"
                     >
@@ -140,8 +128,8 @@
                 </div>
 
                 <!-- Share & Download Card -->
-                <div class="bg-white dark:bg-stone-900 rounded-[24px] p-6 border border-stone-200 dark:border-stone-800">
-                  <p class="text-xs font-black text-stone-400 uppercase tracking-widest mb-4">Share Draft</p>
+                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
+                  <p class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Share Draft</p>
                   
                   <div class="space-y-3">
                     <UButton
@@ -149,7 +137,7 @@
                       color="neutral"
                       block
                       size="lg"
-                      class="rounded-xl font-bold"
+                      class="rounded-lg font-medium"
                       icon="i-lucide-download"
                       @click="downloadDraftPDF"
                     >
@@ -160,7 +148,7 @@
                       variant="outline"
                       block
                       size="lg"
-                      class="rounded-xl font-bold !border-emerald-200 !text-emerald-700 dark:!border-emerald-800 dark:!text-emerald-400 hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20"
+                      class="rounded-lg font-medium border-stone-200 text-stone-700 hover:bg-stone-50"
                       icon="i-lucide-message-circle"
                       @click="shareViaWhatsApp"
                     >
@@ -172,7 +160,7 @@
                       color="neutral"
                       block
                       size="lg"
-                      class="rounded-xl font-bold"
+                      class="rounded-lg font-medium"
                       icon="i-lucide-copy"
                       @click="copyShareLink"
                     >
@@ -186,12 +174,12 @@
                 </div>
 
                 <!-- Info Card -->
-                <div class="p-5 rounded-2xl bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30">
+                <div class="p-4 rounded-lg bg-notion-yellow border border-stone-100">
                   <div class="flex items-start gap-3">
-                    <UIcon name="i-lucide-info" class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                    <UIcon name="i-lucide-info" class="w-4 h-4 text-stone-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p class="text-xs font-bold text-amber-700 dark:text-amber-300 mb-1">Draft Watermark</p>
-                      <p class="text-xs text-amber-600 dark:text-amber-400 leading-relaxed">
+                      <p class="text-xs font-bold text-stone-700 mb-1">Draft Watermark</p>
+                      <p class="text-xs text-stone-600 leading-relaxed">
                         The watermark will be removed after payment. Share this draft for review before finalizing.
                       </p>
                     </div>
@@ -205,39 +193,39 @@
           <div v-else-if="step === 3" class="animate-fade-in">
             <div class="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <!-- Payment Form -->
-              <div class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800">
+              <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 shadow-sm">
                 <div class="flex items-center justify-center gap-3 mb-6">
-                  <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center">
-                    <UIcon name="i-lucide-credit-card" class="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                  <div class="w-10 h-10 bg-notion-green rounded-md flex items-center justify-center">
+                    <UIcon name="i-lucide-credit-card" class="w-5 h-5 text-emerald-700" />
                   </div>
                 </div>
-                <h2 class="text-2xl font-black text-stone-900 dark:text-white mb-2 tracking-tighter text-center">Complete Payment</h2>
+                <h2 class="text-2xl font-bold text-stone-900 dark:text-white mb-2 text-center font-serif">Complete Payment</h2>
                 <p class="text-stone-500 text-center mb-8 text-sm">Secure payment via Paystack</p>
                 
                 <!-- Order Summary -->
-                <div class="bg-stone-50 dark:bg-stone-950/50 rounded-2xl p-5 mb-6">
+                <div class="bg-stone-50 dark:bg-stone-950/50 rounded-lg p-5 mb-6 border border-stone-100">
                   <div class="flex justify-between items-center">
                     <div>
                       <p class="font-bold text-stone-900 dark:text-white">Tenancy Agreement</p>
                       <p class="text-xs text-stone-500">{{ formData?.landlord_name }} ↔ {{ formData?.tenant_name }}</p>
                     </div>
-                    <p class="text-2xl font-black text-emerald-500">GH₵ 40</p>
+                    <p class="text-xl font-bold text-stone-900">GH₵ 40</p>
                   </div>
                 </div>
 
                 <!-- Email Input -->
                 <div class="mb-6">
-                  <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-3 block">Your Email (for receipt)</label>
+                  <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 block">Your Email</label>
                   <input 
                     v-model="customerEmail"
                     type="email"
                     placeholder="you@example.com"
-                    class="w-full px-5 py-4 bg-stone-50 dark:bg-stone-950/50 border border-stone-100 dark:border-stone-800 rounded-xl text-base font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-stone-300"
+                    class="w-full px-4 py-3 bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-lg text-sm text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-400 focus:border-stone-400 transition-all placeholder-stone-300"
                   />
                 </div>
 
                 <div class="flex gap-3">
-                  <UButton variant="outline" size="lg" class="rounded-xl" @click="step = 2">Back</UButton>
+                  <UButton variant="ghost" color="neutral" size="lg" class="rounded-lg" @click="step = 2">Back</UButton>
                   <PaystackButton
                     v-if="customerEmail && contractId"
                     feature-type="contract"
@@ -251,9 +239,9 @@
                   <button 
                     v-else
                     disabled
-                    class="flex-1 py-4 bg-stone-100 dark:bg-stone-800 text-stone-400 font-black rounded-xl cursor-not-allowed text-sm"
+                    class="flex-1 py-3 bg-stone-100 dark:bg-stone-800 text-stone-400 font-medium rounded-lg cursor-not-allowed text-sm"
                   >
-                    Enter Email to Continue
+                    Enter Email
                   </button>
                 </div>
               </div>
@@ -262,13 +250,13 @@
               <div class="hidden lg:block">
                 <ContractSummaryCard :details="formData!" />
                 
-                <div class="mt-6 p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30">
+                <div class="mt-6 p-4 rounded-lg bg-notion-green border border-emerald-100/50">
                   <div class="flex items-start gap-3">
-                    <UIcon name="i-lucide-shield-check" class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <UIcon name="i-lucide-shield-check" class="w-4 h-4 text-emerald-700 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p class="text-xs font-bold text-emerald-700 dark:text-emerald-300 mb-1">Secure Payment</p>
-                      <p class="text-xs text-emerald-600 dark:text-emerald-400 leading-relaxed">
-                        Your payment is processed securely by Paystack. We never store your card details.
+                      <p class="text-xs font-bold text-emerald-800 mb-1">Secure Payment</p>
+                      <p class="text-xs text-emerald-700 leading-relaxed">
+                        Your payment is processed securely by Paystack.
                       </p>
                     </div>
                   </div>
@@ -279,33 +267,33 @@
 
           <!-- Step 4: Success -->
           <div v-else-if="step === 4" class="text-center py-16 animate-fade-in">
-            <div class="w-24 h-24 bg-emerald-50 dark:bg-emerald-950/30 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce-in">
-              <UIcon name="i-lucide-check-circle-2" class="w-14 h-14 text-emerald-500" />
+            <div class="w-16 h-16 bg-notion-green rounded-full flex items-center justify-center mx-auto mb-6">
+              <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-emerald-600" />
             </div>
             
-            <h2 class="text-3xl font-black text-stone-900 dark:text-white mb-4 tracking-tighter uppercase">Agreement Ready!</h2>
-            <p class="text-stone-500 dark:text-stone-400 mb-10 max-w-sm mx-auto font-medium">
-              Your tenancy agreement has been generated. Download it now or share with the other party.
+            <h2 class="text-3xl font-bold text-stone-900 dark:text-white mb-4 font-serif">Agreement Ready!</h2>
+            <p class="text-stone-500 dark:text-stone-400 mb-10 max-w-sm mx-auto">
+              Your tenancy agreement has been generated.
             </p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <NuxtLink 
                 :to="`/contract/preview/${contractId}`"
-                class="px-8 py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-black rounded-2xl hover:scale-105 transition-transform shadow-xl inline-flex items-center justify-center gap-2"
+                class="px-6 py-3 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors inline-flex items-center justify-center gap-2 font-medium"
               >
-                <UIcon name="i-lucide-download" class="w-5 h-5" />
+                <UIcon name="i-lucide-download" class="w-4 h-4" />
                 View & Download
               </NuxtLink>
               <button 
                 @click="shareViaWhatsApp"
-                class="px-8 py-4 bg-emerald-500 text-white font-black rounded-2xl hover:scale-105 transition-transform shadow-xl inline-flex items-center justify-center gap-2"
+                class="px-6 py-3 bg-white border border-stone-200 text-stone-900 rounded-lg hover:bg-stone-50 transition-colors inline-flex items-center justify-center gap-2 font-medium"
               >
-                <UIcon name="i-lucide-message-circle" class="w-5 h-5" />
-                Share via WhatsApp
+                <UIcon name="i-lucide-message-circle" class="w-4 h-4" />
+                WhatsApp
               </button>
               <NuxtLink 
                 to="/"
-                class="px-8 py-4 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-bold rounded-2xl hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
+                class="px-6 py-3 text-stone-500 hover:text-stone-900 rounded-lg transition-colors font-medium"
               >
                 Go Home
               </NuxtLink>
@@ -323,8 +311,6 @@
           />
         </div>
       </main>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">

@@ -2,128 +2,135 @@
 @import "@nuxt/ui";
 
 @theme {
-  /* Lens.xyz Inspired Palette - Clean, Technical, Vibrant */
-  --color-stone-50: #fdfdfd;
-  /* Lens Off-White */
-  --color-stone-100: #f4f4f5;
-  --color-stone-200: #e4e4e7;
-  --color-stone-300: #d4d4d8;
-  --color-stone-400: #a1a1aa;
-  --color-stone-500: #71717a;
-  --color-stone-600: #52525b;
-  --color-stone-700: #3f3f46;
-  --color-stone-800: #27272a;
-  --color-stone-900: #1a1a1a;
-  /* Lens Black */
-  --color-stone-950: #0a0a0a;
+  /* Notion-Inspired Palette */
 
-  /* Lens Mint (Replaced Emerald) */
-  --color-mint-50: #effef7;
-  --color-mint-100: #dafeec;
-  --color-mint-200: #b8fcdb;
-  --color-mint-300: #81f4c3;
-  --color-mint-400: #43e5a0;
-  --color-mint-500: #00d2a0;
-  /* Primary Lens Accent (approx) */
-  --color-mint-600: #00a881;
-  --color-mint-700: #008669;
-  --color-mint-800: #026b56;
-  --color-mint-900: #025848;
-  --color-mint-950: #00332c;
+  /* Usage: bg-[#F7F7F5] for 'default' backgrounds */
+  --color-notion-bg: #FFFFFF;
+  --color-notion-sidebar: #F7F7F5;
 
-  /* Map to Functional Colors */
-  --color-primary-50: var(--color-mint-50);
-  --color-primary-100: var(--color-mint-100);
-  --color-primary-200: var(--color-mint-200);
-  --color-primary-300: var(--color-mint-300);
-  --color-primary-400: var(--color-mint-400);
-  --color-primary-500: var(--color-mint-500);
-  --color-primary-600: var(--color-mint-600);
-  --color-primary-700: var(--color-mint-700);
-  --color-primary-800: var(--color-mint-800);
-  --color-primary-900: var(--color-mint-900);
-  --color-primary-950: var(--color-mint-950);
+  /* Pastels */
+  --color-notion-red: #FFE2DD;
+  --color-notion-orange: #FADEC9;
+  --color-notion-yellow: #FDECC8;
+  --color-notion-green: #DBEDDB;
+  --color-notion-blue: #D3E5EF;
+  --color-notion-purple: #E8DEEE;
+  --color-notion-pink: #F5E0E9;
+  --color-notion-gray: #F1F1EF;
 
-  /* Gray Scale */
-  --color-gray-50: var(--color-stone-50);
-  --color-gray-100: var(--color-stone-100);
-  --color-gray-200: var(--color-stone-200);
-  --color-gray-300: var(--color-stone-300);
-  --color-gray-400: var(--color-stone-400);
-  --color-gray-500: var(--color-stone-500);
-  --color-gray-600: var(--color-stone-600);
-  --color-gray-700: var(--color-stone-700);
-  --color-gray-800: var(--color-stone-800);
-  --color-gray-900: var(--color-stone-900);
-  --color-gray-950: var(--color-stone-950);
+  /* Typography */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: 'Lyon-Text', Georgia, Cambria, "Times New Roman", Times, serif;
 
-  /* Modern Designer Fonts */
-  --font-sans: 'Outfit', 'Inter', sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  /* Keep 'Brand' as a functional blue for links/highlights, but tailored */
+  --color-brand-50: #F5FBFF;
+  --color-brand-100: #E2ECF3;
+  --color-brand-200: #D3E5EF;
+  /* Notion Blue Background */
+  --color-brand-300: #B7DDF9;
+  --color-brand-400: #5EB1EF;
+  --color-brand-500: #2383E2;
+  /* Notion Marketing Blue */
+  --color-brand-600: #0B6ECA;
+  --color-brand-700: #0055A4;
+  --color-brand-800: #004284;
+  --color-brand-900: #003060;
+  --color-brand-950: #002040;
+
+  /* Map functional colors to Stone (Black/Gray) for that stark look */
+  --color-primary-50: var(--color-stone-50);
+  --color-primary-100: var(--color-stone-100);
+  --color-primary-200: var(--color-stone-200);
+  --color-primary-300: var(--color-stone-300);
+  --color-primary-400: var(--color-stone-400);
+  --color-primary-500: var(--color-stone-500);
+  --color-primary-600: var(--color-stone-600);
+  --color-primary-700: var(--color-stone-700);
+  --color-primary-800: var(--color-stone-800);
+  --color-primary-900: var(--color-stone-900);
+  --color-primary-950: var(--color-stone-950);
 }
 
-/* Custom Utilities */
-@utility text-gradient {
-  @apply bg-clip-text text-transparent bg-linear-to-r from-mint-600 to-mint-400;
+@utility font-serif {
+  font-family: var(--font-serif);
 }
 
-@utility bg-grid-pattern {
-  background-size: 64px 64px;
-  background-image:
-    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+@utility bg-notion-gray {
+  background-color: #F7F7F5;
 }
 
-@utility bg-grid-pattern-dark {
-  background-size: 64px 64px;
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+/* Notion-style Cards */
+@utility card-notion {
+  @apply bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg shadow-sm hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200;
 }
 
-@utility btn-pill {
-  @apply rounded-full px-8 py-4 font-semibold transition-all duration-300 active:scale-95;
+/* Notion-style Buttons */
+@utility btn-primary {
+  @apply bg-stone-900 text-white hover:bg-stone-700 active:bg-stone-800 rounded-lg px-4 py-2 font-medium transition-colors;
 }
 
-@utility card-lens {
-  @apply rounded-[32px] bg-white/50 dark:bg-stone-900/50 backdrop-blur-md border border-stone-200/50 dark:border-stone-800/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-mint-500/5 hover:-translate-y-1;
+:root {
+  --background-color: #ffffff;
+  --text-color: #37352f;
 }
 
-/* Base Styles */
-html {
-  scroll-behavior: smooth;
+.dark {
+  --background-color: #191919;
+  --text-color: #ffffff;
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+  background-color: var(--background-color);
+  color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  @apply font-sans bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 tracking-tight antialiased;
-  @apply bg-grid-pattern dark:bg-grid-pattern-dark;
-}
-
-/* Selection Color */
+/* Selection: Notion Blue */
 ::selection {
-  @apply bg-mint-200 text-mint-900;
+  background-color: #D3E5EF;
+  color: #000;
 }
 
-/* Page Transitions */
-.page-enter-active,
-.page-leave-active {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.dark ::selection {
+  background-color: #2383E2;
+  color: #fff;
 }
 
-.page-enter-from,
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(12px) scale(0.99);
-  filter: blur(4px);
+/* Custom Scrollbar for that Notion Feel */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D3D1CB;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #AEACA6;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #474747;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
 }
 
 /* Animations */
-@keyframes fade-in-up {
+@keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(10px);
   }
 
   to {
@@ -133,17 +140,5 @@ body {
 }
 
 @utility animate-fade-in {
-  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@utility delay-100 {
-  animation-delay: 100ms;
-}
-
-@utility delay-200 {
-  animation-delay: 200ms;
-}
-
-@utility delay-300 {
-  animation-delay: 300ms;
+  animation: fade-in 0.5s ease-out forwards;
 }

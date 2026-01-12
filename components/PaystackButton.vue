@@ -2,12 +2,13 @@
   <UButton
     :loading="loading"
     :disabled="disabled"
-    size="lg"
-    class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+    size="xl"
+    block
+    class="rounded-2xl font-black bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl shadow-emerald-500/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
     @click="handlePayment"
   >
     <template #leading>
-      <span class="text-lg">💳</span>
+      <UIcon name="i-lucide-credit-card" class="w-5 h-5" />
     </template>
     <slot>
       Pay GH₵ {{ amount }}
@@ -36,6 +37,20 @@ const amount = computed(() => {
   return props.featureType === 'contract' 
     ? PRICING.CONTRACT.amount 
     : PRICING.DEPOSIT_REPORT.amount
+})
+
+const toast = useToast()
+
+watch(error, (newError) => {
+  if (newError) {
+    console.error('PaystackButton Error:', newError)
+    toast.add({
+      title: 'Payment Failed',
+      description: newError,
+      color: 'error',
+      icon: 'i-lucide-alert-circle'
+    })
+  }
 })
 
 async function handlePayment() {

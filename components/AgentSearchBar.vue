@@ -1,16 +1,16 @@
 <template>
   <div class="w-full max-w-[480px] mx-auto">
     <!-- Minimalist Input Box -->
-    <div class="bg-white dark:bg-stone-900 rounded-[32px] p-2 border border-stone-200 dark:border-stone-800 shadow-sm">
+    <div class="bg-white dark:bg-stone-900 rounded-xl p-2 border border-stone-200 dark:border-stone-800 shadow-sm">
       <form @submit.prevent="handleSearch" class="relative">
         <!-- Phone Input -->
-        <div class="bg-stone-50 dark:bg-stone-950/50 rounded-[28px] p-6 focus-within:bg-white dark:focus-within:bg-stone-950 transition-all">
-          <label class="block text-[10px] font-black text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em] mb-3 ml-1 text-center">Enter Line Number</label>
+        <div class="bg-white dark:bg-stone-900 rounded-lg p-4 border border-stone-200 dark:border-stone-800 focus-within:border-stone-900 focus-within:ring-1 focus-within:ring-stone-900 transition-all">
+          <label class="block text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-2 text-center">Enter Line Number</label>
           <input
             v-model="searchPhone"
             placeholder="0XX XXX XXXX"
             type="tel"
-            class="block w-full bg-transparent border-none p-0 text-3xl sm:text-4xl font-black text-stone-900 dark:text-white placeholder-stone-200 dark:placeholder-stone-800 focus:ring-0 text-center tracking-tight"
+            class="block w-full bg-transparent border-none p-0 text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white placeholder-stone-200 dark:placeholder-stone-800 focus:ring-0 text-center tracking-tight"
           />
         </div>
 
@@ -19,8 +19,8 @@
           <button
             type="submit"
             :disabled="!searchPhone || loading"
-            class="w-full py-5 rounded-[28px] text-lg font-black transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            :class="!searchPhone ? 'bg-stone-100 text-stone-400 dark:bg-stone-800 dark:text-stone-700' : 'bg-stone-900 text-white dark:bg-white dark:text-stone-900 hover:scale-[1.01] active:scale-[0.99]'"
+            class="w-full py-3 rounded-lg text-lg font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            :class="!searchPhone ? 'bg-stone-100 text-stone-400 dark:bg-stone-800 dark:text-stone-700' : 'bg-stone-900 text-white hover:bg-stone-700 active:scale-[0.98]'"
           >
             <span v-if="loading" class="flex items-center justify-center gap-2">
               <UIcon name="i-lucide-loader-2" class="animate-spin" />
@@ -67,14 +67,14 @@
       <!-- No Results - New Unknown Agent Card -->
       <div 
         v-else
-        class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800"
+        class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 shadow-sm"
       >
-        <div class="text-center mb-6">
-          <div class="w-16 h-16 bg-amber-50 dark:bg-amber-900/20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner">
-            <span class="text-3xl">🕵️</span>
+        <div class="text-center mb-8">
+          <div class="w-12 h-12 bg-stone-100 dark:bg-stone-800 rounded-lg flex items-center justify-center mx-auto mb-4 border border-stone-200 dark:border-stone-700">
+             <UIcon name="i-lucide-search-x" class="w-6 h-6 text-stone-400" />
           </div>
-          <h4 class="text-xl font-black text-stone-900 dark:text-white mb-2 tracking-tighter uppercase">Unknown Agent</h4>
-          <p class="text-stone-500 dark:text-stone-400 text-sm font-medium leading-relaxed">
+          <h4 class="text-xl font-bold text-stone-900 dark:text-white mb-2 font-serif">Unknown Agent</h4>
+          <p class="text-stone-500 dark:text-stone-400 text-sm font-medium leading-relaxed max-w-xs mx-auto">
             We have no reports for <strong>{{ formatPhoneDisplay(searchPhone) }}</strong> yet.
           </p>
         </div>
@@ -83,36 +83,36 @@
         <div class="space-y-3">
           <!-- Write First Review -->
           <button
-            class="w-full py-4 rounded-2xl bg-emerald-500 text-white font-black hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
+            class="w-full py-3.5 rounded-lg bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-bold hover:bg-stone-800 dark:hover:bg-stone-200 transition-colors shadow-sm flex items-center justify-center gap-2"
             @click="$emit('write-review', searchPhone)"
           >
-            <UIcon name="i-lucide-pencil" class="w-5 h-5" />
+            <UIcon name="i-lucide-pencil" class="w-4 h-4" />
             Write First Review
           </button>
 
           <!-- Invite Agent via SMS -->
           <button
             @click="showInviteModal = true"
-            class="w-full py-4 rounded-2xl bg-blue-500 text-white font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
+            class="w-full py-3.5 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white font-bold border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors flex items-center justify-center gap-2"
           >
-            <UIcon name="i-lucide-smartphone" class="w-5 h-5" />
+            <UIcon name="i-lucide-smartphone" class="w-4 h-4" />
             Invite Agent to Verify
           </button>
 
           <!-- Reset -->
           <button
             @click="resetSearch"
-            class="w-full py-3 text-stone-400 font-medium hover:text-stone-600 transition-colors"
+            class="w-full py-3 text-stone-400 text-sm font-medium hover:text-stone-600 transition-colors"
           >
             Search Different Number
           </button>
         </div>
 
         <!-- Info -->
-        <div class="mt-6 p-4 bg-stone-50 dark:bg-stone-800/50 rounded-xl">
+        <div class="mt-6 p-4 bg-stone-50 dark:bg-stone-800/50 rounded-lg border border-stone-100 dark:border-stone-800">
           <div class="flex items-start gap-3">
             <UIcon name="i-lucide-info" class="w-4 h-4 text-stone-400 flex-shrink-0 mt-0.5" />
-            <p class="text-xs text-stone-500 leading-relaxed">
+            <p class="text-xs text-stone-500 leading-relaxed font-medium">
               Inviting an agent sends them an SMS to register on RentBase. 
               This helps build trust and transparency in the rental market.
             </p>
@@ -123,65 +123,65 @@
 
     <!-- Invite Agent Modal -->
     <Teleport to="body">
-      <div v-if="showInviteModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999] p-6">
-        <div class="bg-white dark:bg-stone-900 rounded-[28px] p-6 max-w-md w-full animate-bounce-in shadow-2xl border border-stone-200 dark:border-stone-800">
+      <div v-if="showInviteModal" class="fixed inset-0 bg-stone-900/20 backdrop-blur-sm flex items-center justify-center z-[999] p-6">
+        <div class="bg-white dark:bg-stone-900 rounded-lg p-6 max-w-md w-full animate-bounce-in shadow-xl border border-stone-200 dark:border-stone-800">
           <!-- Header -->
           <div class="flex items-center gap-3 mb-6">
-            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
-              <UIcon name="i-lucide-send" class="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <div class="w-10 h-10 bg-stone-100 dark:bg-stone-800 rounded-lg flex items-center justify-center border border-stone-200 dark:border-stone-700">
+              <UIcon name="i-lucide-send" class="w-5 h-5 text-stone-900 dark:text-white" />
             </div>
             <div>
-              <h3 class="font-black text-stone-900 dark:text-white">Invite Agent</h3>
-              <p class="text-xs text-stone-500">Send an SMS invitation to register</p>
+              <h3 class="font-bold text-lg text-stone-900 dark:text-white font-serif tracking-tight">Invite Agent</h3>
+              <p class="text-xs text-stone-500 font-medium">Send an SMS invitation to register</p>
             </div>
           </div>
 
           <!-- Agent Number Display -->
-          <div class="mb-6 p-4 bg-stone-50 dark:bg-stone-800 rounded-xl">
-            <p class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2">Agent's Number</p>
-            <p class="text-2xl font-black text-stone-900 dark:text-white">{{ formatPhoneDisplay(searchPhone) }}</p>
+          <div class="mb-6 p-4 bg-stone-50 dark:bg-stone-800 rounded-lg border border-stone-100 dark:border-stone-700">
+            <p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1.5">Agent's Number</p>
+            <p class="text-xl font-bold text-stone-900 dark:text-white font-mono tracking-tight">{{ formatPhoneDisplay(searchPhone) }}</p>
           </div>
 
           <!-- Your Name (Optional) -->
           <div class="mb-6">
-            <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 block">Your Name (Optional)</label>
+            <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 block">Your Name (Optional)</label>
             <input
               v-model="inviterName"
               type="text"
               placeholder="e.g., Kofi"
-              class="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-100 dark:border-stone-700 rounded-xl text-base font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder-stone-300"
+              class="w-full px-3 py-2.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-lg text-sm font-medium text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-900 dark:focus:ring-white focus:border-stone-900 transition-all placeholder-stone-300"
             />
-            <p class="text-xs text-stone-400 mt-2">We'll mention you referred them</p>
+            <p class="text-[10px] text-stone-400 mt-2 font-medium">We'll mention you referred them</p>
           </div>
 
           <!-- Message Preview -->
           <div class="mb-6">
-            <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 block">SMS Preview</label>
-            <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-sm text-blue-800 dark:text-blue-200 font-mono whitespace-pre-wrap">{{ inviteSmsMessage }}</div>
-            <p class="text-xs text-stone-400 mt-2">{{ inviteSmsMessage.length }}/160 characters</p>
+            <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 block">SMS Preview</label>
+            <div class="p-3 bg-stone-50 dark:bg-stone-800/50 rounded-lg text-xs text-stone-600 dark:text-stone-300 font-mono whitespace-pre-wrap border border-stone-100 dark:border-stone-700">{{ inviteSmsMessage }}</div>
+            <p class="text-[10px] text-stone-400 mt-2 text-right">{{ inviteSmsMessage.length }}/160 characters</p>
           </div>
 
           <!-- Error -->
           <UAlert
             v-if="inviteError"
             color="error"
-            variant="soft"
+            variant="subtle"
             :description="inviteError"
             icon="i-lucide-alert-circle"
             class="mb-4"
           />
 
           <!-- Success -->
-          <div v-if="inviteSuccess" class="mb-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-3">
-            <UIcon name="i-lucide-check-circle-2" class="w-5 h-5 text-emerald-500" />
+          <div v-if="inviteSuccess" class="mb-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-3">
+            <UIcon name="i-lucide-check-circle-2" class="w-5 h-5 text-emerald-600" />
             <span class="text-sm font-bold text-emerald-700 dark:text-emerald-300">Invitation sent! The agent will receive an SMS shortly.</span>
           </div>
 
           <!-- Actions -->
-          <div class="flex gap-3">
+          <div class="flex gap-3 pt-2">
             <button
               @click="closeInviteModal"
-              class="flex-1 py-3 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 font-bold rounded-xl hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
+              class="flex-1 py-2.5 bg-white border border-stone-200 dark:bg-stone-800 dark:border-stone-700 text-stone-600 dark:text-stone-300 font-bold rounded-lg hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors text-sm"
             >
               {{ inviteSuccess ? 'Close' : 'Cancel' }}
             </button>
@@ -190,13 +190,13 @@
               @click="sendInviteSms"
               :disabled="sendingInvite"
               :class="[
-                'flex-1 py-3 font-bold rounded-xl transition-all flex items-center justify-center gap-2',
+                'flex-1 py-2.5 font-bold rounded-lg transition-all flex items-center justify-center gap-2 text-sm shadow-sm',
                 !sendingInvite
-                  ? 'bg-blue-500 text-white hover:bg-blue-600'
-                  : 'bg-stone-200 dark:bg-stone-700 text-stone-400'
+                  ? 'bg-stone-900 text-white dark:bg-white dark:text-stone-900 hover:opacity-90'
+                  : 'bg-stone-100 dark:bg-stone-800 text-stone-400'
               ]"
             >
-              <div v-if="sendingInvite" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <div v-if="sendingInvite" class="w-4 h-4 border-2 border-stone-400 border-t-stone-900 rounded-full animate-spin"></div>
               <template v-else>
                 <UIcon name="i-lucide-send" class="w-4 h-4" />
                 Send Invite

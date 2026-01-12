@@ -1,19 +1,21 @@
 <template>
   <form @submit.prevent="$emit('submit', formData)" class="space-y-6 sm:space-y-8">
     <!-- Section: Landlord Information -->
-    <div class="bg-white dark:bg-stone-900 rounded-[32px] p-8 border border-stone-200 dark:border-stone-800 transition-colors">
-      <h3 class="text-lg font-black mb-6 flex items-center gap-2 text-stone-900 dark:text-white uppercase tracking-tighter">
-        <span class="text-2xl">🏠</span>
-        Landlord
-      </h3>
+    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
+        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-home" class="w-4 h-4" />
+        </div>
+        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Landlord Details</h3>
+      </div>
       
       <div class="grid sm:grid-cols-2 gap-4">
         <UFormField label="Full Name" required>
-          <UInput v-model="formData.landlord_name" placeholder="Enter landlord's full name" size="lg" />
+          <UInput v-model="formData.landlord_name" placeholder="Enter landlord's full name" size="lg" class="input-minimal" />
         </UFormField>
         
         <UFormField label="Phone Number" required>
-          <UInput v-model="formData.landlord_phone" placeholder="024 XXX XXXX" type="tel" size="lg" />
+          <UInput v-model="formData.landlord_phone" placeholder="024 XXX XXXX" type="tel" size="lg" class="input-minimal" />
         </UFormField>
       </div>
       
@@ -24,29 +26,32 @@
             :items="idTypes" 
             placeholder="Select ID type"
             size="lg"
+            class="input-minimal"
           />
         </UFormField>
         
         <UFormField label="ID Number" required>
-          <UInput v-model="formData.landlord_id_number" placeholder="Enter ID number" size="lg" />
+          <UInput v-model="formData.landlord_id_number" placeholder="Enter ID number" size="lg" class="input-minimal" />
         </UFormField>
       </div>
     </div>
     
     <!-- Section: Tenant Information -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">👤</span>
-        Tenant Information
-      </h3>
+    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
+        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-user" class="w-4 h-4" />
+        </div>
+        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Tenant Details</h3>
+      </div>
       
       <div class="grid sm:grid-cols-2 gap-4">
         <UFormField label="Full Name" required>
-          <UInput v-model="formData.tenant_name" placeholder="Enter tenant's full name" size="lg" />
+          <UInput v-model="formData.tenant_name" placeholder="Enter tenant's full name" size="lg" class="input-minimal" />
         </UFormField>
         
         <UFormField label="Phone Number" required>
-          <UInput v-model="formData.tenant_phone" placeholder="024 XXX XXXX" type="tel" size="lg" />
+          <UInput v-model="formData.tenant_phone" placeholder="024 XXX XXXX" type="tel" size="lg" class="input-minimal" />
         </UFormField>
       </div>
       
@@ -57,25 +62,28 @@
             :items="idTypes" 
             placeholder="Select ID type"
             size="lg"
+            class="input-minimal"
           />
         </UFormField>
         
         <UFormField label="ID Number" required>
-          <UInput v-model="formData.tenant_id_number" placeholder="Enter ID number" size="lg" />
+          <UInput v-model="formData.tenant_id_number" placeholder="Enter ID number" size="lg" class="input-minimal" />
         </UFormField>
       </div>
     </div>
     
     <!-- Section: Property Details -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">🏢</span>
-        Property Details
-      </h3>
+    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
+        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-building-2" class="w-4 h-4" />
+        </div>
+        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Property Details</h3>
+      </div>
       
       <div class="space-y-4">
         <UFormField label="Property Address" required>
-          <UInput v-model="formData.property_address" placeholder="Enter full property address" size="lg" />
+          <UInput v-model="formData.property_address" placeholder="Enter full property address" size="lg" class="input-minimal" />
         </UFormField>
         
         <div class="grid sm:grid-cols-2 gap-4">
@@ -85,11 +93,12 @@
               :items="propertyTypes" 
               placeholder="Select property type"
               size="lg"
+              class="input-minimal"
             />
           </UFormField>
           
           <UFormField label="Number of Bedrooms">
-            <UInputNumber v-model="roomCount" :min="0" size="lg" />
+            <UInputNumber v-model="roomCount" :min="0" size="lg" class="input-minimal" />
           </UFormField>
         </div>
         
@@ -99,17 +108,20 @@
             placeholder="Describe the property (rooms, amenities, etc.)"
             :rows="3"
             size="lg"
+            class="input-minimal"
           />
         </UFormField>
       </div>
     </div>
     
     <!-- Section: Rental Terms -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">💰</span>
-        Rental Terms
-      </h3>
+    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
+        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-banknote" class="w-4 h-4" />
+        </div>
+        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Rental Terms</h3>
+      </div>
       
       <div class="grid sm:grid-cols-2 gap-4">
         <UFormField label="Rent Amount" required>
@@ -117,14 +129,14 @@
             <USelect 
               v-model="formData.rent_currency" 
               :items="currencies" 
-              class="w-24"
+              class="w-24 input-minimal"
               size="lg"
             />
             <UInputNumber 
               v-model="formData.rent_amount" 
               :min="0" 
               placeholder="0.00"
-              class="flex-1"
+              class="flex-1 input-minimal"
               size="lg"
             />
           </div>
@@ -135,6 +147,7 @@
             v-model="formData.payment_frequency" 
             :items="paymentFrequencies" 
             size="lg"
+            class="input-minimal"
           />
         </UFormField>
       </div>
@@ -146,6 +159,7 @@
             :min="0" 
             placeholder="0.00"
             size="lg"
+            class="input-minimal"
           />
         </UFormField>
         
@@ -154,6 +168,7 @@
             v-model="formData.lease_start_date" 
             type="date"
             size="lg"
+            class="input-minimal"
           />
         </UFormField>
       </div>
@@ -165,17 +180,20 @@
             :min="1" 
             :max="120"
             size="lg"
+            class="input-minimal"
           />
         </UFormField>
       </div>
     </div>
     
     <!-- Section: Utilities -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">⚡</span>
-        Utilities Included
-      </h3>
+    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
+        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-plug" class="w-4 h-4" />
+        </div>
+        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Utilities Included</h3>
+      </div>
       
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <UCheckbox 
@@ -189,11 +207,13 @@
     </div>
     
     <!-- Section: Special Terms -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-        <span class="text-2xl">📝</span>
-        Special Terms & Conditions
-      </h3>
+    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
+        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-scroll" class="w-4 h-4" />
+        </div>
+        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Special Terms & Conditions</h3>
+      </div>
       
       <UFormField label="Additional terms (optional)">
         <UTextarea 
@@ -201,6 +221,7 @@
           placeholder="Enter any additional terms, rules, or agreements..."
           :rows="4"
           size="lg"
+          class="input-minimal"
         />
       </UFormField>
     </div>
