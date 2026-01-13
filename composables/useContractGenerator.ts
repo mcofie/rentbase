@@ -144,10 +144,10 @@ export function useContractGenerator() {
             }
 
             // Merge the details
-            const updatedDetails = { ...current.details, ...details }
+            const updatedDetails = { ...(current as any).details, ...details }
 
-            const { error: dbError } = await supabase
-                .from('contracts')
+            const { error: dbError } = await (supabase
+                .from('contracts') as any)
                 .update({ details: updatedDetails })
                 .eq('id', id)
                 .eq('user_id', user.value.id)
@@ -175,8 +175,22 @@ export function useContractGenerator() {
         error.value = null
 
         try {
-            const { error: dbError } = await supabase
+            // First, fetch the full contract to get all details
+            const { data: contractData, error: fetchError } = await supabase
                 .from('contracts')
+                .select('*')
+                .eq('id', id)
+                .single()
+
+            if (fetchError || !contractData) {
+                error.value = 'Contract not found'
+                loading.value = false
+                return false
+            }
+
+            // Update the contract as finalized
+            const { error: dbError } = await (supabase
+                .from('contracts') as any)
                 .update({
                     is_finalized: true,
                     payment_ref: paymentRef,
@@ -189,10 +203,17 @@ export function useContractGenerator() {
                 return false
             }
 
-            if (currentContract.value?.id === id) {
-                currentContract.value.is_finalized = true
-                currentContract.value.payment_ref = paymentRef
-            }
+            // Update local state
+            currentContract.value = {
+                ...(contractData as Contract),
+                is_finalized: true,
+                payment_ref: paymentRef,
+            } as Contract
+
+            // Send notifications in the background (don't block UI)
+            sendContractNotifications(contractData).catch(err => {
+                console.error('Failed to send notifications:', err)
+            })
 
             loading.value = false
             return true
@@ -200,6 +221,35 @@ export function useContractGenerator() {
             error.value = err.message || 'Failed to finalize contract'
             loading.value = false
             return false
+        }
+    }
+
+    /**
+     * Send SMS and Email notifications after payment
+     */
+    async function sendContractNotifications(contract: Contract): Promise<void> {
+        try {
+            await $fetch('/api/contracts/notify', {
+                method: 'POST',
+                body: {
+                    contractId: contract.id,
+                    landlordName: contract.details.landlord_name,
+                    landlordPhone: contract.details.landlord_phone,
+                    tenantName: contract.details.tenant_name,
+                    tenantPhone: contract.details.tenant_phone,
+                    tenantEmail: contract.details.tenant_email || contract.customer_email,
+                    propertyAddress: contract.details.property_address,
+                    // Full tokens for email
+                    landlordSignToken: contract.landlord_sign_token,
+                    tenantSignToken: contract.tenant_sign_token,
+                    // Short codes for SMS
+                    landlordShortCode: contract.landlord_short_code,
+                    tenantShortCode: contract.tenant_short_code,
+                }
+            })
+            console.log('[Contract] Notifications sent successfully')
+        } catch (err) {
+            console.error('[Contract] Failed to send notifications:', err)
         }
     }
 

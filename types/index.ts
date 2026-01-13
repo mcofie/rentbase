@@ -59,6 +59,7 @@ export interface ContractDetails {
     // Tenant Information
     tenant_name: string
     tenant_phone: string
+    tenant_email?: string // Optional - for email notifications
     tenant_id_type: string
     tenant_id_number: string
 
@@ -92,9 +93,11 @@ export interface Contract {
     landlord_signature: string | null
     landlord_signed_at: string | null
     landlord_sign_token: string
+    landlord_short_code?: string // Short code for SMS (8 chars)
     tenant_signature: string | null
     tenant_signed_at: string | null
     tenant_sign_token: string
+    tenant_short_code?: string // Short code for SMS (8 chars)
     is_fully_signed: boolean
 
     created_at: string
@@ -149,13 +152,13 @@ export interface PaystackResponse {
 // ============================================
 export const PRICING = {
     CONTRACT: {
-        amount: 40, // GH₵
-        pesewas: 4000,
+        amount: 1, // GH₵ - TEST PRICE
+        pesewas: 100,
         label: 'Pocket Lawyer - Tenancy Agreement',
     },
     DEPOSIT_REPORT: {
-        amount: 25, // GH₵
-        pesewas: 2500,
+        amount: 1, // GH₵ - TEST PRICE
+        pesewas: 100,
         label: 'Deposit Shield - Condition Report',
     },
 } as const

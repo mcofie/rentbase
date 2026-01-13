@@ -166,7 +166,7 @@
               <div v-else class="space-y-4">
                 <!-- Signature Status Card -->
                 <div class="mb-6">
-                  <div v-if="contract.is_fully_signed" class="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-100 dark:border-emerald-800/30">
+                  <div v-if="contract.landlord_signature && contract.tenant_signature" class="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-100 dark:border-emerald-800/30">
                     <UIcon name="i-lucide-check-circle-2" class="w-6 h-6 text-emerald-600" />
                     <div>
                       <p class="font-bold text-emerald-700 dark:text-emerald-300">Fully Signed</p>
@@ -245,7 +245,7 @@
                   @click="downloadFinal"
                 >
                   <UIcon name="i-lucide-download" class="w-5 h-5" />
-                  Download {{ contract.is_fully_signed ? 'Signed' : 'Final' }} PDF
+                  Download {{ (contract.landlord_signature && contract.tenant_signature) ? 'Signed' : 'Final' }} PDF
                 </button>
                 
                 <!-- Share via WhatsApp -->
@@ -263,7 +263,7 @@
 
                 <!-- Send via SMS -->
                 <SMSSender
-                  v-if="!contract.is_fully_signed"
+                  v-if="!(contract.landlord_signature && contract.tenant_signature)"
                   variant="outline"
                   size="lg"
                   icon="i-lucide-smartphone"
@@ -369,8 +369,11 @@ async function copySigningLink(party: 'landlord' | 'tenant') {
   if (!contract.value) return
   
   const baseUrl = config.public.appUrl || 'http://localhost:3000'
-  const token = party === 'landlord' ? contract.value.landlord_sign_token : contract.value.tenant_sign_token
-  const url = `${baseUrl}/contract/sign/${token}`
+  // Prefer short codes, fallback to tokens
+  const code = party === 'landlord' 
+    ? (contract.value.landlord_short_code || contract.value.landlord_sign_token)
+    : (contract.value.tenant_short_code || contract.value.tenant_sign_token)
+  const url = `${baseUrl}/s/${code}`
   
   await navigator.clipboard.writeText(url)
   copiedLink.value = party
@@ -381,8 +384,11 @@ function shareSigningLinks() {
   if (!contract.value) return
   
   const baseUrl = config.public.appUrl || 'http://localhost:3000'
-  const landlordUrl = `${baseUrl}/contract/sign/${contract.value.landlord_sign_token}`
-  const tenantUrl = `${baseUrl}/contract/sign/${contract.value.tenant_sign_token}`
+  // Use short codes for WhatsApp (limited chars in preview)
+  const landlordCode = contract.value.landlord_short_code || contract.value.landlord_sign_token
+  const tenantCode = contract.value.tenant_short_code || contract.value.tenant_sign_token
+  const landlordUrl = `${baseUrl}/s/${landlordCode}`
+  const tenantUrl = `${baseUrl}/s/${tenantCode}`
   
   const message = `*TENANCY AGREEMENT - DIGITAL SIGNATURE REQUIRED*\n\n` +
     `📍 Property: ${details.value.property_address}\n\n` +
@@ -397,7 +403,9 @@ function shareSigningLinks() {
 const smsMessage = computed(() => {
   if (!contract.value) return ''
   const baseUrl = config.public.appUrl || 'http://localhost:3000'
-  const landlordUrl = `${baseUrl}/contract/sign/${contract.value.landlord_sign_token}`
+  // Use short code for SMS (critical - 160 char limit)
+  const code = contract.value.landlord_short_code || contract.value.landlord_sign_token
+  const landlordUrl = `${baseUrl}/s/${code}`
   
   return `SIGN YOUR TENANCY AGREEMENT\n` +
     `Property: ${details.value.property_address}\n` +

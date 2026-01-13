@@ -54,6 +54,15 @@
           <UInput v-model="formData.tenant_phone" placeholder="024 XXX XXXX" type="tel" size="lg" class="input-minimal" />
         </UFormField>
       </div>
+
+      <div class="mt-4">
+        <UFormField label="Email Address">
+          <UInput v-model="formData.tenant_email" placeholder="tenant@example.com" type="email" size="lg" class="input-minimal" />
+          <template #hint>
+            <span class="text-xs text-stone-400">Optional - For sending signing link via email</span>
+          </template>
+        </UFormField>
+      </div>
       
       <div class="grid sm:grid-cols-2 gap-4 mt-4">
         <UFormField label="ID Type" required>
@@ -164,11 +173,10 @@
         </UFormField>
         
         <UFormField label="Lease Start Date" required>
-          <UInput 
-            v-model="formData.lease_start_date" 
-            type="date"
-            size="lg"
-            class="input-minimal"
+          <DatePicker 
+            v-model="formData.lease_start_date"
+            placeholder="Select start date"
+            :allow-past="false"
           />
         </UFormField>
       </div>
@@ -284,6 +292,7 @@ const formData = reactive<ContractDetails>({
   landlord_id_number: props.initialData?.landlord_id_number || '',
   tenant_name: props.initialData?.tenant_name || '',
   tenant_phone: props.initialData?.tenant_phone || '',
+  tenant_email: props.initialData?.tenant_email || '',
   tenant_id_type: props.initialData?.tenant_id_type || '',
   tenant_id_number: props.initialData?.tenant_id_number || '',
   property_address: props.initialData?.property_address || '',

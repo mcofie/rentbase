@@ -177,32 +177,41 @@
       </p>
     </div>
 
-    <!-- Success State -->
-    <div v-if="signSuccess" class="fixed inset-0 bg-stone-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-      <div class="bg-white dark:bg-stone-900 rounded-lg p-8 max-w-md w-full text-center animate-bounce-in border border-stone-200 dark:border-stone-800 shadow-2xl">
-        <div class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex items-center justify-center mx-auto mb-6">
-          <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-emerald-600" />
-        </div>
-        <h2 class="text-2xl font-bold text-stone-900 dark:text-white mb-2 font-serif">Signature Submitted!</h2>
-        <p class="text-stone-500 mb-8">
-          Your signature has been securely recorded.
-          <span v-if="!contract?.is_fully_signed">
-            The other party will be notified to sign.
-          </span>
-          <span v-else>
-            Both parties have now signed the agreement.
-          </span>
-        </p>
-        <NuxtLink 
-          :to="`/contract/preview/${contract?.id}`"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-medium rounded-lg hover:bg-stone-800 transition-colors shadow-sm"
-        >
-          <UIcon name="i-lucide-file-text" class="w-4 h-4" />
-          View Signed Contract
-        </NuxtLink>
-      </div>
-    </div>
   </div>
+
+  <!-- Success Modal - Teleported to body for proper overlay -->
+  <Teleport to="body">
+    <Transition name="modal">
+      <div v-if="signSuccess" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click.stop></div>
+        
+        <!-- Modal Content -->
+        <div class="relative bg-white dark:bg-stone-900 rounded-xl p-8 max-w-md w-full text-center animate-bounce-in border border-stone-200 dark:border-stone-800 shadow-2xl">
+          <div class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-emerald-600" />
+          </div>
+          <h2 class="text-2xl font-bold text-stone-900 dark:text-white mb-2 font-serif">Signature Submitted!</h2>
+          <p class="text-stone-500 mb-8">
+            Your signature has been securely recorded.
+            <span v-if="!contract?.is_fully_signed">
+              The other party will be notified to sign.
+            </span>
+            <span v-else>
+              Both parties have now signed the agreement.
+            </span>
+          </p>
+          <NuxtLink 
+            :to="`/contract/preview/${contract?.id}`"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-medium rounded-lg hover:bg-stone-800 dark:hover:bg-stone-100 transition-colors shadow-sm"
+          >
+            <UIcon name="i-lucide-file-text" class="w-4 h-4" />
+            View Signed Contract
+          </NuxtLink>
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -365,5 +374,19 @@ function formatDate(dateString: string | null): string {
 
 .animate-bounce-in {
   animation: bounce-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Modal transition */
+.modal-enter-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
 }
 </style>
