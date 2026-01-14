@@ -11,8 +11,8 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    // Format phone to E164
-    const e164 = formatPhoneE164(phone)
+    // Format phone to E164 (decode first to handle %2B correctly)
+    const e164 = formatPhoneE164(decodeURIComponent(phone))
 
     const client = await serverSupabaseServiceRole(event)
 

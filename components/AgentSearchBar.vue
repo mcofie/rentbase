@@ -6,12 +6,18 @@
         <!-- Phone Input -->
         <div class="bg-white dark:bg-stone-900 rounded-lg p-4 border border-stone-200 dark:border-stone-800 focus-within:border-stone-900 focus-within:ring-1 focus-within:ring-stone-900 transition-all">
           <label class="block text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-2 text-center">Enter Line Number</label>
-          <input
-            v-model="searchPhone"
-            placeholder="0XX XXX XXXX"
-            type="tel"
-            class="block w-full bg-transparent border-none p-0 text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white placeholder-stone-200 dark:placeholder-stone-800 focus:ring-0 text-center tracking-tight"
-          />
+          <div class="flex items-center justify-center gap-3">
+             <div class="flex items-center gap-1 opacity-50 select-none pb-1">
+                <span class="text-2xl filter grayscale-[0.2]">🇬🇭</span>
+                <span class="text-2xl font-bold font-mono text-stone-400">+233</span>
+             </div>
+             <input
+               v-model="searchPhone"
+               placeholder="2X XXX XXXX"
+               type="tel"
+               class="block w-full max-w-[260px] bg-transparent border-none p-0 text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white placeholder-stone-200 dark:placeholder-stone-800 focus:ring-0 tracking-tight"
+             />
+          </div>
         </div>
 
         <!-- Action Button -->

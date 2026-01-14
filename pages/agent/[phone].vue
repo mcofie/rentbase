@@ -293,8 +293,8 @@ const supabase = useSupabaseClient()
 const toast = useToast()
 const { sendSMS } = useSMS()
 
-const phone = route.params.phone as string
-const formattedPhone = computed(() => formatPhoneDisplay(phone))
+const phone = computed(() => route.params.phone as string)
+const formattedPhone = computed(() => formatPhoneDisplay(phone.value))
 
 const loading = ref(true)
 const submitting = ref(false)
@@ -366,7 +366,7 @@ function invokeInviteModal() {
 async function sendInviteSms() {
   sendingInvite.value = true
   try {
-    const formatted = formatPhoneE164(phone)
+    const formatted = formatPhoneE164(phone.value)
     const result = await sendSMS(formatted, inviteSmsMessage.value)
     
     if (result.success) {
@@ -395,14 +395,16 @@ async function sendInviteSms() {
 }
 
 function copyAgentPhone() {
-  navigator.clipboard.writeText(phone)
+  navigator.clipboard.writeText(phone.value)
   toast.add({ title: 'Line Copied', color: 'success' })
 }
 
 async function fetchAgentData() {
+  if (!phone.value) return
+  
   loading.value = true
   try {
-    const e164 = formatPhoneE164(phone)
+    const e164 = formatPhoneE164(phone.value)
     
     // Fetch reviews and agent data in parallel
     const [reviewsResult, agentResult] = await Promise.all([
@@ -413,7 +415,7 @@ async function fetchAgentData() {
         .eq('status', 'approved')
         .order('created_at', { ascending: false }),
       // Use server API to get agent data (handles schema and RLS properly)
-      $fetch(`/api/agents/${encodeURIComponent(phone)}`)
+      $fetch(`/api/agents/${encodeURIComponent(phone.value)}`)
     ]) as [any, { isVerified: boolean, agent: any }]
 
     // Handle Reviews
@@ -492,7 +494,7 @@ async function verifyAndSubmit() {
     const antiSpamData = captchaRef.value?.getAntiSpamData() || {}
     
     const body: any = {
-      agent_phone: formatPhoneE164(phone),
+      agent_phone: formatPhoneE164(phone.value),
       rating: newReview.rating,
       comment: newReview.comment,
       reviewer_phone: e164,
@@ -534,7 +536,7 @@ async function submitReview() {
     const antiSpamData = captchaRef.value?.getAntiSpamData() || {}
     
     const body: any = {
-      agent_phone: formatPhoneE164(phone),
+      agent_phone: formatPhoneE164(phone.value),
       rating: newReview.rating,
       comment: newReview.comment,
       // Include anti-spam fields
@@ -565,9 +567,10 @@ function handleAuthSuccess() {
   submitReview()
 }
 
-onMounted(() => {
+// Watch for route changes to refetch data
+watch(() => route.params.phone, () => {
   fetchAgentData()
-})
+}, { immediate: true })
 </script>
 
 <style scoped>

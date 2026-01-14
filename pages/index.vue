@@ -12,7 +12,10 @@
         
         <!-- Search Component -->
         <div class="max-w-xl mx-auto mb-16 relative z-10">
-          <AgentSearchBar />
+          <AgentSearchBar 
+            @write-review="handleWriteReview" 
+            @view-reviews="handleViewDetails" 
+          />
           <p class="text-xs text-stone-400 mt-4 font-medium">
              Try searching <span class="text-stone-900 dark:text-white font-mono">054 123 4567</span> or <span class="text-stone-900 dark:text-white cursor-pointer hover:underline" @click="$router.push('/agent')">verify an agent</span>
           </p>
@@ -105,11 +108,23 @@
 
 <script setup lang="ts">
 import { useHead } from '#imports'
+import { formatPhoneE164 } from '~/utils/formatPhone'
 
+const router = useRouter()
 const showAuthModal = ref(false)
 
 function handleAuthSuccess() {
   // Logic after auth
+}
+
+function handleWriteReview(phone: string) {
+  const formatted = formatPhoneE164(phone)
+  router.push(`/agent/${encodeURIComponent(formatted)}?review=true`)
+}
+
+function handleViewDetails(phone: string) {
+  const formatted = formatPhoneE164(phone)
+  router.push(`/agent/${encodeURIComponent(formatted)}`)
 }
 
 // Add animation classes

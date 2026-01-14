@@ -85,21 +85,30 @@
 </template>
 
 <script setup lang="ts">
+import { formatPhoneE164, isValidGhanaPhone } from '~/utils/formatPhone'
+
 const router = useRouter()
+const toast = useToast()
 const searchQuery = ref('')
 
 function handleSearch() {
   if (!searchQuery.value) return
   
-  // Basic cleaning of phone number input
-  const cleanPhone = searchQuery.value.replace(/\D/g, '')
+  // Format the phone number properly
+  const formatted = formatPhoneE164(searchQuery.value)
   
-  if (cleanPhone.length < 9) {
-    // Ideally show a toast here, but simple alert for now or just return
+  // Validate
+  if (!isValidGhanaPhone(formatted)) {
+    toast.add({
+      title: 'Invalid Phone Number',
+      description: 'Please enter a valid Ghana phone number',
+      color: 'warning'
+    })
     return
   }
   
-  router.push(`/agent/${cleanPhone}`)
+  // Navigate with the formatted E164 number
+  router.push(`/agent/${encodeURIComponent(formatted)}`)
 }
 </script>
 

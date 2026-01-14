@@ -5,7 +5,13 @@
  */
 export function formatPhoneE164(phone: string): string {
     // Remove all non-digits
-    const digits = phone.replace(/\D/g, '')
+    let digits = phone.replace(/\D/g, '')
+
+    // Handle case where someone typed +233 followed by local format (02XX...)
+    // e.g., +2330276251608 should become +233276251608
+    if (digits.startsWith('2330') && digits.length === 13) {
+        digits = '233' + digits.slice(4) // Remove the extra 0
+    }
 
     // If starts with 0, replace with +233
     if (digits.startsWith('0')) {
