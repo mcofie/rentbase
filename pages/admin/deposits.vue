@@ -90,58 +90,60 @@
     </div>
 
     <!-- Details Modal -->
-    <UModal v-model="showModal">
-      <div class="p-6" v-if="selectedReport">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-lg font-bold text-stone-900 dark:text-white">Report Details</h2>
-          <button @click="showModal = false" class="p-1 text-stone-400 hover:text-stone-600">
-            <UIcon name="i-lucide-x" class="w-5 h-5" />
-          </button>
+    <UModal v-model:open="showModal">
+      <template #content>
+        <div class="p-6" v-if="selectedReport">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-lg font-bold text-stone-900 dark:text-white">Report Details</h2>
+            <button @click="showModal = false" class="p-1 text-stone-400 hover:text-stone-600">
+              <UIcon name="i-lucide-x" class="w-5 h-5" />
+            </button>
+          </div>
+          
+          <dl class="space-y-4">
+            <div>
+              <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Property</dt>
+              <dd class="text-sm text-stone-900 dark:text-white">{{ selectedReport.property_address || 'Not specified' }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Email</dt>
+              <dd class="text-sm text-stone-900 dark:text-white">{{ selectedReport.customer_email || 'Not provided' }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Phone</dt>
+              <dd class="text-sm text-stone-900 dark:text-white">{{ selectedReport.customer_phone || 'Not provided' }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Report Code</dt>
+              <dd class="text-sm font-mono text-stone-900 dark:text-white">{{ selectedReport.short_code || selectedReport.id?.slice(0, 8).toUpperCase() }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Created</dt>
+              <dd class="text-sm text-stone-900 dark:text-white">{{ formatDate(selectedReport.created_at) }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Payment Ref</dt>
+              <dd class="text-sm font-mono text-stone-600 dark:text-stone-400">{{ selectedReport.payment_ref || 'N/A' }}</dd>
+            </div>
+          </dl>
+          
+          <div class="mt-6 flex gap-3">
+            <NuxtLink 
+              :to="`/deposit/view/${selectedReport.id}`"
+              target="_blank"
+              class="flex-1 py-2 bg-stone-900 dark:bg-white text-white dark:text-stone-900 rounded-lg font-medium text-sm text-center hover:bg-stone-800 transition-colors"
+            >
+              View Report
+            </NuxtLink>
+            <button 
+              @click="showModal = false"
+              class="px-4 py-2 border border-stone-200 dark:border-stone-700 rounded-lg text-sm font-medium text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors"
+            >
+              Close
+            </button>
+          </div>
         </div>
-        
-        <dl class="space-y-4">
-          <div>
-            <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Property</dt>
-            <dd class="text-sm text-stone-900 dark:text-white">{{ selectedReport.property_address || 'Not specified' }}</dd>
-          </div>
-          <div>
-            <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Email</dt>
-            <dd class="text-sm text-stone-900 dark:text-white">{{ selectedReport.customer_email || 'Not provided' }}</dd>
-          </div>
-          <div>
-            <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Phone</dt>
-            <dd class="text-sm text-stone-900 dark:text-white">{{ selectedReport.customer_phone || 'Not provided' }}</dd>
-          </div>
-          <div>
-            <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Report Code</dt>
-            <dd class="text-sm font-mono text-stone-900 dark:text-white">{{ selectedReport.short_code || selectedReport.id?.slice(0, 8).toUpperCase() }}</dd>
-          </div>
-          <div>
-            <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Created</dt>
-            <dd class="text-sm text-stone-900 dark:text-white">{{ formatDate(selectedReport.created_at) }}</dd>
-          </div>
-          <div>
-            <dt class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Payment Ref</dt>
-            <dd class="text-sm font-mono text-stone-600 dark:text-stone-400">{{ selectedReport.payment_ref || 'N/A' }}</dd>
-          </div>
-        </dl>
-        
-        <div class="mt-6 flex gap-3">
-          <NuxtLink 
-            :to="`/deposit/view/${selectedReport.id}`"
-            target="_blank"
-            class="flex-1 py-2 bg-stone-900 dark:bg-white text-white dark:text-stone-900 rounded-lg font-medium text-sm text-center hover:bg-stone-800 transition-colors"
-          >
-            View Report
-          </NuxtLink>
-          <button 
-            @click="showModal = false"
-            class="px-4 py-2 border border-stone-200 dark:border-stone-700 rounded-lg text-sm font-medium text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors"
-          >
-            Close
-          </button>
-        </div>
-      </div>
+      </template>
     </UModal>
   </div>
 </template>

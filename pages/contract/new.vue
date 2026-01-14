@@ -23,7 +23,7 @@
       
       <!-- Main Content -->
       <main class="px-6 py-8 sm:py-12 flex-grow">
-        <div :class="['mx-auto', step === 2 ? 'max-w-6xl' : 'max-w-3xl']">
+        <div :class="['mx-auto', step === 2 ? 'max-w-6xl' : 'max-w-4xl']">
           <!-- Page Header -->
           <div class="text-center mb-10 animate-fade-in">
             <div class="inline-flex items-center gap-2 px-3 py-1 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-md text-[10px] font-bold uppercase tracking-widest mb-4">

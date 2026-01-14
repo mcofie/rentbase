@@ -40,6 +40,14 @@
           <UIcon name="i-lucide-camera" class="w-4.5 h-4.5" />
           <span>Condition Reports</span>
         </NuxtLink>
+
+        <!-- Section: Agents -->
+        <div class="px-3 py-1 mt-6 mb-1 text-[11px] font-semibold text-[#91918E] uppercase tracking-wide">Agents</div>
+        
+        <NuxtLink to="/admin/agents/claims" class="flex items-center gap-2.5 px-3 py-1.5 rounded text-[14px] text-[#5F5E5B] dark:text-[#9B9B9B] hover:bg-[#EFEFEF] dark:hover:bg-[#2C2C2C] hover:text-[#37352F] dark:hover:text-[#D4D4D4] transition-colors" active-class="!bg-[#EFEFEF] dark:!bg-[#37352F] !text-[#37352F] dark:!text-[#D4D4D4] font-medium">
+          <UIcon name="i-lucide-user-check" class="w-4.5 h-4.5" />
+          <span>Agent Claims</span>
+        </NuxtLink>
       </nav>
 
       <!-- User / Logout -->
@@ -83,6 +91,7 @@ const pageTitle = computed(() => {
   if (path.includes('/reviews')) return 'Reviews Database'
   if (path.includes('/contracts')) return 'Contracts Database'
   if (path.includes('/deposits')) return 'Condition Reports'
+  if (path.includes('/agents/claims')) return 'Agent Claims'
   return 'Dashboard'
 })
 

@@ -132,8 +132,8 @@ const loading = ref(true)
 const stats = ref([
   { label: 'Total Reviews', value: '0', icon: 'i-lucide-message-square', link: '/admin/reviews' },
   { label: 'Pending Reviews', value: '0', icon: 'i-lucide-clock', link: '/admin/reviews' },
-  { label: 'Contracts', value: '0', icon: 'i-lucide-file-text', link: '/admin/contracts' },
-  { label: 'Deposits', value: '0', icon: 'i-lucide-camera', link: '/admin/deposits' }
+  { label: 'Agent Claims', value: '0', icon: 'i-lucide-user-check', link: '/admin/agents/claims' },
+  { label: 'Contracts', value: '0', icon: 'i-lucide-file-text', link: '/admin/contracts' }
 ])
 
 const reviewStatuses = ref([
@@ -146,8 +146,8 @@ const recentActivity = ref<any[]>([])
 
 const quickActions = [
   { label: 'Moderate Reviews', link: '/admin/reviews', icon: 'i-lucide-shield-check' },
+  { label: 'Review Agent Claims', link: '/admin/agents/claims', icon: 'i-lucide-user-check' },
   { label: 'View Contracts', link: '/admin/contracts', icon: 'i-lucide-file-text' },
-  { label: 'Check Deposits', link: '/admin/deposits', icon: 'i-lucide-camera' },
 ]
 
 onMounted(async () => {
@@ -166,8 +166,7 @@ async function fetchDashboardData() {
     ])
 
     stats.value[0].value = (reviews.count || 0).toString()
-    stats.value[2].value = (contracts.count || 0).toString()
-    stats.value[3].value = (reports.count || 0).toString()
+    stats.value[3].value = (contracts.count || 0).toString()
 
     // Fetch pending reviews count
     const { count: pendingCount } = await client
@@ -176,6 +175,14 @@ async function fetchDashboardData() {
       .or('status.is.null,status.eq.pending')
 
     stats.value[1].value = (pendingCount || 0).toString()
+
+    // Fetch pending agent claims count
+    try {
+      const { claims } = await $fetch<{ claims: any[] }>('/api/admin/agents/claims?status=pending')
+      stats.value[2].value = (claims?.length || 0).toString()
+    } catch (e) {
+      stats.value[2].value = '0'
+    }
 
     // Fetch review status breakdown
     const { data: allReviews } = await client

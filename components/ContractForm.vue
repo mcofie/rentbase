@@ -1,113 +1,181 @@
 <template>
   <form @submit.prevent="$emit('submit', formData)" class="space-y-6 sm:space-y-8">
     <!-- Section: Landlord Information -->
-    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
       <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
-           <UIcon name="i-lucide-home" class="w-4 h-4" />
+        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-home" class="w-5 h-5" />
         </div>
-        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Landlord Details</h3>
+        <div>
+          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Landlord Details</h3>
+          <p class="text-xs text-stone-500 font-medium">Property owner information</p>
+        </div>
       </div>
       
-      <div class="grid sm:grid-cols-2 gap-4">
+      <div class="grid sm:grid-cols-2 gap-6">
         <UFormField label="Full Name" required>
-          <UInput v-model="formData.landlord_name" placeholder="Enter landlord's full name" size="lg" class="input-minimal" />
+          <UInput 
+            v-model="formData.landlord_name" 
+            icon="i-lucide-user" 
+            placeholder="Enter landlord's full name" 
+            size="xl" 
+            class="w-full"
+          />
         </UFormField>
         
         <UFormField label="Phone Number" required>
-          <UInput v-model="formData.landlord_phone" placeholder="024 XXX XXXX" type="tel" size="lg" class="input-minimal" />
+          <UInput 
+            v-model="formData.landlord_phone" 
+            icon="i-lucide-phone" 
+            placeholder="024 XXX XXXX" 
+            type="tel" 
+            size="xl" 
+            class="w-full"
+          />
         </UFormField>
       </div>
       
-      <div class="grid sm:grid-cols-2 gap-4 mt-4">
+      <div class="grid sm:grid-cols-2 gap-6 mt-6">
         <UFormField label="ID Type" required>
           <USelect 
             v-model="formData.landlord_id_type" 
             :items="idTypes" 
             placeholder="Select ID type"
-            size="lg"
-            class="input-minimal"
+            size="xl"
+            icon="i-lucide-badge-check"
+            class="w-full"
           />
         </UFormField>
         
         <UFormField label="ID Number" required>
-          <UInput v-model="formData.landlord_id_number" placeholder="Enter ID number" size="lg" class="input-minimal" />
+          <UInput 
+            v-model="formData.landlord_id_number" 
+            icon="i-lucide-hash" 
+            placeholder="Enter ID number" 
+            size="xl" 
+            class="w-full"
+          />
         </UFormField>
       </div>
     </div>
     
     <!-- Section: Tenant Information -->
-    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
       <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
-           <UIcon name="i-lucide-user" class="w-4 h-4" />
+        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-user" class="w-5 h-5" />
         </div>
-        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Tenant Details</h3>
+        <div>
+          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Tenant Details</h3>
+          <p class="text-xs text-stone-500 font-medium">Renter information</p>
+        </div>
       </div>
       
-      <div class="grid sm:grid-cols-2 gap-4">
+      <div class="grid sm:grid-cols-2 gap-6">
         <UFormField label="Full Name" required>
-          <UInput v-model="formData.tenant_name" placeholder="Enter tenant's full name" size="lg" class="input-minimal" />
+          <UInput 
+            v-model="formData.tenant_name" 
+            icon="i-lucide-user" 
+            placeholder="Enter tenant's full name" 
+            size="xl" 
+            class="w-full"
+          />
         </UFormField>
         
         <UFormField label="Phone Number" required>
-          <UInput v-model="formData.tenant_phone" placeholder="024 XXX XXXX" type="tel" size="lg" class="input-minimal" />
+          <UInput 
+            v-model="formData.tenant_phone" 
+            icon="i-lucide-phone" 
+            placeholder="024 XXX XXXX" 
+            type="tel" 
+            size="xl" 
+            class="w-full"
+          />
         </UFormField>
       </div>
 
-      <div class="mt-4">
+      <div class="mt-6">
         <UFormField label="Email Address">
-          <UInput v-model="formData.tenant_email" placeholder="tenant@example.com" type="email" size="lg" class="input-minimal" />
+          <UInput 
+            v-model="formData.tenant_email" 
+            icon="i-lucide-mail" 
+            placeholder="tenant@example.com" 
+            type="email" 
+            size="xl" 
+            class="w-full"
+          />
           <template #hint>
             <span class="text-xs text-stone-400">Optional - For sending signing link via email</span>
           </template>
         </UFormField>
       </div>
       
-      <div class="grid sm:grid-cols-2 gap-4 mt-4">
+      <div class="grid sm:grid-cols-2 gap-6 mt-6">
         <UFormField label="ID Type" required>
           <USelect 
             v-model="formData.tenant_id_type" 
             :items="idTypes" 
             placeholder="Select ID type"
-            size="lg"
-            class="input-minimal"
+            size="xl"
+            icon="i-lucide-badge-check"
+            class="w-full"
           />
         </UFormField>
         
         <UFormField label="ID Number" required>
-          <UInput v-model="formData.tenant_id_number" placeholder="Enter ID number" size="lg" class="input-minimal" />
+          <UInput 
+            v-model="formData.tenant_id_number" 
+            icon="i-lucide-hash" 
+            placeholder="Enter ID number" 
+            size="xl" 
+            class="w-full"
+          />
         </UFormField>
       </div>
     </div>
     
     <!-- Section: Property Details -->
-    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
       <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
-           <UIcon name="i-lucide-building-2" class="w-4 h-4" />
+        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-building-2" class="w-5 h-5" />
         </div>
-        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Property Details</h3>
+        <div>
+          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Property Details</h3>
+          <p class="text-xs text-stone-500 font-medium">Location and specs</p>
+        </div>
       </div>
       
-      <div class="space-y-4">
+      <div class="space-y-6">
         <UFormField label="Property Address" required>
-          <UInput v-model="formData.property_address" placeholder="Enter full property address" size="lg" class="input-minimal" />
+          <UInput 
+            v-model="formData.property_address" 
+            icon="i-lucide-map-pin" 
+            placeholder="Enter full property address" 
+            size="xl" 
+            class="w-full"
+          />
         </UFormField>
         
-        <div class="grid sm:grid-cols-2 gap-4">
+        <div class="grid sm:grid-cols-2 gap-6">
           <UFormField label="Property Type" required>
             <USelect 
               v-model="formData.property_type" 
               :items="propertyTypes" 
               placeholder="Select property type"
-              size="lg"
-              class="input-minimal"
+              size="xl"
+              icon="i-lucide-home"
+              class="w-full"
             />
           </UFormField>
           
           <UFormField label="Number of Bedrooms">
-            <UInputNumber v-model="roomCount" :min="0" size="lg" class="input-minimal" />
+            <UInputNumber 
+              v-model="roomCount" 
+              :min="0" 
+              size="xl" 
+              class="w-full"
+            />
           </UFormField>
         </div>
         
@@ -115,38 +183,41 @@
           <UTextarea 
             v-model="formData.property_description" 
             placeholder="Describe the property (rooms, amenities, etc.)"
-            :rows="3"
-            size="lg"
-            class="input-minimal"
+            :rows="4"
+            size="xl"
+            class="w-full"
           />
         </UFormField>
       </div>
     </div>
     
     <!-- Section: Rental Terms -->
-    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
       <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
-           <UIcon name="i-lucide-banknote" class="w-4 h-4" />
+        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-banknote" class="w-5 h-5" />
         </div>
-        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Rental Terms</h3>
+        <div>
+          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Rental Terms</h3>
+          <p class="text-xs text-stone-500 font-medium">Financial and lease details</p>
+        </div>
       </div>
       
-      <div class="grid sm:grid-cols-2 gap-4">
+      <div class="grid sm:grid-cols-2 gap-6">
         <UFormField label="Rent Amount" required>
           <div class="flex gap-2">
             <USelect 
               v-model="formData.rent_currency" 
               :items="currencies" 
-              class="w-24 input-minimal"
-              size="lg"
+              class="w-28"
+              size="xl"
             />
             <UInputNumber 
               v-model="formData.rent_amount" 
               :min="0" 
               placeholder="0.00"
-              class="flex-1 input-minimal"
-              size="lg"
+              class="flex-1"
+              size="xl"
             />
           </div>
         </UFormField>
@@ -155,20 +226,21 @@
           <USelect 
             v-model="formData.payment_frequency" 
             :items="paymentFrequencies" 
-            size="lg"
-            class="input-minimal"
+            size="xl"
+            icon="i-lucide-calendar-clock"
+            class="w-full"
           />
         </UFormField>
       </div>
       
-      <div class="grid sm:grid-cols-2 gap-4 mt-4">
+      <div class="grid sm:grid-cols-2 gap-6 mt-6">
         <UFormField label="Security Deposit" required>
           <UInputNumber 
             v-model="formData.security_deposit" 
             :min="0" 
             placeholder="0.00"
-            size="lg"
-            class="input-minimal"
+            size="xl"
+            class="w-full"
           />
         </UFormField>
         
@@ -181,29 +253,32 @@
         </UFormField>
       </div>
       
-      <div class="mt-4">
+      <div class="mt-6">
         <UFormField label="Lease Duration (Months)" required>
           <UInputNumber 
             v-model="formData.lease_duration_months" 
             :min="1" 
             :max="120"
-            size="lg"
-            class="input-minimal"
+            size="xl"
+            class="w-full"
           />
         </UFormField>
       </div>
     </div>
     
     <!-- Section: Utilities -->
-    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
       <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
-           <UIcon name="i-lucide-plug" class="w-4 h-4" />
+        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-plug" class="w-5 h-5" />
         </div>
-        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Utilities Included</h3>
+        <div>
+          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Utilities Included</h3>
+          <p class="text-xs text-stone-500 font-medium">Select utils covered by rent</p>
+        </div>
       </div>
       
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <UCheckbox 
           v-for="utility in allUtilities" 
           :key="utility"
@@ -215,32 +290,35 @@
     </div>
     
     <!-- Section: Special Terms -->
-    <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
+    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
       <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-8 h-8 rounded-md bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
-           <UIcon name="i-lucide-scroll" class="w-4 h-4" />
+        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+           <UIcon name="i-lucide-scroll" class="w-5 h-5" />
         </div>
-        <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif">Special Terms & Conditions</h3>
+        <div>
+          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Special Terms & Conditions</h3>
+          <p class="text-xs text-stone-500 font-medium">Additional clauses</p>
+        </div>
       </div>
       
       <UFormField label="Additional terms (optional)">
         <UTextarea 
           v-model="formData.special_terms" 
           placeholder="Enter any additional terms, rules, or agreements..."
-          :rows="4"
-          size="lg"
-          class="input-minimal"
+          :rows="6"
+          size="xl"
+          class="w-full"
         />
       </UFormField>
     </div>
     
     <!-- Submit Button -->
-    <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+    <div class="flex flex-col sm:flex-row justify-end gap-3 pt-6">
       <UButton
         type="button"
         variant="ghost"
         color="neutral"
-        size="lg"
+        size="xl"
         class="order-2 sm:order-1"
         @click="$emit('cancel')"
       >
@@ -248,10 +326,10 @@
       </UButton>
       <UButton
         type="submit"
-        size="lg"
+        size="xl"
         :loading="loading"
         icon="i-lucide-eye"
-        class="order-1 sm:order-2"
+        class="order-1 sm:order-2 px-8"
       >
         Preview Agreement
       </UButton>
@@ -324,4 +402,3 @@ function toggleUtility(utility: string) {
   }
 }
 </script>
-

@@ -1,4 +1,4 @@
-import { serverSupabaseClient } from '#supabase/server'
+import { serverSupabaseServiceRole } from '#supabase/server'
 import crypto from 'crypto'
 import { rateLimit, phoneRateLimitKey } from '~/server/utils/rateLimit'
 import { validatePhone } from '~/server/utils/validation'
@@ -63,7 +63,8 @@ export default defineEventHandler(async (event) => {
         message: 'Too many OTP requests. Please wait 10 minutes.'
     })
 
-    const client = await serverSupabaseClient(event)
+    // Use service role client to bypass RLS for anonymous users
+    const client = await serverSupabaseServiceRole(event)
     const config = useRuntimeConfig()
 
     // Generate cryptographically secure 4-digit code
@@ -71,12 +72,20 @@ export default defineEventHandler(async (event) => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000) // 10 mins
 
     // Delete any existing codes for this phone (prevent accumulation)
-    await (client.from('verification_codes') as any)
+    const { error: deleteError } = await (client as any)
+        .schema('rentbase')
+        .from('verification_codes')
         .delete()
         .eq('phone', validatedPhone)
 
+    if (deleteError) {
+        console.error('OTP Delete Error:', JSON.stringify(deleteError, null, 2))
+    }
+
     // Store new code in DB
-    const { error } = await (client.from('verification_codes') as any)
+    const { error } = await (client as any)
+        .schema('rentbase')
+        .from('verification_codes')
         .insert({
             phone: validatedPhone,
             code,
@@ -84,8 +93,8 @@ export default defineEventHandler(async (event) => {
         })
 
     if (error) {
-        console.error('OTP Save Error:', error)
-        throw createError({ statusCode: 500, statusMessage: 'Failed to generate OTP' })
+        console.error('OTP Save Error:', JSON.stringify(error, null, 2))
+        throw createError({ statusCode: 500, statusMessage: 'Failed to generate OTP: ' + error.message })
     }
 
     // Send SMS

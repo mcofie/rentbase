@@ -1,4 +1,4 @@
-import { serverSupabaseClient } from '#supabase/server'
+import { serverSupabaseServiceRole } from '#supabase/server'
 import { rateLimit, phoneRateLimitKey } from '~/server/utils/rateLimit'
 import { validatePhone, validateOtpCode } from '~/server/utils/validation'
 
@@ -34,10 +34,11 @@ export default defineEventHandler(async (event) => {
         message: 'Too many verification attempts. Please wait and try again.'
     })
 
-    const client = await serverSupabaseClient(event)
+    const client = await serverSupabaseServiceRole(event)
 
     // Verify Code - check for exact match and not expired
-    const { data, error } = await client
+    const { data, error } = await (client as any)
+        .schema('rentbase')
         .from('verification_codes')
         .select('*')
         .eq('phone', validatedPhone)
@@ -48,6 +49,7 @@ export default defineEventHandler(async (event) => {
         .single()
 
     if (error || !data) {
+        console.error('OTP Verify Error:', error ? JSON.stringify(error, null, 2) : 'No matching code found')
         throw createError({
             statusCode: 400,
             statusMessage: 'Invalid or expired code'
@@ -55,12 +57,16 @@ export default defineEventHandler(async (event) => {
     }
 
     // CRITICAL: Delete code after successful verification to prevent replay attacks
-    await (client.from('verification_codes') as any)
+    await (client as any)
+        .schema('rentbase')
+        .from('verification_codes')
         .delete()
         .eq('id', (data as any).id)
 
     // Also clean up any other codes for this phone
-    await (client.from('verification_codes') as any)
+    await (client as any)
+        .schema('rentbase')
+        .from('verification_codes')
         .delete()
         .eq('phone', validatedPhone)
 
