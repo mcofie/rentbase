@@ -11,6 +11,9 @@ export function createSupabaseServer() {
                 autoRefreshToken: false,
                 persistSession: false,
             },
+            db: {
+                schema: 'rentbase',
+            },
         }
     )
 }

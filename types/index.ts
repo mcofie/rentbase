@@ -14,12 +14,19 @@ export interface Profile {
 // ============================================
 // Review Types
 // ============================================
+export type ReviewStatus = 'pending' | 'approved' | 'rejected'
+
 export interface Review {
-    id: number
+    id: string
     agent_phone: string
-    reviewer_id: string
+    agent_name?: string
+    reviewer_id?: string
+    reviewer_name?: string
+    reviewer_phone?: string
     rating: number
     comment: string | null
+    status: ReviewStatus | null
+    ip_address?: string
     created_at: string
 }
 
@@ -116,6 +123,7 @@ export interface ReportImage {
 
 export interface ConditionReport {
     id: string
+    short_code?: string
     user_id: string | null
     customer_email: string | null
     payment_ref: string | null

@@ -261,7 +261,7 @@
                 <span class="font-bold text-stone-900 dark:text-white text-sm">Your Report ID</span>
               </div>
               <div class="bg-stone-50 dark:bg-stone-800 rounded-md p-3 font-mono text-xs text-stone-700 dark:text-stone-300 break-all border border-stone-200 dark:border-stone-700">
-                {{ reportId }}
+                {{ reportShortCode || reportId }}
               </div>
               <p class="text-xs text-stone-400 mt-3">
                 Save this ID! Use it with your email ({{ customerEmail }}) to retrieve your report anytime before {{ retrievalDeadline }}.
@@ -316,6 +316,7 @@ const supabase = useSupabaseClient()
 const step = ref(1)
 const error = ref<string | null>(null)
 const reportId = ref('')
+const reportShortCode = ref('')
 const propertyAddress = ref('')
 const customerEmail = ref('')
 const uploadedPhotos = ref<{ url: string; description: string; room?: string }[]>([])
@@ -350,7 +351,7 @@ const reportSmsMessage = computed(() => {
   return `DEPOSIT SHIELD REPORT\n` +
     `Property: ${propertyAddress.value || 'N/A'}\n` +
     `Photos: ${uploadedPhotos.value.length}\n` +
-    `Report ID: ${reportId.value.slice(0, 8)}...\n` +
+    `Report ID: ${reportShortCode.value || reportId.value.slice(0, 8)}...\n` +
     `Retrieve at: rentbase.app/retrieve\n` +
     `- RentBase`
 })
@@ -371,6 +372,7 @@ onMounted(async () => {
     if (dbError) throw dbError
     
     reportId.value = data.id
+    reportShortCode.value = data.short_code || data.id.slice(0, 8).toUpperCase()
   } catch (err: any) {
     error.value = err.message || 'Failed to initialize report'
   }
@@ -425,6 +427,15 @@ async function handlePaymentSuccess(reference: string) {
       
       await (supabase.from('report_images') as any).insert(imagesToInsert)
     }
+
+    // Ensure short code is available
+    if (!reportShortCode.value) {
+       const { data } = await (supabase.from('condition_reports') as any)
+         .select('short_code')
+         .eq('id', reportId.value)
+         .single()
+       if (data?.short_code) reportShortCode.value = data.short_code
+    }
     
     step.value = 4
   } catch (err: any) {
@@ -442,6 +453,7 @@ async function downloadReport() {
     report_type: 'move_in',
     is_finalized: true,
     report_date: new Date().toISOString(),
+    short_code: reportShortCode.value
   }
   
   const images: ReportImage[] = uploadedPhotos.value.map((photo, index) => ({
@@ -465,6 +477,7 @@ async function downloadDraftReport() {
     report_type: 'move_in',
     is_finalized: false,
     report_date: new Date().toISOString(),
+    short_code: reportShortCode.value
   }
   
   const images: ReportImage[] = uploadedPhotos.value.map((photo, index) => ({
@@ -483,8 +496,8 @@ function shareViaWhatsApp() {
   const message = `*DEPOSIT SHIELD - CONDITION REPORT*\n\n` +
     `📍 Property: ${propertyAddress.value || 'Not specified'}\n` +
     `📸 Photos: ${uploadedPhotos.value.length} documented\n` +
-    `🔒 Storage: 7 years\n\n` +
-    `Report ID: ${reportId.value}\n\n` +
+    `🔒 Storage: 2 years\n\n` +
+    `Report ID: ${reportShortCode.value || reportId.value}\n\n` +
     `_Powered by RentBase - Deposit Shield_`
   
   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank')

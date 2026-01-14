@@ -564,6 +564,7 @@ async function fetchAgentData() {
         .from('reviews')
         .select('*')
         .eq('agent_phone', e164)
+        .eq('status', 'approved')
         .order('created_at', { ascending: false }),
       supabase
         .from('profiles')

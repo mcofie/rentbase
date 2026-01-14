@@ -68,11 +68,11 @@
 
               <!-- Report ID -->
               <div class="mb-8">
-                <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-3 block">Report / Contract ID</label>
+                <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-3 block">Report Code / Contract ID</label>
                 <input
                   v-model="documentId"
                   type="text"
-                  placeholder="e.g., a1b2c3d4-e5f6-..."
+                  placeholder="e.g., 8-char code (ABC123XY) or full ID"
                   required
                   class="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800 rounded-lg text-sm font-medium font-mono text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-400 focus:border-stone-400 transition-all placeholder-stone-300"
                 />
@@ -92,7 +92,7 @@
               <button
                 type="submit"
                 :disabled="loading"
-                class="w-full py-4 bg-stone-900 text-white font-medium rounded-lg hover:bg-stone-800 transition-all flex items-center justify-center gap-2 shadow-sm"
+                class="w-full py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-medium rounded-lg hover:bg-stone-800 dark:hover:bg-stone-100 transition-all flex items-center justify-center gap-2 shadow-sm"
               >
                 <UIcon v-if="loading" name="i-lucide-loader-2" class="w-4 h-4 animate-spin" />
                  <span v-else>Find My Document</span>
@@ -122,7 +122,9 @@
               <div class="space-y-3 mb-6">
                 <div class="flex justify-between py-3 border-b border-stone-100 dark:border-stone-800">
                   <span class="text-sm text-stone-500">Document ID</span>
-                  <span class="font-mono text-xs text-stone-700 dark:text-stone-300">{{ result.id.slice(0, 12) }}...</span>
+                  <span class="font-mono text-xs text-stone-700 dark:text-stone-300">
+                    {{ result.short_code || result.id.slice(0, 12) + '...' }}
+                  </span>
                 </div>
                 <div class="flex justify-between py-3 border-b border-stone-100 dark:border-stone-800">
                   <span class="text-sm text-stone-500">Created</span>
@@ -144,14 +146,14 @@
               <div class="space-y-3">
                 <NuxtLink
                   :to="docType === 'deposit' ? `/deposit/view/${result.id}` : `/contract/preview/${result.id}`"
-                  class="w-full py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-medium rounded-lg hover:bg-stone-800 transition-all flex items-center justify-center gap-2"
+                  class="w-full py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-medium rounded-lg hover:bg-stone-800 dark:hover:bg-stone-100 transition-all flex items-center justify-center gap-2"
                 >
                   <UIcon name="i-lucide-eye" class="w-4 h-4" />
                   View Document
                 </NuxtLink>
                 <button
                   @click="downloadDocument"
-                  class="w-full py-4 bg-white border border-stone-200 text-stone-900 font-medium rounded-lg hover:bg-stone-50 transition-all flex items-center justify-center gap-2"
+                  class="w-full py-4 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-medium rounded-lg hover:bg-stone-50 dark:hover:bg-stone-700 transition-all flex items-center justify-center gap-2"
                 >
                   <UIcon name="i-lucide-download" class="w-4 h-4" />
                   Download PDF
@@ -211,16 +213,23 @@ async function searchDocument() {
   try {
     if (docType.value === 'deposit') {
       // Search condition reports
-      const { data, error: dbError } = await (supabase
-        .from('condition_reports') as any)
+      let query = supabase
+        .from('condition_reports')
         .select('*')
-        .eq('id', documentId.value)
         .eq('customer_email', email.value)
         .eq('is_finalized', true)
-        .single()
+        
+      // Check if ID is short code (e.g. 8 chars) or UUID
+      if (documentId.value.trim().length <= 10) {
+        query = query.eq('short_code', documentId.value.trim())
+      } else {
+        query = query.eq('id', documentId.value.trim())
+      }
+      
+      const { data, error: dbError } = await query.single()
 
       if (dbError || !data) {
-        error.value = 'No report found with that ID and email combination. Please check and try again.'
+        error.value = 'No report found with that ID/Code and email combination. Please check and try again.'
         return
       }
 
@@ -230,7 +239,7 @@ async function searchDocument() {
       const { data: images } = await (supabase
         .from('report_images') as any)
         .select('*')
-        .eq('report_id', documentId.value)
+        .eq('report_id', data.id) // Ensure we use the full ID for images fetch
 
       reportImages.value = images || []
     } else {
@@ -238,7 +247,7 @@ async function searchDocument() {
       const { data, error: dbError } = await (supabase
         .from('contracts') as any)
         .select('*')
-        .eq('id', documentId.value)
+        .eq('id', documentId.value.trim())
         .eq('customer_email', email.value)
         .eq('is_finalized', true)
         .single()
