@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300 flex flex-col items-center justify-center p-6 text-balance">
+  <div class="min-h-screen bg-notion-gray dark:bg-stone-950 transition-colors duration-300 flex flex-col items-center justify-center p-6 text-balance">
     <!-- Center Logo -->
     <NuxtLink to="/" class="mb-12 flex items-center gap-2 group">
       <div class="w-12 h-12 bg-[#0075DE] rounded-xl flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-500">
@@ -9,24 +9,27 @@
 
     <div class="w-full max-w-sm">
       <div class="text-center mb-10 animate-fade-in">
-        <h1 class="text-4xl font-black text-stone-900 dark:text-white tracking-tighter mb-4">Welcome back.</h1>
-        <p class="text-stone-500 dark:text-stone-400 font-medium">Enter your line to secure your session.</p>
+        <h1 class="text-4xl font-bold text-notion-text dark:text-white mb-4 tracking-tight font-serif">Welcome back.</h1>
+        <p class="text-notion-text-secondary dark:text-stone-400 font-medium">Enter your line to secure your session.</p>
       </div>
 
-      <div class="bg-white dark:bg-stone-900 border border-[#E1E1E1] dark:border-stone-800 rounded-2xl p-2 shadow-sm animate-fade-in delay-100">
+      <div class="bg-white dark:bg-stone-900 border border-notion-border dark:border-stone-800 rounded-xl shadow-sm animate-fade-in delay-100 overflow-hidden">
         <div class="p-8">
           <form @submit.prevent="step === 'phone' ? handleRequestOtp() : handleVerifyOtp()" class="space-y-6">
             <!-- Step 1: Phone -->
             <div v-if="step === 'phone'" class="space-y-6">
               <div class="space-y-3">
-                <label class="text-[10px] font-black text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em] ml-1">Phone Number</label>
-                <div class="relative">
-                  <span class="absolute left-5 top-1/2 -translate-y-1/2 text-xl font-black text-stone-300">+233</span>
+                <label class="text-[10px] font-bold text-notion-text-secondary uppercase tracking-[0.2em] ml-1">Phone Number</label>
+                <div class="flex gap-2">
+                  <div class="flex-shrink-0 flex items-center gap-2 px-4 py-3 bg-notion-gray dark:bg-stone-800 rounded-lg border border-notion-border dark:border-stone-700">
+                    <span class="text-lg">🇬🇭</span>
+                    <span class="text-sm font-bold text-notion-text-secondary">+233</span>
+                  </div>
                   <input 
                     v-model="phone"
                     type="tel"
                     placeholder="24 XXX XXXX"
-                    class="w-full pl-16 pr-6 py-4 bg-[#F7F7F5] dark:bg-stone-950/50 border-[#E1E1E1] dark:border-stone-800 rounded-lg text-lg font-medium text-[#050505] dark:text-white focus:ring-2 focus:ring-[#0075DE]/20 focus:border-[#0075DE] transition-all placeholder-[#999999] dark:placeholder-stone-800"
+                    class="flex-1 min-w-0 px-4 py-4 bg-white dark:bg-stone-950/50 border-notion-border dark:border-stone-800 rounded-lg text-lg font-medium text-notion-text dark:text-white focus:ring-2 focus:ring-notion-blue/20 focus:border-notion-blue transition-all placeholder-stone-300"
                     autofocus
                   />
                 </div>
@@ -35,7 +38,7 @@
               <button 
                 type="submit"
                 :disabled="loading || phone.length < 9"
-                class="w-full py-4 bg-[#050505] dark:bg-white text-white dark:text-stone-900 text-lg font-bold rounded-lg hover:bg-stone-800 active:scale-[0.98] transition-all disabled:opacity-30 flex items-center justify-center gap-3 shadow-sm"
+                class="w-full py-4 bg-notion-text dark:bg-white text-white dark:text-stone-900 text-lg font-bold rounded-lg hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-30 flex items-center justify-center gap-3 shadow-sm"
               >
                 <UIcon v-if="loading" name="i-lucide-loader-2" class="animate-spin" />
                 <span>Send Code</span>
@@ -46,15 +49,15 @@
             <div v-else class="space-y-6 animate-fade-in">
               <div class="space-y-3">
                 <div class="flex items-center justify-between px-1">
-                  <label class="text-[10px] font-black text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em]">6-Digit Code</label>
-                  <button @click="step = 'phone'" class="text-[10px] font-bold text-[#0075DE] uppercase tracking-widest hover:underline">Change Number</button>
+                  <label class="text-[10px] font-bold text-notion-text-secondary uppercase tracking-[0.2em]">6-Digit Code</label>
+                  <button @click="step = 'phone'" class="text-[10px] font-bold text-notion-blue uppercase tracking-widest hover:underline px-0 py-0">Change Number</button>
                 </div>
                 <input 
                   v-model="otp"
                   type="text"
                   maxlength="6"
                   placeholder="000000"
-                  class="w-full px-6 py-4 bg-[#F7F7F5] dark:bg-stone-950/50 border-[#E1E1E1] dark:border-stone-800 rounded-lg text-2xl font-bold text-[#050505] dark:text-white text-center tracking-[0.5em] focus:ring-2 focus:ring-[#0075DE]/20 focus:border-[#0075DE] transition-all placeholder-[#999999] dark:placeholder-stone-800"
+                  class="w-full px-6 py-4 bg-notion-gray dark:bg-stone-950/50 border-notion-border dark:border-stone-800 rounded-lg text-2xl font-bold text-notion-text dark:text-white text-center tracking-[0.5em] focus:ring-2 focus:ring-notion-blue/20 focus:border-notion-blue transition-all placeholder-stone-300"
                   autofocus
                 />
               </div>
@@ -62,21 +65,21 @@
               <button 
                 type="submit"
                 :disabled="loading || otp.length < 6"
-                class="w-full py-4 bg-[#0075DE] text-white text-lg font-bold rounded-lg hover:bg-[#005BAB] active:scale-[0.98] transition-all disabled:opacity-30 flex items-center justify-center gap-3 shadow-sm"
+                class="w-full py-4 bg-notion-blue text-white text-lg font-bold rounded-lg hover:bg-notion-blue-hover active:scale-[0.98] transition-all disabled:opacity-30 flex items-center justify-center gap-3 shadow-lg shadow-notion-blue/20"
               >
                 <UIcon v-if="loading" name="i-lucide-loader-2" class="animate-spin" />
                 <span>Verify & Sign In</span>
               </button>
               
-              <p class="text-center text-[10px] font-black text-stone-400 uppercase tracking-widest pt-2">
-                Didn't receive it? <button @click="handleRequestOtp" class="text-[#0075DE] hover:underline">Resend</button>
+              <p class="text-center text-[10px] font-bold text-notion-text-secondary uppercase tracking-widest pt-2">
+                Didn't receive it? <button @click="handleRequestOtp" class="text-notion-blue hover:underline">Resend</button>
               </p>
             </div>
           </form>
         </div>
       </div>
       
-      <p class="text-center text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mt-12 opacity-50">
+      <p class="text-center text-[10px] font-bold text-notion-text-secondary uppercase tracking-[0.2em] mt-12 opacity-50">
         RentBase Protocol • Secure Layer
       </p>
     </div>
@@ -115,19 +118,19 @@ async function handleVerifyOtp() {
     const success = await verifyOTP(otp.value)
     if (!success) throw new Error('Verification failed')
     
-    // Strict Admin Check
-    if (profile.value?.role !== 'admin') {
-      await signOut()
-      throw new Error('Access restricted. Only administrators can log in at this time.')
+    // Dynamic Redirection based on Role
+    if (profile.value?.role === 'admin') {
+      toast.add({ title: 'Welcome Admin', color: 'success' })
+      router.push('/admin')
+    } else {
+      toast.add({ title: 'Welcome back!', color: 'success' })
+      const redirect = route.query.redirect as string || '/dashboard'
+      router.push(redirect)
     }
-    
-    toast.add({ title: 'Welcome Admin', color: 'success' })
-    const redirect = route.query.redirect as string || '/admin'
-    router.push(redirect)
   } catch (err: any) {
     toast.add({ title: 'Login Failed', description: err.message, color: 'error' })
-    // If it was the role error, we already signed them out
-    if (err.message.includes('Access restricted')) {
+    // Reset if it's an auth error
+    if (err.message.includes('restricted') || err.message.includes('Invalid')) {
       step.value = 'phone'
       otp.value = ''
     }

@@ -1,14 +1,14 @@
 <template>
   <form @submit.prevent="$emit('submit', formData)" class="space-y-6 sm:space-y-8">
     <!-- Section: Landlord Information -->
-    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
-      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
-           <UIcon name="i-lucide-home" class="w-5 h-5" />
+    <div class="bg-white dark:bg-stone-900 rounded-[24px] p-8 border border-notion-border dark:border-stone-800 shadow-sm">
+      <div class="flex items-center gap-3 mb-8 pb-4 border-b border-notion-border dark:border-stone-800">
+        <div class="w-10 h-10 rounded-xl bg-notion-pastel-blue dark:bg-blue-900/30 flex items-center justify-center text-notion-blue">
+           <UIcon name="i-lucide-user" class="w-5 h-5" />
         </div>
         <div>
-          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Landlord Details</h3>
-          <p class="text-xs text-stone-500 font-medium">Property owner information</p>
+          <h3 class="text-xl font-bold text-notion-text dark:text-white font-serif leading-tight">Landlord Details</h3>
+          <p class="text-xs text-notion-text-secondary">Official property owner information</p>
         </div>
       </div>
       
@@ -60,14 +60,14 @@
     </div>
     
     <!-- Section: Tenant Information -->
-    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
-      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
-           <UIcon name="i-lucide-user" class="w-5 h-5" />
+    <div class="bg-white dark:bg-stone-900 rounded-[24px] p-8 border border-notion-border dark:border-stone-800 shadow-sm">
+      <div class="flex items-center gap-3 mb-8 pb-4 border-b border-notion-border dark:border-stone-800">
+        <div class="w-10 h-10 rounded-xl bg-notion-green flex items-center justify-center text-emerald-800">
+           <UIcon name="i-lucide-user-check" class="w-5 h-5" />
         </div>
         <div>
-          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Tenant Details</h3>
-          <p class="text-xs text-stone-500 font-medium">Renter information</p>
+          <h3 class="text-xl font-bold text-notion-text dark:text-white font-serif leading-tight">Tenant Details</h3>
+          <p class="text-xs text-notion-text-secondary font-medium">Agreement participant information</p>
         </div>
       </div>
       
@@ -135,14 +135,14 @@
     </div>
     
     <!-- Section: Property Details -->
-    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
-      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
-           <UIcon name="i-lucide-building-2" class="w-5 h-5" />
+    <div class="bg-white dark:bg-stone-900 rounded-[24px] p-8 border border-notion-border dark:border-stone-800 shadow-sm">
+      <div class="flex items-center gap-3 mb-8 pb-4 border-b border-notion-border dark:border-stone-800">
+        <div class="w-10 h-10 rounded-xl bg-notion-orange flex items-center justify-center text-orange-800">
+           <UIcon name="i-lucide-map-pin" class="w-5 h-5" />
         </div>
         <div>
-          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Property Details</h3>
-          <p class="text-xs text-stone-500 font-medium">Location and specs</p>
+          <h3 class="text-xl font-bold text-notion-text dark:text-white font-serif leading-tight">Property Details</h3>
+          <p class="text-xs text-notion-text-secondary font-medium">Location and specifications</p>
         </div>
       </div>
       
@@ -192,14 +192,14 @@
     </div>
     
     <!-- Section: Rental Terms -->
-    <div class="bg-white dark:bg-stone-900 rounded-xl p-8 border border-stone-200 dark:border-stone-800 transition-colors shadow-sm">
-      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100 dark:border-stone-800">
-        <div class="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-900 dark:text-white">
+    <div class="bg-white dark:bg-stone-900 rounded-[24px] p-8 border border-notion-border dark:border-stone-800 shadow-sm">
+      <div class="flex items-center gap-3 mb-8 pb-4 border-b border-notion-border dark:border-stone-800">
+        <div class="w-10 h-10 rounded-xl bg-notion-purple flex items-center justify-center text-purple-800">
            <UIcon name="i-lucide-banknote" class="w-5 h-5" />
         </div>
         <div>
-          <h3 class="text-lg font-bold text-stone-900 dark:text-white font-serif leading-tight">Rental Terms</h3>
-          <p class="text-xs text-stone-500 font-medium">Financial and lease details</p>
+          <h3 class="text-xl font-bold text-notion-text dark:text-white font-serif leading-tight">Rental Terms</h3>
+          <p class="text-xs text-notion-text-secondary font-medium">Financial and lease duration</p>
         </div>
       </div>
       
@@ -312,26 +312,25 @@
       </UFormField>
     </div>
     
-    <!-- Submit Button -->
     <div class="flex flex-col sm:flex-row justify-end gap-3 pt-6">
       <UButton
         type="button"
         variant="ghost"
         color="neutral"
         size="xl"
-        class="order-2 sm:order-1"
+        class="order-2 sm:order-1 rounded-xl font-bold text-notion-text-secondary"
         @click="$emit('cancel')"
       >
-        Cancel
+        Discard
       </UButton>
       <UButton
         type="submit"
         size="xl"
         :loading="loading"
         icon="i-lucide-eye"
-        class="order-1 sm:order-2 px-8"
+        class="order-1 sm:order-2 px-8 btn-primary font-bold shadow-lg shadow-notion-blue/20"
       >
-        Preview Agreement
+        Preview Draft
       </UButton>
     </div>
   </form>

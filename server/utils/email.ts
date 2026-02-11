@@ -6,16 +6,21 @@
  */
 
 interface EmailOptions {
-    to: string
-    subject: string
-    html: string
-    text?: string
+  to: string
+  subject: string
+  html: string
+  text?: string
+  attachments?: {
+    filename: string
+    content: string
+    encoding: string
+  }[]
 }
 
 interface EmailResult {
-    success: boolean
-    error?: string
-    messageId?: string
+  success: boolean
+  error?: string
+  messageId?: string
 }
 
 /**
@@ -23,82 +28,89 @@ interface EmailResult {
  * Configure RESEND_API_KEY or SENDGRID_API_KEY in environment
  */
 export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
-    const config = useRuntimeConfig()
+  const config = useRuntimeConfig()
 
-    // Try Resend first (recommended for Nuxt)
-    if (config.resendApiKey) {
-        return sendWithResend(options, config.resendApiKey)
-    }
+  // Try Resend first (recommended for Nuxt)
+  if (config.resendApiKey) {
+    return sendWithResend(options, config.resendApiKey)
+  }
 
-    // Fallback to SendGrid
-    if (config.sendgridApiKey) {
-        return sendWithSendGrid(options, config.sendgridApiKey)
-    }
+  // Fallback to SendGrid
+  if (config.sendgridApiKey) {
+    return sendWithSendGrid(options, config.sendgridApiKey)
+  }
 
-    // No email provider configured - log and return success (silent fail in dev)
-    console.warn('[Email] No email provider configured. Set RESEND_API_KEY or SENDGRID_API_KEY.')
-    return { success: true, messageId: 'dev-mode-no-email-sent' }
+  // No email provider configured - log and return success (silent fail in dev)
+  console.warn('[Email] No email provider configured. Set RESEND_API_KEY or SENDGRID_API_KEY.')
+  return { success: true, messageId: 'dev-mode-no-email-sent' }
 }
 
 async function sendWithResend(options: EmailOptions, apiKey: string): Promise<EmailResult> {
-    try {
-        const response = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                from: 'RentBase <noreply@rentbase.app>',
-                to: options.to,
-                subject: options.subject,
-                html: options.html,
-                text: options.text,
-            }),
-        })
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'RentBase <noreply@rentbase.app>',
+        to: options.to,
+        subject: options.subject,
+        html: options.html,
+        text: options.text,
+        attachments: options.attachments
+      }),
+    })
 
-        const data = await response.json()
+    const data = await response.json()
 
-        if (response.ok) {
-            return { success: true, messageId: data.id }
-        }
-
-        return { success: false, error: data.message || 'Failed to send email' }
-    } catch (error: any) {
-        console.error('[Email] Resend error:', error)
-        return { success: false, error: error.message }
+    if (response.ok) {
+      return { success: true, messageId: data.id }
     }
+
+    return { success: false, error: data.message || 'Failed to send email' }
+  } catch (error: any) {
+    console.error('[Email] Resend error:', error)
+    return { success: false, error: error.message }
+  }
 }
 
 async function sendWithSendGrid(options: EmailOptions, apiKey: string): Promise<EmailResult> {
-    try {
-        const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                personalizations: [{ to: [{ email: options.to }] }],
-                from: { email: 'noreply@rentbase.app', name: 'RentBase' },
-                subject: options.subject,
-                content: [
-                    { type: 'text/html', value: options.html },
-                    ...(options.text ? [{ type: 'text/plain', value: options.text }] : []),
-                ],
-            }),
-        })
+  try {
+    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: options.to }] }],
+        from: { email: 'noreply@rentbase.app', name: 'RentBase' },
+        subject: options.subject,
+        content: [
+          { type: 'text/html', value: options.html },
+          ...(options.text ? [{ type: 'text/plain', value: options.text }] : []),
+        ],
+        attachments: options.attachments?.map(a => ({
+          content: a.content,
+          filename: a.filename,
+          type: 'application/pdf',
+          disposition: 'attachment'
+        }))
+      }),
+    })
 
-        if (response.ok || response.status === 202) {
-            return { success: true, messageId: response.headers.get('x-message-id') || 'sent' }
-        }
-
-        const data = await response.json()
-        return { success: false, error: data.errors?.[0]?.message || 'Failed to send email' }
-    } catch (error: any) {
-        console.error('[Email] SendGrid error:', error)
-        return { success: false, error: error.message }
+    if (response.ok || response.status === 202) {
+      return { success: true, messageId: response.headers.get('x-message-id') || 'sent' }
     }
+
+    const data = await response.json()
+    return { success: false, error: data.errors?.[0]?.message || 'Failed to send email' }
+  } catch (error: any) {
+    console.error('[Email] SendGrid error:', error)
+    return { success: false, error: error.message }
+  }
 }
 
 // ============================================
@@ -109,13 +121,13 @@ async function sendWithSendGrid(options: EmailOptions, apiKey: string): Promise<
  * Generate Contract Ready email
  */
 export function contractReadyEmail(contractId: string, landlordName: string, tenantName: string, propertyAddress: string): EmailOptions {
-    const appUrl = process.env.NUXT_PUBLIC_APP_URL || 'https://rentbase.app'
-    const viewUrl = `${appUrl}/contract/preview/${contractId}`
+  const appUrl = process.env.NUXT_PUBLIC_APP_URL || 'https://rentbase.app'
+  const viewUrl = `${appUrl}/contract/preview/${contractId}`
 
-    return {
-        to: '', // Set by caller
-        subject: '📜 Your RentBase Contract is Ready',
-        html: `
+  return {
+    to: '', // Set by caller
+    subject: '📜 Your RentBase Contract is Ready',
+    html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -168,21 +180,21 @@ export function contractReadyEmail(contractId: string, landlordName: string, ten
       </body>
       </html>
     `,
-        text: `Your RentBase Contract is Ready\n\nProperty: ${propertyAddress}\nLandlord: ${landlordName}\nTenant: ${tenantName}\n\nView your contract: ${viewUrl}\n\n- RentBase`,
-    }
+    text: `Your RentBase Contract is Ready\n\nProperty: ${propertyAddress}\nLandlord: ${landlordName}\nTenant: ${tenantName}\n\nView your contract: ${viewUrl}\n\n- RentBase`,
+  }
 }
 
 /**
  * Generate Signing Request email
  */
 export function signingRequestEmail(contractId: string, signerName: string, signerRole: 'landlord' | 'tenant', signingToken: string): EmailOptions {
-    const appUrl = process.env.NUXT_PUBLIC_APP_URL || 'https://rentbase.app'
-    const signUrl = `${appUrl}/contract/sign/${signingToken}`
+  const appUrl = process.env.NUXT_PUBLIC_APP_URL || 'https://rentbase.app'
+  const signUrl = `${appUrl}/contract/sign/${signingToken}`
 
-    return {
-        to: '', // Set by caller
-        subject: `✍️ Please Sign Your Tenancy Agreement`,
-        html: `
+  return {
+    to: '', // Set by caller
+    subject: `✍️ Please Sign Your Tenancy Agreement`,
+    html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -221,22 +233,22 @@ export function signingRequestEmail(contractId: string, signerName: string, sign
       </body>
       </html>
     `,
-        text: `Hi ${signerName},\n\nA tenancy agreement is awaiting your signature as the ${signerRole}.\n\nSign here: ${signUrl}\n\nThis link expires in 7 days.\n\n- RentBase`,
-    }
+    text: `Hi ${signerName},\n\nA tenancy agreement is awaiting your signature as the ${signerRole}.\n\nSign here: ${signUrl}\n\nThis link expires in 7 days.\n\n- RentBase`,
+  }
 }
 
 /**
  * Generate New Review Notification email (for agents)
  */
 export function newReviewEmail(agentName: string, rating: number, comment: string, agentPhone: string): EmailOptions {
-    const appUrl = process.env.NUXT_PUBLIC_APP_URL || 'https://rentbase.app'
-    const profileUrl = `${appUrl}/agent/${agentPhone}`
-    const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating)
+  const appUrl = process.env.NUXT_PUBLIC_APP_URL || 'https://rentbase.app'
+  const profileUrl = `${appUrl}/agent/${agentPhone}`
+  const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating)
 
-    return {
-        to: '', // Set by caller
-        subject: `⭐ New ${rating}-Star Review on RentBase`,
-        html: `
+  return {
+    to: '', // Set by caller
+    subject: `⭐ New ${rating}-Star Review on RentBase`,
+    html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -273,6 +285,6 @@ export function newReviewEmail(agentName: string, rating: number, comment: strin
       </body>
       </html>
     `,
-        text: `Hi ${agentName},\n\nYou received a new ${rating}-star review on RentBase!\n\n${comment ? `"${comment}"\n\n` : ''}View your profile: ${profileUrl}\n\n- RentBase`,
-    }
+    text: `Hi ${agentName},\n\nYou received a new ${rating}-star review on RentBase!\n\n${comment ? `"${comment}"\n\n` : ''}View your profile: ${profileUrl}\n\n- RentBase`,
+  }
 }

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { sendDiscordNotification } from '~/server/utils/discord'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
@@ -94,6 +95,25 @@ export default defineEventHandler(async (event) => {
                 console.error('Failed to finalize contract:', contractError)
             } else {
                 console.log(`Contract ${metadata.contract_id} finalized`)
+
+                // Fetch contract details for notification
+                const { data: contract } = await supabase
+                    .from('contracts')
+                    .select('details')
+                    .eq('id', metadata.contract_id)
+                    .single()
+
+                const details = contract?.details || {}
+
+                await sendDiscordNotification(
+                    `📜 **Tenancy Agreement Finalized**\n` +
+                    `**Contract ID:** ${metadata.contract_id}\n` +
+                    `**Amount:** GH₵ ${(amount / 100).toFixed(2)}\n` +
+                    `**Landlord:** ${details.landlord_name || 'N/A'}\n` +
+                    `**Tenant:** ${details.tenant_name || 'N/A'}\n` +
+                    `**Property:** ${details.property_address || 'N/A'}`,
+                    'success'
+                )
             }
         } else if (metadata?.feature_type === 'deposit_report' && metadata?.report_id) {
             const { error: reportError } = await supabase
@@ -109,6 +129,21 @@ export default defineEventHandler(async (event) => {
                 console.error('Failed to finalize report:', reportError)
             } else {
                 console.log(`Report ${metadata.report_id} finalized`)
+
+                // Fetch report details for notification
+                const { data: report } = await supabase
+                    .from('condition_reports')
+                    .select('property_address, short_code')
+                    .eq('id', metadata.report_id)
+                    .single()
+
+                await sendDiscordNotification(
+                    `🛡️ **Condition Report Finalized**\n` +
+                    `**Report ID:** ${report?.short_code || metadata.report_id}\n` +
+                    `**Amount:** GH₵ ${(amount / 100).toFixed(2)}\n` +
+                    `**Location:** ${report?.property_address || 'N/A'}`,
+                    'success'
+                )
             }
         }
 

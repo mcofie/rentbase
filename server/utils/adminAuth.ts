@@ -5,6 +5,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { useRuntimeConfig } from '#imports'
 
 // Use service role key for admin operations
 function getServiceClient() {
@@ -53,7 +54,8 @@ export async function isAdminPhoneWithDebug(phone: string): Promise<{
     console.log('[isAdminPhone] Checking phone:', phone)
 
     // First, let's see all admin users for debugging
-    const { data: allAdmins, error: listError } = await supabase
+    const { data: allAdmins, error: listError } = await (supabase as any)
+        .schema('rentbase')
         .from('admin_users')
         .select('id, phone, is_active')
 
@@ -69,7 +71,8 @@ export async function isAdminPhoneWithDebug(phone: string): Promise<{
         }
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
+        .schema('rentbase')
         .from('admin_users')
         .select('id, is_active')
         .eq('phone', phone)
@@ -96,7 +99,8 @@ export async function createOTP(phone: string): Promise<{ otp: string; expiresAt
     }
 
     // Invalidate any existing OTPs for this phone
-    await supabase
+    await (supabase as any)
+        .schema('rentbase')
         .from('admin_otps')
         .delete()
         .eq('phone', phone)
@@ -105,7 +109,8 @@ export async function createOTP(phone: string): Promise<{ otp: string; expiresAt
     const otp = generateOTPCode()
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes expiry
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
+        .schema('rentbase')
         .from('admin_otps')
         .insert({
             phone,
@@ -135,7 +140,8 @@ export async function verifyOTP(phone: string, code: string): Promise<{
     const supabase = getServiceClient()
 
     // Get the OTP record
-    const { data: otpRecord, error: fetchError } = await supabase
+    const { data: otpRecord, error: fetchError } = await (supabase as any)
+        .schema('rentbase')
         .from('admin_otps')
         .select('*')
         .eq('phone', phone)
@@ -150,20 +156,21 @@ export async function verifyOTP(phone: string, code: string): Promise<{
 
     // Check if expired
     if (new Date(otpRecord.expires_at) < new Date()) {
-        await supabase.from('admin_otps').delete().eq('id', otpRecord.id)
+        await (supabase as any).schema('rentbase').from('admin_otps').delete().eq('id', otpRecord.id)
         return { success: false, error: 'OTP has expired. Please request a new code.' }
     }
 
     // Check attempts (max 3)
     if (otpRecord.attempts >= 3) {
-        await supabase.from('admin_otps').delete().eq('id', otpRecord.id)
+        await (supabase as any).schema('rentbase').from('admin_otps').delete().eq('id', otpRecord.id)
         return { success: false, error: 'Too many attempts. Please request a new code.' }
     }
 
     // Verify code
     if (otpRecord.otp_code !== code) {
         // Increment attempts
-        await supabase
+        await (supabase as any)
+            .schema('rentbase')
             .from('admin_otps')
             .update({ attempts: otpRecord.attempts + 1 })
             .eq('id', otpRecord.id)
@@ -172,13 +179,15 @@ export async function verifyOTP(phone: string, code: string): Promise<{
     }
 
     // Mark OTP as used
-    await supabase
+    await (supabase as any)
+        .schema('rentbase')
         .from('admin_otps')
         .update({ is_used: true })
         .eq('id', otpRecord.id)
 
     // Get admin user
-    const { data: adminUser } = await supabase
+    const { data: adminUser } = await (supabase as any)
+        .schema('rentbase')
         .from('admin_users')
         .select('id')
         .eq('phone', phone)
@@ -192,7 +201,8 @@ export async function verifyOTP(phone: string, code: string): Promise<{
     const sessionToken = generateSessionToken()
     const sessionExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
 
-    const { error: sessionError } = await supabase
+    const { error: sessionError } = await (supabase as any)
+        .schema('rentbase')
         .from('admin_sessions')
         .insert({
             admin_id: adminUser.id,
@@ -206,7 +216,8 @@ export async function verifyOTP(phone: string, code: string): Promise<{
     }
 
     // Update last login
-    await supabase
+    await (supabase as any)
+        .schema('rentbase')
         .from('admin_users')
         .update({ last_login_at: new Date().toISOString() })
         .eq('id', adminUser.id)
@@ -225,34 +236,51 @@ export async function validateSession(token: string): Promise<{
     valid: boolean
     adminId?: string
     phone?: string
+    email?: string
     name?: string
 }> {
     const supabase = getServiceClient()
 
-    const { data: session, error } = await supabase
+    // 1. Get the session
+    const { data: session, error: sessionError } = await (supabase as any)
+        .schema('rentbase')
         .from('admin_sessions')
-        .select('admin_id, expires_at, admin_users(id, phone, name)')
+        .select('admin_id, expires_at')
         .eq('session_token', token)
         .single()
 
-    if (error || !session) {
+    if (sessionError || !session) {
+        console.error('[validateSession] Session token not found:', { error: sessionError?.message, token: token.substring(0, 8) + '...' })
         return { valid: false }
     }
 
-    // Check expiry
+    // 2. Check expiry
     if (new Date(session.expires_at) < new Date()) {
+        console.warn('[validateSession] Session expired:', { expires_at: session.expires_at, now: new Date().toISOString() })
         // Clean up expired session
-        await supabase.from('admin_sessions').delete().eq('session_token', token)
+        await (supabase as any).schema('rentbase').from('admin_sessions').delete().eq('session_token', token)
         return { valid: false }
     }
 
-    const adminUser = session.admin_users as any
+    // 3. Get the user
+    const { data: adminUser, error: userError } = await (supabase as any)
+        .schema('rentbase')
+        .from('admin_users')
+        .select('id, phone, email, name')
+        .eq('id', session.admin_id)
+        .single()
+
+    if (userError || !adminUser) {
+        console.error('[validateSession] Admin user not found for session:', { error: userError?.message, adminId: session.admin_id })
+        return { valid: false }
+    }
 
     return {
         valid: true,
-        adminId: session.admin_id,
-        phone: adminUser?.phone,
-        name: adminUser?.name
+        adminId: adminUser.id,
+        phone: adminUser.phone,
+        email: adminUser.email,
+        name: adminUser.name
     }
 }
 
@@ -262,10 +290,95 @@ export async function validateSession(token: string): Promise<{
 export async function invalidateSession(token: string): Promise<boolean> {
     const supabase = getServiceClient()
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
+        .schema('rentbase')
         .from('admin_sessions')
         .delete()
         .eq('session_token', token)
 
     return !error
+}
+
+/**
+ * Verify admin password and create session
+ */
+export async function verifyPassword(email: string, password: string): Promise<{
+    success: boolean
+    error?: string
+    sessionToken?: string
+    expiresAt?: Date
+}> {
+    const supabase = getServiceClient()
+
+    console.log(`[verifyPassword] Attempting login for: ${email} (len: ${password?.length})`)
+
+    // 1. Fetch admin user by email
+    const { data: adminUser, error: fetchError } = await (supabase as any)
+        .schema('rentbase')
+        .from('admin_users')
+        .select('*')
+        .eq('email', email.toLowerCase())
+        .eq('is_active', true)
+        .single()
+
+    if (fetchError || !adminUser) {
+        if (fetchError) console.error('[verifyPassword] DB Error:', fetchError)
+        else console.warn(`[verifyPassword] Admin user not found or inactive for: ${email}`)
+        return { success: false, error: 'Invalid credentials' }
+    }
+
+    // 3. Verify password hash
+    const [salt, storedHash] = (adminUser.password_hash || '').split(':')
+
+    if (!salt || !storedHash) {
+        console.error('[verifyPassword] No hash set')
+        return { success: false, error: 'Password not set for this account' }
+    }
+
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
+
+    if (hash !== storedHash) {
+        console.error('[verifyPassword] Hash mismatch')
+        return { success: false, error: 'Invalid password' }
+    }
+
+    // 4. Create session
+    const sessionToken = generateSessionToken()
+    const sessionExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+
+    const { error: sessionError } = await (supabase as any)
+        .schema('rentbase')
+        .from('admin_sessions')
+        .insert({
+            admin_id: adminUser.id,
+            session_token: sessionToken,
+            expires_at: sessionExpiresAt.toISOString()
+        })
+
+    if (sessionError) {
+        console.error('Failed to create session:', sessionError)
+        return { success: false, error: 'Failed to create session' }
+    }
+
+    // Update last login
+    await (supabase as any)
+        .schema('rentbase')
+        .from('admin_users')
+        .update({ last_login_at: new Date().toISOString() })
+        .eq('id', adminUser.id)
+
+    return {
+        success: true,
+        sessionToken,
+        expiresAt: sessionExpiresAt
+    }
+}
+
+/**
+ * Helper to hash a password
+ */
+export function hashPassword(password: string): string {
+    const salt = crypto.randomBytes(16).toString('hex')
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
+    return `${salt}:${hash}`
 }

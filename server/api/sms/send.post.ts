@@ -8,6 +8,7 @@
 
 import { rateLimit, ipRateLimitKey } from '~/server/utils/rateLimit'
 import { validatePhone, validateText } from '~/server/utils/validation'
+import { sendSMS } from '~/server/utils/sms'
 
 export default defineEventHandler(async (event) => {
     // Rate limit: 10 SMS per IP per hour
@@ -47,43 +48,13 @@ export default defineEventHandler(async (event) => {
     const validatedPhone = phoneValidation.value.replace('+', '')
     const validatedMessage = messageValidation.value
 
-    // Hubtel credentials from environment
-    const clientId = config.hubtelClientId
-    const clientSecret = config.hubtelClientSecret
-    const senderId = config.hubtelSenderId || 'RentBase'
-
-    if (!clientId || !clientSecret) {
-        console.warn('Hubtel credentials not configured, SMS will be logged only')
-        console.log(`[SMS] To: ${validatedPhone}, Message: ${validatedMessage}`)
-        return {
-            success: true,
-            messageId: `mock_${Date.now()}`,
-            note: 'SMS logged (Hubtel not configured)'
-        }
-    }
-
     try {
-        // Hubtel SendSMS API
-        const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
-
-        const response = await $fetch('https://smsc.hubtel.com/v1/messages/send', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Basic ${auth}`,
-                'Content-Type': 'application/json'
-            },
-            body: {
-                From: senderId,
-                To: validatedPhone,
-                Content: validatedMessage,
-                RegisteredDelivery: true
-            }
-        })
+        const response = await sendSMS(validatedPhone, validatedMessage)
 
         return {
             success: true,
-            messageId: (response as any).MessageId,
-            status: (response as any).Status
+            messageId: response.MessageId || response.messageId || response.requestId,
+            status: response.Status || response.status
         }
     } catch (error: any) {
         console.error('Hubtel SMS error:', error)

@@ -22,31 +22,24 @@ export function useAuth() {
         state.loading = true
         state.error = null
 
-        if (!isValidGhanaPhone(phone)) {
-            state.error = 'Please enter a valid Ghana phone number'
-            state.loading = false
-            return false
-        }
-
-        const formattedPhone = formatPhoneE164(phone)
-
         try {
-            const { error } = await supabase.auth.signInWithOtp({
-                phone: formattedPhone,
+            // Call our custom Admin OTP endpoint instead of Supabase Auth
+            const response = await $fetch('/api/admin/auth/send-otp', {
+                method: 'POST',
+                body: { phone }
             })
 
-            if (error) {
-                state.error = error.message
-                state.loading = false
-                return false
+            if (!(response as any).success) {
+                throw new Error((response as any).message || 'Failed to send OTP')
             }
 
-            state.phone = formattedPhone
+            state.phone = phone
             state.step = 'otp'
             state.loading = false
             return true
         } catch (err: any) {
-            state.error = err.message || 'Failed to send OTP'
+            console.error('[sendOTP] Error:', err)
+            state.error = err.data?.message || err.message || 'Failed to send OTP'
             state.loading = false
             return false
         }
@@ -59,32 +52,28 @@ export function useAuth() {
         state.loading = true
         state.error = null
 
-        if (otp.length !== 6) {
-            state.error = 'OTP must be 6 digits'
-            state.loading = false
-            return false
-        }
-
         try {
-            const { error } = await supabase.auth.verifyOtp({
-                phone: state.phone,
-                token: otp,
-                type: 'sms',
+            // Call our custom Admin OTP verification endpoint
+            const response = await $fetch('/api/admin/auth/verify-otp', {
+                method: 'POST',
+                body: {
+                    phone: state.phone,
+                    otp: otp
+                }
             })
 
-            if (error) {
-                state.error = error.message
-                state.loading = false
-                return false
+            if (!(response as any).success) {
+                throw new Error((response as any).message || 'Verification failed')
             }
 
-            // Fetch or create profile
+            // Fetch profile to update state
             await fetchProfile()
 
             state.loading = false
             return true
         } catch (err: any) {
-            state.error = err.message || 'Failed to verify OTP'
+            console.error('[verifyOTP] Error:', err)
+            state.error = err.data?.message || err.message || 'Failed to verify OTP'
             state.loading = false
             return false
         }
@@ -101,7 +90,25 @@ export function useAuth() {
      * Fetch user profile
      */
     async function fetchProfile(): Promise<Profile | null> {
-        // Early return if no user or user.id is not available
+        // 1. Try fetching from custom admin session first
+        try {
+            const adminSession = await $fetch('/api/admin/auth/me')
+            if (adminSession && (adminSession as any).authenticated) {
+                const userData = (adminSession as any).user
+                profile.value = {
+                    id: userData.id,
+                    phone_number: userData.phone,
+                    full_name: userData.name || userData.full_name,
+                    role: userData.role,
+                    is_verified: true,
+                } as any
+                return profile.value
+            }
+        } catch (e) {
+            // Not logged in via admin session, continue to Supabase check
+        }
+
+        // 2. Fallback to Supabase Auth user
         if (!user.value || !user.value.id) {
             return null
         }
@@ -116,7 +123,6 @@ export function useAuth() {
                 .single()
 
             if (error) {
-                // Don't log error if profile simply doesn't exist yet
                 if (error.code !== 'PGRST116') {
                     console.error('Error fetching profile:', error)
                 }
@@ -135,6 +141,11 @@ export function useAuth() {
      * Sign out
      */
     async function signOut(): Promise<void> {
+        try {
+            await $fetch('/api/admin/auth/logout', { method: 'POST' })
+        } catch (e) {
+            // Logout failed or already logged out
+        }
         await supabase.auth.signOut()
         profile.value = null
         state.step = 'phone'
@@ -155,9 +166,7 @@ export function useAuth() {
 
     // Initialize profile on mount
     onMounted(async () => {
-        if (user.value?.id) {
-            await fetchProfile()
-        }
+        await fetchProfile()
     })
 
     // Watch for user changes

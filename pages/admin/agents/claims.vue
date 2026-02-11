@@ -7,7 +7,7 @@
         👤
       </div>
       <h1 class="text-4xl font-bold text-[#37352F] dark:text-[#FFFFFF] font-serif mb-2">Agent Claims</h1>
-      <p class="text-[#787774] dark:text-[#9B9B9B]">Review and manage agent registration requests.</p>
+      <p class="text-[#787774] dark:text-[#9B9B9B]">Review and manage agent registration requests and account permissions.</p>
     </div>
 
     <!-- Toolbar -->
@@ -87,16 +87,7 @@
               </div>
             </th>
             <th class="px-4 py-2 text-left font-normal text-[#787774] dark:text-[#9B9B9B] border-r border-[#E1E1E1] dark:border-[#2F2F2F] w-36">
-              <div class="flex items-center gap-1.5">
-                <UIcon name="i-lucide-building" class="w-3.5 h-3.5" />
-                Agency
-              </div>
-            </th>
-            <th class="px-4 py-2 text-left font-normal text-[#787774] dark:text-[#9B9B9B] border-r border-[#E1E1E1] dark:border-[#2F2F2F] w-32">
-              <div class="flex items-center gap-1.5">
-                <UIcon name="i-lucide-map-pin" class="w-3.5 h-3.5" />
-                Location
-              </div>
+              Account Status
             </th>
             <th class="px-4 py-2 text-left font-normal text-[#787774] dark:text-[#9B9B9B] border-r border-[#E1E1E1] dark:border-[#2F2F2F] w-28">
               <div class="flex items-center gap-1.5">
@@ -129,14 +120,13 @@
               </div>
             </td>
             <td class="px-4 py-3 border-r border-[#E1E1E1] dark:border-[#2F2F2F]">
-              <span class="text-[#787774] dark:text-[#9B9B9B]">
-                {{ claim.agency_name || '—' }}
-              </span>
-            </td>
-            <td class="px-4 py-3 border-r border-[#E1E1E1] dark:border-[#2F2F2F]">
-              <span class="text-[#37352F] dark:text-[#D4D4D4] capitalize">
-                {{ claim.location?.replace('-', ' ') || '—' }}
-              </span>
+              <div v-if="claim.profile" class="flex items-center gap-1.5">
+                <span :class="['w-2 h-2 rounded-full', claim.profile.is_verified ? 'bg-[#6A9A78]' : 'bg-[#D27C7C]']"></span>
+                <span class="text-[#37352F] dark:text-[#D4D4D4] text-xs">
+                  {{ claim.profile.role }} {{ claim.profile.is_verified ? '(Verified)' : '(Unverified)' }}
+                </span>
+              </div>
+              <div v-else class="text-[#91918E] text-xs">No account created</div>
             </td>
             <td class="px-4 py-3 border-r border-[#E1E1E1] dark:border-[#2F2F2F]">
               <span 
@@ -154,27 +144,25 @@
                 <!-- Actions -->
                 <div class="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
                   <button 
-                    v-if="claim.status === 'pending'"
                     @click="openReviewModal(claim, 'approve')"
                     class="p-1.5 hover:bg-[#DBEDDB] dark:hover:bg-emerald-900/30 rounded text-[#6A9A78]"
-                    title="Approve"
+                    title="Change Status / Approve"
                   >
                     <UIcon name="i-lucide-check" class="w-4 h-4" />
                   </button>
                   <button 
-                    v-if="claim.status === 'pending'"
                     @click="openReviewModal(claim, 'reject')"
                     class="p-1.5 hover:bg-[#FFE2DD] dark:hover:bg-red-900/30 rounded text-[#D27C7C]"
-                    title="Reject"
+                    title="Change Status / Reject"
                   >
                     <UIcon name="i-lucide-x" class="w-4 h-4" />
                   </button>
                   <button 
                     @click="viewClaimDetails(claim)"
                     class="p-1.5 hover:bg-[#EFEFEF] dark:hover:bg-[#464646] rounded text-[#91918E]"
-                    title="View Details"
+                    title="Manage Account"
                   >
-                    <UIcon name="i-lucide-eye" class="w-4 h-4" />
+                    <UIcon name="i-lucide-settings" class="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -231,12 +219,12 @@
                 {{ reviewAction === 'approve' ? 'Approve' : 'Reject' }} Agent Claim
               </h3>
               <p class="text-sm text-[#787774] dark:text-[#9B9B9B]">
-                {{ selectedClaim.full_name }}
+                {{ selectedClaim.full_name }} (Current status: {{ selectedClaim.status }})
               </p>
             </div>
           </div>
 
-          <!-- Claim Details -->
+          <!-- Claim Details Summary -->
           <div class="bg-[#F7F7F5] dark:bg-stone-800 rounded-lg p-4 mb-6">
             <div class="grid grid-cols-2 gap-4 text-sm">
               <div>
@@ -245,16 +233,10 @@
                   {{ formatPhone(selectedClaim.phone) }}
                 </p>
               </div>
-              <div>
-                <p class="text-[#91918E] text-xs uppercase tracking-wider mb-1">Location</p>
+              <div v-if="selectedClaim.profile">
+                <p class="text-[#91918E] text-xs uppercase tracking-wider mb-1">Account Role</p>
                 <p class="font-medium text-[#37352F] dark:text-white capitalize">
-                  {{ selectedClaim.location ? selectedClaim.location.replace('-', ' ') : '—' }}
-                </p>
-              </div>
-              <div v-if="selectedClaim.agency_name" class="col-span-2">
-                <p class="text-[#91918E] text-xs uppercase tracking-wider mb-1">Agency</p>
-                <p class="font-medium text-[#37352F] dark:text-white">
-                  {{ selectedClaim.agency_name }}
+                  {{ selectedClaim.profile.role }}
                 </p>
               </div>
             </div>
@@ -292,82 +274,110 @@
               ]"
             >
               <span v-if="submitting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-              <span v-else>{{ reviewAction === 'approve' ? 'Approve Claim' : 'Reject Claim' }}</span>
+              <span v-else>{{ reviewAction === 'approve' ? 'Update to Approved' : 'Update to Rejected' }}</span>
             </button>
           </div>
         </div>
       </template>
     </UModal>
 
-    <!-- Details Modal -->
+    <!-- Details/Manage Account Modal -->
     <UModal v-model:open="showDetailsModal">
       <template #content>
         <div v-if="selectedClaim" class="p-6">
           <div class="flex items-center gap-3 mb-6">
-            <div class="w-12 h-12 bg-[#D3E5EF] rounded-full flex items-center justify-center">
+            <div class="w-12 h-12 bg-[#D3E5EF] dark:bg-[#0075DE]/20 rounded-full flex items-center justify-center">
               <UIcon name="i-lucide-user" class="w-6 h-6 text-[#0075DE]" />
             </div>
             <div>
               <h3 class="text-lg font-semibold text-[#37352F] dark:text-white">
-                {{ selectedClaim.full_name }}
+                Manage Agent Account
               </h3>
-              <span 
-                :class="['inline-flex items-center px-2 py-0.5 rounded text-xs', getStatusBadgeClass(selectedClaim.status)]"
-              >
-                {{ selectedClaim.status }}
-              </span>
-            </div>
-          </div>
-
-          <div class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <p class="text-[#91918E] text-xs uppercase tracking-wider mb-1">Phone</p>
-                <p class="font-medium text-[#37352F] dark:text-white font-mono">
-                  {{ formatPhone(selectedClaim.phone) }}
-                </p>
-              </div>
-              <div>
-                <p class="text-[#91918E] text-xs uppercase tracking-wider mb-1">Location</p>
-                <p class="font-medium text-[#37352F] dark:text-white capitalize">
-                  {{ selectedClaim.location ? selectedClaim.location.replace('-', ' ') : '—' }}
-                </p>
-              </div>
-              <div>
-                <p class="text-[#91918E] text-xs uppercase tracking-wider mb-1">Agency</p>
-                <p class="font-medium text-[#37352F] dark:text-white">
-                  {{ selectedClaim.agency_name || '—' }}
-                </p>
-              </div>
-              <div>
-                <p class="text-[#91918E] text-xs uppercase tracking-wider mb-1">Submitted</p>
-                <p class="font-medium text-[#37352F] dark:text-white">
-                  {{ formatDate(selectedClaim.created_at) }}
-                </p>
-              </div>
-            </div>
-
-            <div v-if="selectedClaim.admin_notes">
-              <p class="text-[#91918E] text-xs uppercase tracking-wider mb-1">Admin Notes</p>
-              <p class="text-[#37352F] dark:text-white bg-[#F7F7F5] dark:bg-stone-800 rounded-lg p-3 text-sm">
-                {{ selectedClaim.admin_notes }}
-              </p>
-            </div>
-
-            <div v-if="selectedClaim.reviewed_at">
-              <p class="text-[#91918E] text-xs uppercase tracking-wider mb-1">Reviewed</p>
-              <p class="font-medium text-[#37352F] dark:text-white">
-                {{ formatDate(selectedClaim.reviewed_at) }}
+              <p class="text-sm text-[#787774] dark:text-[#9B9B9B]">
+                {{ selectedClaim.full_name }}
               </p>
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-[#E1E1E1] dark:border-stone-700">
+          <div class="space-y-6">
+            <!-- Account Status Section -->
+            <div class="bg-[#F7F7F5] dark:bg-stone-800 rounded-xl p-5">
+              <h4 class="text-[10px] font-bold text-[#666666] uppercase tracking-[0.1em] mb-4">Account Information</h4>
+              
+              <div v-if="selectedClaim.profile" class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-[#787774]">Verification Status</span>
+                  <div class="flex items-center gap-2">
+                    <span :class="['px-2 py-0.5 rounded text-[10px] font-bold uppercase', selectedClaim.profile.is_verified ? 'bg-[#DBEDDB] text-[#1C3829]' : 'bg-[#FFE2DD] text-[#5D1715]']">
+                      {{ selectedClaim.profile.is_verified ? 'Verified' : 'Unverified' }}
+                    </span>
+                    <button 
+                      @click="toggleVerification"
+                      :disabled="submitting"
+                      class="text-xs text-[#0075DE] hover:underline font-medium"
+                    >
+                      {{ selectedClaim.profile.is_verified ? 'Revoke' : 'Verify Now' }}
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-[#787774]">Account Role</span>
+                  <select 
+                    v-model="selectedClaim.profile.role" 
+                    @change="updateRole"
+                    :disabled="submitting"
+                    class="text-xs bg-white dark:bg-stone-900 border border-[#E1E1E1] dark:border-stone-700 rounded px-2 py-1 outline-none focus:ring-1 focus:ring-[#0075DE]"
+                  >
+                    <option value="renter">Renter</option>
+                    <option value="agent">Agent</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-[#787774]">Phone (Unique ID)</span>
+                  <span class="text-xs font-mono text-[#37352F] dark:text-[#D4D4D4]">{{ selectedClaim.phone }}</span>
+                </div>
+              </div>
+
+              <div v-else class="text-center py-4">
+                <UIcon name="i-lucide-user-x" class="w-8 h-8 text-[#91918E] mx-auto mb-2" />
+                <p class="text-sm text-[#787774]">This agent hasn't created an account yet.</p>
+                <p class="text-xs text-[#91918E] mt-1">Status: {{ selectedClaim.status }}</p>
+              </div>
+            </div>
+
+            <!-- Claim Metadata -->
+            <div>
+              <h4 class="text-[10px] font-bold text-[#666666] uppercase tracking-[0.1em] mb-3">Claim Metadata</h4>
+              <div class="grid grid-cols-2 gap-y-3 gap-x-6 text-sm">
+                <div>
+                  <dt class="text-[10px] text-[#91918E] mb-0.5">Agency</dt>
+                  <dd class="font-medium text-[#37352F] dark:text-white">{{ selectedClaim.agency_name || '—' }}</dd>
+                </div>
+                <div>
+                  <dt class="text-[10px] text-[#91918E] mb-0.5">Location</dt>
+                  <dd class="font-medium text-[#37352F] dark:text-white capitalize">{{ selectedClaim.location?.replace('-', ' ') || '—' }}</dd>
+                </div>
+                <div>
+                  <dt class="text-[10px] text-[#91918E] mb-0.5">Submitted Date</dt>
+                  <dd class="font-medium text-[#37352F] dark:text-white">{{ formatDate(selectedClaim.created_at) }}</dd>
+                </div>
+                <div v-if="selectedClaim.reviewed_at">
+                  <dt class="text-[10px] text-[#91918E] mb-0.5">Last Reviewed</dt>
+                  <dd class="font-medium text-[#37352F] dark:text-white">{{ formatDate(selectedClaim.reviewed_at) }}</dd>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 pt-4 border-t border-[#E1E1E1] dark:border-stone-700">
             <button
               @click="showDetailsModal = false"
-              class="w-full px-4 py-2.5 bg-[#37352F] dark:bg-white text-white dark:text-[#37352F] rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+              class="w-full px-4 py-2 border border-[#E1E1E1] dark:border-stone-700 text-[#37352F] dark:text-white rounded hover:bg-[#F7F7F5] dark:hover:bg-stone-800 transition-colors text-sm font-medium"
             >
-              Close
+              Done
             </button>
           </div>
         </div>
@@ -382,6 +392,13 @@ definePageMeta({
   middleware: 'admin'
 })
 
+interface AgentProfile {
+  id: string
+  phone_number: string
+  role: 'renter' | 'agent' | 'admin'
+  is_verified: boolean
+}
+
 interface AgentClaim {
   id: string
   phone: string
@@ -394,6 +411,7 @@ interface AgentClaim {
   reviewed_at: string | null
   created_at: string
   updated_at: string
+  profile?: AgentProfile | null
 }
 
 const toast = useToast()
@@ -470,12 +488,12 @@ async function fetchClaims() {
 function openReviewModal(claim: AgentClaim, action: 'approve' | 'reject') {
   selectedClaim.value = claim
   reviewAction.value = action
-  adminNotes.value = ''
+  adminNotes.value = claim.admin_notes || ''
   showReviewModal.value = true
 }
 
 function viewClaimDetails(claim: AgentClaim) {
-  selectedClaim.value = claim
+  selectedClaim.value = JSON.parse(JSON.stringify(claim)) // Deep copy
   showDetailsModal.value = true
 }
 
@@ -483,35 +501,108 @@ async function submitReview() {
   if (!selectedClaim.value) return
   
   submitting.value = true
+  const targetId = selectedClaim.value.id
+  const targetStatus = reviewAction.value === 'approve' ? 'approved' : 'rejected'
   
   try {
-    await $fetch(`/api/admin/agents/${selectedClaim.value.id}`, {
+    await $fetch(`/api/admin/agents/${targetId}`, {
       method: 'PATCH',
       body: {
-        status: reviewAction.value === 'approve' ? 'approved' : 'rejected',
+        status: targetStatus,
         adminNotes: adminNotes.value || null
       }
     })
     
-    // Update local state
-    const claim = claims.value.find(c => c.id === selectedClaim.value?.id)
+    // Update local state in both claims array and selectedClaim
+    const claim = claims.value.find(c => c.id === targetId)
     if (claim) {
-      claim.status = reviewAction.value === 'approve' ? 'approved' : 'rejected'
+      claim.status = targetStatus
       claim.admin_notes = adminNotes.value || null
       claim.reviewed_at = new Date().toISOString()
+      
+      // If approved, usually the background process verifies them, let's refresh to be sure
+      if (targetStatus === 'approved') {
+        await fetchClaims()
+      }
     }
     
     showReviewModal.value = false
     
     toast.add({
-      title: `Claim ${reviewAction.value === 'approve' ? 'approved' : 'rejected'}`,
-      description: `${selectedClaim.value.full_name}'s claim has been ${reviewAction.value === 'approve' ? 'approved' : 'rejected'}.`,
-      color: reviewAction.value === 'approve' ? 'success' : 'warning'
+      title: `Claim ${targetStatus}`,
+      color: targetStatus === 'approved' ? 'success' : 'warning'
     })
   } catch (err: any) {
     toast.add({
       title: 'Failed to update claim',
       description: err.data?.message || 'Please try again.',
+      color: 'error'
+    })
+  } finally {
+    submitting.value = false
+  }
+}
+
+async function toggleVerification() {
+  if (!selectedClaim.value?.profile) return
+  
+  submitting.value = true
+  const newStatus = !selectedClaim.value.profile.is_verified
+  
+  try {
+    await $fetch('/api/admin/agents/profile', {
+      method: 'PATCH',
+      body: {
+        profileId: selectedClaim.value.profile.id,
+        isVerified: newStatus,
+        role: selectedClaim.value.profile.role
+      }
+    })
+    
+    // Update local state
+    selectedClaim.value.profile.is_verified = newStatus
+    const mainClaim = claims.value.find(c => c.id === selectedClaim.value?.id)
+    if (mainClaim?.profile) mainClaim.profile.is_verified = newStatus
+    
+    toast.add({
+      title: newStatus ? 'Verification approved' : 'Verification revoked',
+      color: newStatus ? 'success' : 'warning'
+    })
+  } catch (err: any) {
+    toast.add({
+      title: 'Failed to update verification',
+      color: 'error'
+    })
+  } finally {
+    submitting.value = false
+  }
+}
+
+async function updateRole() {
+  if (!selectedClaim.value?.profile) return
+  
+  submitting.value = true
+  
+  try {
+    await $fetch('/api/admin/agents/profile', {
+      method: 'PATCH',
+      body: {
+        profileId: selectedClaim.value.profile.id,
+        isVerified: selectedClaim.value.profile.is_verified,
+        role: selectedClaim.value.profile.role
+      }
+    })
+    
+    const mainClaim = claims.value.find(c => c.id === selectedClaim.value?.id)
+    if (mainClaim?.profile) mainClaim.profile.role = selectedClaim.value.profile.role
+    
+    toast.add({
+      title: 'Account role updated',
+      color: 'success'
+    })
+  } catch (err: any) {
+    toast.add({
+      title: 'Failed to update role',
       color: 'error'
     })
   } finally {

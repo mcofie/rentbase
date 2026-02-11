@@ -1,4 +1,6 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
+import { sendDiscordNotification } from '~/server/utils/discord'
+import { sendSMS } from '~/server/utils/sms'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
@@ -81,7 +83,25 @@ export default defineEventHandler(async (event) => {
             }
         }
 
-        // TODO: Send SMS notification to agent about approval
+        // Send Discord Notification
+        await sendDiscordNotification(
+            `✅ **Agent Verified**\n` +
+            `**Name:** ${claim.full_name}\n` +
+            `**Phone:** ${claim.phone}\n` +
+            `**Agency:** ${claim.agency_name || 'N/A'}\n` +
+            `**Notes:** ${adminNotes || 'None'}`,
+            'success'
+        )
+
+        // Send SMS Notification to Agent
+        try {
+            const smsMessage = `Congratulations ${claim.full_name.split(' ')[0]}! Your RentBase agent account has been approved. You can now log in at ${useRuntimeConfig().public.appUrl}/auth/login`
+            await sendSMS(claim.phone, smsMessage)
+        } catch (smsError) {
+            console.error('Failed to send approval SMS:', smsError)
+            // Still proceed as the main action (approval) succeeded
+        }
+
         console.log(`Agent claim approved for ${claim.phone} - ${claim.full_name}`)
     }
 

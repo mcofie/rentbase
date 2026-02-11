@@ -14,6 +14,11 @@ export function useContractGenerator() {
      * Can work with or without a logged-in user
      */
     async function createDraft(details: ContractDetails, email?: string): Promise<Contract | null> {
+        if (!supabase) {
+            error.value = 'Supabase client not initialized'
+            return null
+        }
+
         loading.value = true
         error.value = null
 
@@ -33,23 +38,39 @@ export function useContractGenerator() {
                 insertData.customer_email = email
             }
 
-            const { data, error: dbError } = await (supabase
-                .from('contracts') as any)
+            // Explicitly use rentbase schema to avoid any ambiguity
+            const { data, error: dbError } = await (supabase as any)
+                .schema('rentbase')
+                .from('contracts')
                 .insert(insertData)
                 .select()
                 .single()
 
             if (dbError) {
+                console.error('[Supabase Error]:', dbError)
                 error.value = dbError.message
                 loading.value = false
                 return null
             }
 
+            if (!data) {
+                error.value = 'Failed to retrieve created contract'
+                loading.value = false
+                return null
+            }
+
+            // Notify Discord about new contract draft (Fire and forget)
+            $fetch('/api/contracts/created', {
+                method: 'POST',
+                body: { contractId: data.id }
+            }).catch(err => console.error('[Discord] Failed to send creation notification:', err))
+
             currentContract.value = data
             loading.value = false
             return data
         } catch (err: any) {
-            error.value = err.message || 'Failed to create contract'
+            console.error('[CreateDraft Exception]:', err)
+            error.value = err.message || 'An unexpected error occurred'
             loading.value = false
             return null
         }
@@ -63,7 +84,8 @@ export function useContractGenerator() {
         error.value = null
 
         try {
-            const { data, error: dbError } = await supabase
+            const { data, error: dbError } = await (supabase as any)
+                .schema('rentbase')
                 .from('contracts')
                 .select('*')
                 .eq('id', id)
@@ -95,7 +117,8 @@ export function useContractGenerator() {
         error.value = null
 
         try {
-            const { data, error: dbError } = await supabase
+            const { data, error: dbError } = await (supabase as any)
+                .schema('rentbase')
                 .from('contracts')
                 .select('*')
                 .eq('user_id', user.value.id)
@@ -130,7 +153,8 @@ export function useContractGenerator() {
 
         try {
             // First get the current contract
-            const { data: current } = await supabase
+            const { data: current } = await (supabase as any)
+                .schema('rentbase')
                 .from('contracts')
                 .select('details')
                 .eq('id', id)
@@ -146,8 +170,9 @@ export function useContractGenerator() {
             // Merge the details
             const updatedDetails = { ...(current as any).details, ...details }
 
-            const { error: dbError } = await (supabase
-                .from('contracts') as any)
+            const { error: dbError } = await (supabase as any)
+                .schema('rentbase')
+                .from('contracts')
                 .update({ details: updatedDetails })
                 .eq('id', id)
                 .eq('user_id', user.value.id)
@@ -176,7 +201,8 @@ export function useContractGenerator() {
 
         try {
             // First, fetch the full contract to get all details
-            const { data: contractData, error: fetchError } = await supabase
+            const { data: contractData, error: fetchError } = await (supabase as any)
+                .schema('rentbase')
                 .from('contracts')
                 .select('*')
                 .eq('id', id)
@@ -189,8 +215,9 @@ export function useContractGenerator() {
             }
 
             // Update the contract as finalized
-            const { error: dbError } = await (supabase
-                .from('contracts') as any)
+            const { error: dbError } = await (supabase as any)
+                .schema('rentbase')
+                .from('contracts')
                 .update({
                     is_finalized: true,
                     payment_ref: paymentRef,

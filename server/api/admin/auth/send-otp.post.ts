@@ -4,7 +4,7 @@
  */
 
 import { defineEventHandler, readBody, createError } from 'h3'
-import { createOTP, isAdminPhoneWithDebug } from '~/server/utils/adminAuth'
+import { findUserByPhone, createLoginOTP } from '~/server/utils/auth'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
@@ -36,25 +36,21 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    console.log('[Admin OTP] Input phone:', phone)
-    console.log('[Admin OTP] Normalized phone:', normalizedPhone)
+    // Check if user exists (Admin or Approved Agent)
+    const user = await findUserByPhone(normalizedPhone)
+    console.log('[Auth OTP] User found:', user)
 
-    // Check if admin - get debug info
-    const { isAdmin, debug } = await isAdminPhoneWithDebug(normalizedPhone)
-    console.log('[Admin OTP] Is admin phone:', isAdmin, 'Debug:', debug)
-
-    if (!isAdmin) {
-        // For development, show clear message with debug info
-        console.log('[Admin OTP] Phone not registered as admin')
+    if (!user) {
+        console.log('[Auth OTP] User not found or not approved')
         throw createError({
             statusCode: 403,
-            message: `Phone not registered. Looking for: ${normalizedPhone}. Found in DB: ${JSON.stringify(debug?.allPhones || [])}. Error: ${debug?.error || 'none'}`
+            message: `Account not found or pending approval. Please register first.`
         })
     }
 
-    // Create OTP
-    const result = await createOTP(normalizedPhone)
-    console.log('[Admin OTP] OTP created:', result ? 'success' : 'failed')
+    // Create OTP using our standard utility
+    const result = await createLoginOTP(normalizedPhone)
+    console.log('[Auth OTP] OTP created:', result ? 'success' : 'failed')
 
     if (!result) {
         throw createError({

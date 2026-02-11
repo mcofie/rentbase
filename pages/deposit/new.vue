@@ -120,7 +120,7 @@
                     </div>
                     <div class="flex justify-between py-2">
                       <span class="text-sm text-stone-500">Report Fee</span>
-                      <span class="font-bold text-lg text-stone-900 dark:text-white">GH₵ 25</span>
+                      <span class="font-bold text-lg text-stone-900 dark:text-white">GH₵ {{ servicePrice }}</span>
                     </div>
                   </div>
                 </div>
@@ -197,7 +197,7 @@
                     <p class="font-bold text-stone-900 dark:text-white">Deposit Shield Report</p>
                     <p class="text-xs text-stone-500">{{ uploadedPhotos.length }} photos • 2 years storage</p>
                   </div>
-                  <p class="text-xl font-bold text-stone-900 dark:text-white">GH₵ 25</p>
+                  <p class="text-xl font-bold text-stone-900 dark:text-white">GH₵ {{ servicePrice }}</p>
                 </div>
               </div>
 
@@ -230,7 +230,7 @@
                   class="flex-1"
                   @success="handlePaymentSuccess"
                 >
-                  Pay GH₵ 25
+                   Pay GH₵ {{ servicePrice }}
                 </PaystackButton>
                 <button 
                   v-else
@@ -347,17 +347,18 @@ const uniqueRooms = computed(() => {
   return rooms.size
 })
 
-const reportSmsMessage = computed(() => {
-  return `DEPOSIT SHIELD REPORT\n` +
-    `Property: ${propertyAddress.value || 'N/A'}\n` +
-    `Photos: ${uploadedPhotos.value.length}\n` +
-    `Report ID: ${reportShortCode.value || reportId.value.slice(0, 8)}...\n` +
-    `Retrieve at: rentbase.app/retrieve\n` +
-    `- RentBase`
-})
+const servicePrice = ref(25)
 
 // Create a report ID on mount
 onMounted(async () => {
+  // Fetch dynamic price
+  try {
+    const prices = await $fetch<{ price_condition_report: number }>('/api/settings/prices')
+    if (prices?.price_condition_report) servicePrice.value = prices.price_condition_report
+  } catch (e) {
+    console.error('Failed to fetch dynamic price:', e)
+  }
+
   try {
     const { data, error: dbError } = await (supabase
       .from('condition_reports') as any)
@@ -373,6 +374,13 @@ onMounted(async () => {
     
     reportId.value = data.id
     reportShortCode.value = data.short_code || data.id.slice(0, 8).toUpperCase()
+
+    // Notify Discord about new report draft
+    $fetch('/api/reports/created', {
+      method: 'POST',
+      body: { reportId: data.id }
+    }).catch(err => console.error('[Discord] Failed to send report creation notification:', err))
+
   } catch (err: any) {
     error.value = err.message || 'Failed to initialize report'
   }

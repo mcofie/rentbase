@@ -33,7 +33,8 @@ export default defineNuxtConfig({
     // Environment variables
     runtimeConfig: {
         // Server-side only
-        supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder',
+        supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || 'placeholder',
+        supabaseSecretKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || 'placeholder',
         paystackSecretKey: process.env.PAYSTACK_SECRET_KEY || 'placeholder',
         hubtelClientId: process.env.HUBTEL_CLIENT_ID || '',
         hubtelClientSecret: process.env.HUBTEL_CLIENT_SECRET || '',
@@ -43,6 +44,7 @@ export default defineNuxtConfig({
         // Email service API keys (choose one)
         resendApiKey: process.env.RESEND_API_KEY || '',
         sendgridApiKey: process.env.SENDGRID_API_KEY || '',
+        discordWebhookUrl: process.env.DISCORD_WEBHOOK_URL || '',
 
         // Public (client-side)
         public: {

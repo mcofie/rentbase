@@ -128,7 +128,7 @@
                 </div>
                 <div class="flex justify-between py-3 border-b border-stone-100 dark:border-stone-800">
                   <span class="text-sm text-stone-500">Created</span>
-                  <span class="font-bold text-stone-900 dark:text-white">{{ formatDate(result.created_at || result.report_date) }}</span>
+                  <span class="font-bold text-stone-900 dark:text-white">{{ formatDate(result.report_date || result.created_at) }}</span>
                 </div>
                 <div class="flex justify-between py-3 border-b border-stone-100 dark:border-stone-800">
                   <span class="text-sm text-stone-500">Status</span>
@@ -201,7 +201,7 @@ const reportImages = ref<ReportImage[]>([])
 
 const expiryDate = computed(() => {
   if (!result.value) return ''
-  const date = new Date(result.value.created_at || result.value.report_date)
+  const date = new Date(result.value.report_date || result.value.created_at)
   date.setFullYear(date.getFullYear() + 2)
   return date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
 })
@@ -239,7 +239,7 @@ async function searchDocument() {
       const { data: images } = await (supabase
         .from('report_images') as any)
         .select('*')
-        .eq('report_id', data.id) // Ensure we use the full ID for images fetch
+        .eq('report_id', (data as any).id) // Ensure we use the full ID for images fetch
 
       reportImages.value = images || []
     } else {

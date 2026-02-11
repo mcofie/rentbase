@@ -1,4 +1,4 @@
-import { serverSupabaseClient } from '#supabase/server'
+import { serverSupabaseServiceRole } from '#supabase/server'
 import { rateLimit } from '~/server/utils/rateLimit'
 import { validatePhone, validateText, sanitizeForDb } from '~/server/utils/validation'
 
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
         message: 'Too many reports submitted. Please try again later.'
     })
 
-    const client = await serverSupabaseClient(event)
+    const client = await serverSupabaseServiceRole(event)
 
     // Get IP for audit trail
     const ip = getRequestHeader(event, 'x-forwarded-for') ||
@@ -65,17 +65,18 @@ export default defineEventHandler(async (event) => {
     })
 
     // Insert report
-    const { data, error } = await (client
-        .from('agent_reports') as any)
+    const { data, error } = await (client as any)
+        .schema('rentbase')
+        .from('agent_reports')
         .insert(reportData)
         .select()
         .single()
 
     if (error) {
-        console.error('Report submission error:', error)
+        console.error('[Report Submission Error]:', error)
         throw createError({
             statusCode: 500,
-            statusMessage: 'Failed to submit report. Please try again.'
+            statusMessage: 'Failed to submit report. Internal server error.'
         })
     }
 

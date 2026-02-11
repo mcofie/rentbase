@@ -70,7 +70,7 @@
             <div>
               <p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1.5">Date</p>
               <p class="font-medium text-stone-900 dark:text-white text-sm">
-                {{ formatDate(report.report_date || report.created_at || '') }}
+                {{ formatDate(report.report_date || '') }}
               </p>
             </div>
             <div>

@@ -2,9 +2,9 @@
   <UButton
     :loading="loading"
     :disabled="disabled"
-    size="lg"
+    size="xl"
     block
-    class="rounded-lg font-medium bg-[#0075DE] text-white border-0 transition-all duration-200 hover:bg-[#005BAB] active:scale-[0.99]"
+    class="rounded-xl font-bold btn-primary h-14 shadow-lg shadow-notion-blue/20"
     @click="handlePayment"
   >
     <template #leading>

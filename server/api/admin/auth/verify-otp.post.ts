@@ -4,7 +4,7 @@
  */
 
 import { defineEventHandler, readBody, createError, setCookie } from 'h3'
-import { verifyOTP } from '~/server/utils/adminAuth'
+import { verifyLoginOTP, findUserByPhone, createSession } from '~/server/utils/auth'
 
 const COOKIE_NAME = 'admin_session'
 const COOKIE_MAX_AGE = 60 * 60 * 24 // 24 hours in seconds
@@ -27,17 +27,36 @@ export default defineEventHandler(async (event) => {
     }
 
     // Verify OTP
-    const result = await verifyOTP(normalizedPhone, otp)
+    const verifyResult = await verifyLoginOTP(normalizedPhone, otp)
 
-    if (!result.success) {
+    if (!verifyResult.success) {
         throw createError({
             statusCode: 401,
-            message: result.error || 'Invalid OTP'
+            message: verifyResult.error || 'Invalid OTP'
+        })
+    }
+
+    // Identify user and role
+    const user = await findUserByPhone(normalizedPhone)
+    if (!user) {
+        throw createError({
+            statusCode: 404,
+            message: 'User account no longer exists'
+        })
+    }
+
+    // Create session
+    const session = await createSession(user.id, user.role)
+    if (!session) {
+        throw createError({
+            statusCode: 500,
+            message: 'Failed to create session'
         })
     }
 
     // Set secure HTTP-only cookie with session token
-    setCookie(event, COOKIE_NAME, result.sessionToken!, {
+    // We use the same cookie name for both roles to simplify things
+    setCookie(event, COOKIE_NAME, session.sessionToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
@@ -48,6 +67,7 @@ export default defineEventHandler(async (event) => {
     return {
         success: true,
         message: 'Login successful',
-        expiresAt: result.expiresAt
+        role: user.role,
+        expiresAt: session.expiresAt
     }
 })

@@ -1,23 +1,40 @@
-import { createSupabaseServer } from '~/server/utils/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
-    const client = createSupabaseServer()
+    const config = useRuntimeConfig()
 
-    try {
-        const { data: contracts, error } = await client
-            .from('contracts')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(100)
+    const supabase = createClient(
+        config.public.supabaseUrl,
+        config.supabaseServiceRoleKey,
+        {
+            db: { schema: 'rentbase' }
+        }
+    )
 
-        if (error) throw error
+    const query = getQuery(event)
+    const limit = parseInt(query.limit as string) || 10
+    const offset = parseInt(query.offset as string) || 0
 
-        return contracts || []
+    console.log(`[AdminAPI] Fetching contracts: limit=${limit}, offset=${offset}`)
 
-    } catch (err: any) {
+    const { data, count, error } = await supabase
+        .from('contracts')
+        .select('*', { count: 'exact' })
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1)
+
+    if (error) {
+        console.error('[AdminAPI] Contracts Error:', error.message)
         throw createError({
             statusCode: 500,
-            message: err.message || 'Failed to fetch contracts'
+            message: 'Database query failed'
         })
+    }
+
+    console.log(`[AdminAPI] Success: Found ${data?.length} contracts out of ${count}`)
+
+    return {
+        contracts: data || [],
+        total: count || 0
     }
 })

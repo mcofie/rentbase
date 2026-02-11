@@ -15,7 +15,7 @@
       
       <!-- Auto-save indicator -->
       <div v-if="autoSaveStatus" class="fixed bottom-6 right-6 z-50">
-        <div class="flex items-center gap-2 px-4 py-2 bg-[#0075DE] text-white rounded-lg text-xs font-medium shadow-lg animate-fade-in">
+        <div class="flex items-center gap-2 px-4 py-2 bg-notion-blue text-white rounded-lg text-xs font-medium shadow-lg animate-fade-in">
           <UIcon :name="autoSaveStatus === 'saving' ? 'i-lucide-loader-2' : 'i-lucide-check'" :class="{ 'animate-spin': autoSaveStatus === 'saving' }" class="w-4 h-4" />
           {{ autoSaveStatus === 'saving' ? 'Saving...' : 'Draft saved' }}
         </div>
@@ -25,40 +25,47 @@
       <main class="px-6 py-8 sm:py-12 flex-grow">
         <div :class="['mx-auto', step === 2 ? 'max-w-6xl' : 'max-w-4xl']">
           <!-- Page Header -->
-          <div class="text-center mb-10 animate-fade-in">
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-md text-[10px] font-bold uppercase tracking-widest mb-4">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              Pocket Lawyer
+          <div class="text-center mb-10 animate-fade-in group">
+            <div class="mb-4 text-6xl group-hover:scale-110 transition-transform duration-500 cursor-default">
+              {{ step === 1 ? '✍️' : step === 2 ? '📄' : step === 3 ? '💳' : '🎉' }}
             </div>
-            <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white mb-3 tracking-tight font-serif">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-notion-gray dark:bg-stone-800 text-notion-text-secondary rounded-md text-[10px] font-bold uppercase tracking-widest mb-4 border border-notion-border">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Pocket Lawyer Protocol
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-bold text-stone-900 dark:text-white mb-3 tracking-tight font-serif">
               {{ stepTitles[step - 1] }}
             </h1>
-            <p class="text-stone-500 dark:text-stone-400 font-medium">
+            <p class="text-stone-500 dark:text-stone-400 font-medium max-w-xl mx-auto">
               {{ stepDescriptions[step - 1] }}
             </p>
           </div>
           
-      <!-- Progress Steps (Notion Style: Minimal) -->
-          <div class="flex items-center justify-center gap-4 mb-12 text-xs font-medium text-stone-400">
-             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 1 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
-               <span>1. Details</span>
+          <!-- Progress Steps (Notion Style: Minimal) -->
+          <div class="flex items-center justify-center gap-2 mb-16 text-[11px] font-bold uppercase tracking-widest text-notion-text-secondary">
+             <div :class="['flex items-center gap-2 px-3 py-2 rounded-lg transition-all', step === 1 ? 'bg-notion-blue/10 text-notion-blue shadow-sm ring-1 ring-notion-blue/20' : 'opacity-40']">
+               <span class="w-4 h-4 rounded-full bg-notion-blue text-white flex items-center justify-center text-[8px]">1</span>
+               <span>Details</span>
              </div>
-             <span class="text-stone-300">/</span>
-             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 2 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
-               <span>2. Preview</span>
+             <UIcon name="i-lucide-chevron-right" class="w-3 h-3 opacity-20" />
+             <div :class="['flex items-center gap-2 px-3 py-2 rounded-lg transition-all', step === 2 ? 'bg-notion-blue/10 text-notion-blue shadow-sm ring-1 ring-notion-blue/20' : 'opacity-40']">
+               <span class="w-4 h-4 rounded-full bg-notion-blue text-white flex items-center justify-center text-[8px]">2</span>
+               <span>Preview</span>
              </div>
-             <span class="text-stone-300">/</span>
-             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 3 ? 'bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-white' : '']">
-               <span>3. Pay</span>
+             <UIcon name="i-lucide-chevron-right" class="w-3 h-3 opacity-20" />
+             <div :class="['flex items-center gap-2 px-3 py-2 rounded-lg transition-all', step === 3 ? 'bg-notion-blue/10 text-notion-blue shadow-sm ring-1 ring-notion-blue/20' : 'opacity-40']">
+               <span class="w-4 h-4 rounded-full bg-notion-blue text-white flex items-center justify-center text-[8px]">3</span>
+               <span>Pay</span>
              </div>
-             <span class="text-stone-300">/</span>
-             <div :class="['flex items-center gap-2 px-3 py-1.5 rounded-md transition-all', step === 4 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400' : '']">
-               <span>4. Done</span>
+             <UIcon name="i-lucide-chevron-right" class="w-3 h-3 opacity-20" />
+             <div :class="['flex items-center gap-2 px-3 py-2 rounded-lg transition-all', step === 4 ? 'bg-notion-green text-emerald-800 shadow-sm ring-1 ring-emerald-200' : 'opacity-40']">
+               <UIcon name="i-lucide-check" class="w-4 h-4" />
+               <span>Done</span>
              </div>
           </div>
 
           <!-- Step 1: Contract Form -->
-          <div v-if="step === 1">
+          <div v-if="step === 1" class="animate-fade-in-up">
             <ContractForm 
               :loading="loading"
               :initial-data="formData"
@@ -67,11 +74,12 @@
             />
             
             <!-- Clear saved draft button -->
-            <div v-if="hasSavedDraft" class="mt-4 text-center">
+            <div v-if="hasSavedDraft" class="mt-8 text-center">
               <button 
                 @click="clearSavedDraft"
-                class="text-xs text-stone-400 hover:text-stone-900 transition-colors underline decoration-stone-200"
+                class="text-xs text-stone-400 hover:text-stone-900 dark:hover:text-white transition-colors flex items-center justify-center gap-2 mx-auto"
               >
+                <UIcon name="i-lucide-trash-2" class="w-3 h-3" />
                 Clear saved draft
               </button>
             </div>
@@ -79,35 +87,38 @@
 
           <!-- Step 2: Preview with Watermark -->
           <div v-else-if="step === 2" class="animate-fade-in">
-            <div class="grid lg:grid-cols-3 gap-8">
+            <div class="grid lg:grid-cols-12 gap-8 items-start">
               <!-- Preview Document -->
-              <div class="lg:col-span-2 order-2 lg:order-1">
-                <ContractPreview :details="formData!" />
+              <div class="lg:col-span-8 order-2 lg:order-1">
+                <div class="bg-white dark:bg-stone-900 border border-notion-border dark:border-stone-800 rounded-xl overflow-hidden shadow-sm">
+                  <ContractPreview :details="formData!" />
+                </div>
               </div>
 
               <!-- Action Sidebar -->
-              <div class="space-y-6 order-1 lg:order-2">
+              <div class="lg:col-span-4 space-y-6 order-1 lg:order-2 sticky top-24">
                 <!-- Summary Card -->
                 <ContractSummaryCard :details="formData!" />
                 
                 <!-- Approval Card -->
-                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-8 h-8 bg-notion-green rounded-md flex items-center justify-center">
-                      <UIcon name="i-lucide-check-circle" class="w-4 h-4 text-emerald-700" />
+                <div class="bg-white dark:bg-stone-900 rounded-[24px] p-6 border border-notion-border dark:border-stone-800 shadow-sm">
+                  <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-notion-green dark:bg-emerald-900/30 rounded-xl flex items-center justify-center">
+                      <UIcon name="i-lucide-check-circle-2" class="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
                     </div>
                     <div>
-                      <h3 class="font-bold text-stone-900 dark:text-white">Looks Good?</h3>
-                      <p class="text-xs text-stone-500">Proceed to payment</p>
+                      <h3 class="text-sm font-bold text-notion-text dark:text-white">Review Draft</h3>
+                      <p class="text-[11px] text-notion-text-secondary">Ready for finalization</p>
                     </div>
                   </div>
 
                   <div class="space-y-3">
                     <UButton
                       block
-                      size="lg"
-                      class="rounded-lg font-medium btn-primary"
-                      icon="i-lucide-credit-card"
+                      size="xl"
+                      class="rounded-xl font-bold btn-primary h-12"
+                      icon="i-lucide-arrow-right"
+                      trailing
                       :loading="loading"
                       @click="approvePreview"
                     >
@@ -118,7 +129,7 @@
                       color="neutral"
                       block
                       size="lg"
-                      class="rounded-lg font-medium"
+                      class="rounded-xl font-medium text-notion-text-secondary hover:text-notion-text"
                       icon="i-lucide-pencil"
                       @click="step = 1"
                     >
@@ -128,61 +139,57 @@
                 </div>
 
                 <!-- Share & Download Card -->
-                <div class="bg-white dark:bg-stone-900 rounded-lg p-6 border border-stone-200 dark:border-stone-800 shadow-sm">
-                  <p class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Share Draft</p>
+                <div class="bg-notion-gray dark:bg-stone-800/40 rounded-[24px] p-6 border border-notion-border dark:border-stone-700">
+                  <div class="flex items-center gap-2 mb-4">
+                    <UIcon name="i-lucide-share-2" class="w-4 h-4 text-notion-text-secondary" />
+                    <span class="text-[10px] font-bold text-notion-text-secondary uppercase tracking-[0.1em]">Collaborate</span>
+                  </div>
                   
-                  <div class="space-y-3">
+                  <div class="grid grid-cols-2 gap-3">
                     <UButton
                       variant="outline"
                       color="neutral"
                       block
-                      size="lg"
-                      class="rounded-lg font-medium"
-                      icon="i-lucide-download"
+                      size="md"
+                      class="rounded-xl font-medium bg-white dark:bg-stone-900 border-notion-border"
+                      icon="i-lucide-file-text"
                       @click="downloadDraftPDF"
                     >
-                      Download Draft PDF
+                      Draft PDF
                     </UButton>
                     
                     <UButton
                       variant="outline"
                       block
-                      size="lg"
-                      class="rounded-lg font-medium border-stone-200 text-stone-700 hover:bg-stone-50"
+                      size="md"
+                      class="rounded-xl font-medium border-notion-border text-stone-700 bg-white dark:bg-stone-900 dark:text-stone-300"
                       icon="i-lucide-message-circle"
                       @click="shareViaWhatsApp"
                     >
-                      Share via WhatsApp
-                    </UButton>
-                    
-                    <UButton
-                      variant="ghost"
-                      color="neutral"
-                      block
-                      size="lg"
-                      class="rounded-lg font-medium"
-                      icon="i-lucide-copy"
-                      @click="copyShareLink"
-                    >
-                      {{ linkCopied ? 'Link Copied!' : 'Copy Share Link' }}
+                      WhatsApp
                     </UButton>
                   </div>
                   
-                  <p class="text-xs text-stone-400 mt-4 text-center">
-                    Share the draft for review before payment
-                  </p>
+                  <UButton
+                    variant="soft"
+                    color="neutral"
+                    block
+                    size="md"
+                    class="rounded-xl font-medium mt-3 bg-stone-200/50 dark:bg-stone-700/50 text-notion-text dark:text-white"
+                    icon="i-lucide-link"
+                    @click="copyShareLink"
+                  >
+                    {{ linkCopied ? 'Link Copied!' : 'Copy Preview Link' }}
+                  </UButton>
                 </div>
 
                 <!-- Info Card -->
-                <div class="p-4 rounded-lg bg-notion-yellow border border-stone-100">
+                <div class="p-4 rounded-xl bg-notion-yellow/40 border border-amber-200/50 dark:border-amber-900/30">
                   <div class="flex items-start gap-3">
-                    <UIcon name="i-lucide-info" class="w-4 h-4 text-stone-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p class="text-xs font-bold text-stone-700 mb-1">Draft Watermark</p>
-                      <p class="text-xs text-stone-600 leading-relaxed">
-                        The watermark will be removed after payment. Share this draft for review before finalizing.
-                      </p>
-                    </div>
+                    <UIcon name="i-lucide-info" class="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
+                    <p class="text-[11px] text-amber-800 dark:text-amber-400 leading-normal">
+                      Watermark is removed after payment. Agreement is stored for 2 years.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -190,42 +197,71 @@
           </div>
 
           <!-- Step 3: Email & Payment -->
-          <div v-else-if="step === 3" class="animate-fade-in">
-            <div class="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div v-else-if="step === 3" class="animate-fade-in-up">
+            <div class="grid lg:grid-cols-12 gap-10 max-w-5xl mx-auto">
               <!-- Payment Form -->
-              <div class="bg-white dark:bg-stone-900 rounded-lg p-8 border border-stone-200 dark:border-stone-800 shadow-sm">
-                <div class="flex items-center justify-center gap-3 mb-6">
-                  <div class="w-10 h-10 bg-notion-green rounded-md flex items-center justify-center">
-                    <UIcon name="i-lucide-credit-card" class="w-5 h-5 text-emerald-700" />
+              <div class="lg:col-span-7 bg-white dark:bg-stone-900 rounded-[24px] p-8 border border-notion-border dark:border-stone-800 shadow-sm">
+                <div class="flex items-center justify-between mb-8">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-notion-pastel-blue dark:bg-blue-900/30 rounded-2xl flex items-center justify-center">
+                      <UIcon name="i-lucide-credit-card" class="w-6 h-6 text-notion-blue dark:text-notion-pastel-blue" />
+                    </div>
+                    <div>
+                      <h2 class="text-xl font-bold text-notion-text dark:text-white font-serif">Checkout</h2>
+                      <p class="text-xs text-notion-text-secondary italic">Secure Payment Processing</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col items-end">
+                    <img src="https://paystack.com/assets/img/login/paystack-logo.png" class="h-4 opacity-40 dark:invert" />
                   </div>
                 </div>
-                <h2 class="text-2xl font-bold text-stone-900 dark:text-white mb-2 text-center font-serif">Complete Payment</h2>
-                <p class="text-stone-500 text-center mb-8 text-sm">Secure payment via Paystack</p>
                 
-                <!-- Order Summary -->
-                <div class="bg-stone-50 dark:bg-stone-950/50 rounded-lg p-5 mb-6 border border-stone-100">
-                  <div class="flex justify-between items-center">
-                    <div>
-                      <p class="font-bold text-stone-900 dark:text-white">Tenancy Agreement</p>
-                      <p class="text-xs text-stone-500">{{ formData?.landlord_name }} ↔ {{ formData?.tenant_name }}</p>
-                    </div>
-                    <p class="text-xl font-bold text-stone-900">GH₵ 40</p>
-                  </div>
+                <!-- Order Summary Breakdown -->
+                <div class="bg-notion-gray dark:bg-stone-800/50 rounded-2xl p-6 mb-8 border border-notion-border dark:border-stone-700/50">
+                   <div class="space-y-4">
+                      <div class="flex justify-between items-center text-sm">
+                        <div class="flex items-center gap-2">
+                          <UIcon name="i-lucide-file-text" class="w-4 h-4 text-notion-text-secondary" />
+                          <span class="text-notion-text-secondary">Tenancy Agreement Feature</span>
+                        </div>
+                        <span class="font-bold text-notion-text dark:text-white">GH₵ {{ servicePrice }}</span>
+                      </div>
+                      <div class="flex justify-between items-center text-sm">
+                        <div class="flex items-center gap-2">
+                          <UIcon name="i-lucide-cloud" class="w-4 h-4 text-emerald-500" />
+                          <span class="text-notion-text-secondary">Cloud Backup & Storage (2yrs)</span>
+                        </div>
+                        <span class="text-emerald-600 font-bold text-xs bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded">INCLUDED</span>
+                      </div>
+                      <div class="pt-4 border-t border-notion-border dark:border-stone-700 flex justify-between items-center">
+                        <span class="font-black text-notion-text dark:text-white uppercase tracking-widest text-[11px]">Payable Total</span>
+                        <span class="text-3xl font-black text-notion-blue dark:text-white tracking-tighter">GH₵ {{ servicePrice }}</span>
+                      </div>
+                   </div>
                 </div>
 
                 <!-- Email Input -->
-                <div class="mb-6">
-                  <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 block">Your Email</label>
-                  <input 
+                <div class="mb-8 group">
+                  <div class="flex items-center gap-2 mb-3">
+                    <label class="text-[11px] font-bold text-notion-text-secondary uppercase tracking-widest group-focus-within:text-notion-blue transition-colors">Receipt Recipient</label>
+                  </div>
+                  <UInput 
                     v-model="customerEmail"
                     type="email"
-                    placeholder="you@example.com"
-                    class="w-full px-4 py-3 bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-lg text-sm text-stone-900 dark:text-white focus:ring-1 focus:ring-stone-400 focus:border-stone-400 transition-all placeholder-stone-300"
+                    placeholder="email@example.com"
+                    size="xl"
+                    icon="i-lucide-mail"
+                    class="w-full"
+                    variant="outline"
                   />
+                  <p class="text-[10px] text-notion-text-secondary mt-2.5 flex items-center gap-1.5">
+                    <UIcon name="i-lucide-shield-check" class="w-3.5 h-3.5" />
+                    Final document will be delivered to this address
+                  </p>
                 </div>
 
-                <div class="flex gap-3">
-                  <UButton variant="ghost" color="neutral" size="lg" class="rounded-lg" @click="step = 2">Back</UButton>
+                <div class="flex gap-4">
+                  <UButton variant="ghost" color="neutral" size="xl" class="rounded-xl px-6" @click="step = 2">Back</UButton>
                   <PaystackButton
                     v-if="customerEmail && contractId"
                     feature-type="contract"
@@ -234,69 +270,81 @@
                     class="flex-1"
                     @success="handlePaymentSuccess"
                   >
-                    Pay GH₵ 40
+                    Complete Checkout
                   </PaystackButton>
-                  <button 
+                  <UButton
                     v-else
                     disabled
-                    class="flex-1 py-3 bg-stone-100 dark:bg-stone-800 text-stone-400 font-medium rounded-lg cursor-not-allowed text-sm"
+                    block
+                    size="xl"
+                    class="flex-1 bg-notion-blue/50 text-white cursor-not-allowed rounded-xl"
                   >
-                    Enter Email
-                  </button>
+                    Enter Email to Pay
+                  </UButton>
                 </div>
               </div>
 
-              <!-- Summary Card -->
-              <div class="hidden lg:block">
+              <!-- Summary Card (Right Column) -->
+              <div class="lg:col-span-5 space-y-6">
                 <ContractSummaryCard :details="formData!" />
                 
-                <div class="mt-6 p-4 rounded-lg bg-notion-green border border-emerald-100/50">
-                  <div class="flex items-start gap-3">
-                    <UIcon name="i-lucide-shield-check" class="w-4 h-4 text-emerald-700 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p class="text-xs font-bold text-emerald-800 mb-1">Secure Payment</p>
-                      <p class="text-xs text-emerald-700 leading-relaxed">
-                        Your payment is processed securely by Paystack.
-                      </p>
+                <div class="p-6 rounded-[24px] bg-notion-text dark:bg-stone-800 text-white shadow-lg shadow-stone-200/50 dark:shadow-none">
+                  <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                      <UIcon name="i-lucide-shield-lock" class="w-4 h-4 text-emerald-400" />
                     </div>
+                    <span class="text-[11px] font-black uppercase tracking-[0.2em] text-stone-300">Carfax Protection</span>
                   </div>
+                  <p class="text-sm leading-relaxed text-stone-300 italic">
+                    Once paid, we remove the draft watermark and invite all parties to digitally sign the verified agreement.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
+
           <!-- Step 4: Success -->
-          <div v-else-if="step === 4" class="text-center py-16 animate-fade-in">
-            <div class="w-16 h-16 bg-notion-green rounded-full flex items-center justify-center mx-auto mb-6">
-              <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-emerald-600" />
-            </div>
-            
-            <h2 class="text-3xl font-bold text-stone-900 dark:text-white mb-4 font-serif">Agreement Ready!</h2>
-            <p class="text-stone-500 dark:text-stone-400 mb-10 max-w-sm mx-auto">
-              Your tenancy agreement has been generated.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <NuxtLink 
-                :to="`/contract/preview/${contractId}`"
-                class="px-6 py-3 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors inline-flex items-center justify-center gap-2 font-medium"
-              >
-                <UIcon name="i-lucide-download" class="w-4 h-4" />
-                View & Download
-              </NuxtLink>
-              <button 
-                @click="shareViaWhatsApp"
-                class="px-6 py-3 bg-white border border-stone-200 text-stone-900 rounded-lg hover:bg-stone-50 transition-colors inline-flex items-center justify-center gap-2 font-medium"
-              >
-                <UIcon name="i-lucide-message-circle" class="w-4 h-4" />
-                WhatsApp
-              </button>
-              <NuxtLink 
-                to="/"
-                class="px-6 py-3 text-stone-500 hover:text-stone-900 rounded-lg transition-colors font-medium"
-              >
-                Go Home
-              </NuxtLink>
+          <div v-else-if="step === 4" class="text-center py-16 animate-fade-in max-w-2xl mx-auto">
+            <div class="bg-white dark:bg-stone-900 p-12 rounded-[32px] border border-notion-border shadow-xl">
+              <div class="w-20 h-20 bg-notion-green rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce-in">
+                <UIcon name="i-lucide-party-popper" class="w-10 h-10 text-emerald-600" />
+              </div>
+              
+              <h2 class="text-4xl font-bold text-notion-text dark:text-white mb-4 font-serif tracking-tight">Agreement Ready!</h2>
+              <p class="text-notion-text-secondary dark:text-stone-400 mb-12 text-lg">
+                Your legally binding tenancy agreement has been successfully generated and finalized.
+              </p>
+              
+              <div class="grid sm:grid-cols-2 gap-4">
+                <UButton
+                  size="xl"
+                  class="rounded-xl font-bold bg-notion-blue hover:bg-notion-blue-hover text-white h-14"
+                  icon="i-lucide-download"
+                  @click="downloadDraftPDF" 
+                >
+                  Download PDF
+                </UButton>
+                <UButton
+                   variant="outline"
+                   size="xl"
+                   class="rounded-xl font-bold border-notion-border text-notion-text h-14"
+                   icon="i-lucide-message-circle"
+                   @click="shareViaWhatsApp"
+                >
+                  Send via WhatsApp
+                </UButton>
+              </div>
+
+              <div class="mt-12 pt-8 border-t border-notion-border">
+                <NuxtLink 
+                  to="/"
+                  class="text-sm font-bold text-notion-blue hover:underline flex items-center justify-center gap-2"
+                >
+                  Return to Dashboard
+                  <UIcon name="i-lucide-arrow-right" class="w-4 h-4" />
+                </NuxtLink>
+              </div>
             </div>
           </div>
           
@@ -328,8 +376,20 @@ const contractId = ref('')
 const linkCopied = ref(false)
 const autoSaveStatus = ref<'saving' | 'saved' | null>(null)
 const hasSavedDraft = ref(false)
+const servicePrice = ref(40)
 
 const STORAGE_KEY = 'rentbase_contract_draft'
+
+// Load saved draft and fetch price on mount
+onMounted(async () => {
+  loadSavedDraft()
+  try {
+    const prices = await $fetch<{ price_contract: number }>('/api/settings/prices')
+    if (prices?.price_contract) servicePrice.value = prices.price_contract
+  } catch (e) {
+    console.error('Failed to fetch dynamic price:', e)
+  }
+})
 
 const stepTitles = [
   'Create Agreement',
@@ -481,22 +541,16 @@ async function copyShareLink() {
 </script>
 
 <style scoped>
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes bounce-in {
-  0% { opacity: 0; transform: scale(0.5); }
-  50% { transform: scale(1.1); }
-  100% { opacity: 1; transform: scale(1); }
 }
 
 .animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
 }
 
-.animate-bounce-in {
-  animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 </style>

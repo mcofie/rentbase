@@ -2,43 +2,7 @@ import { serverSupabaseServiceRole } from '#supabase/server'
 import crypto from 'crypto'
 import { rateLimit, phoneRateLimitKey } from '~/server/utils/rateLimit'
 import { validatePhone } from '~/server/utils/validation'
-
-/**
- * Send Hubtel SMS (server-side utility)
- */
-async function sendHubtelSMS(phone: string, message: string, config: any) {
-    const clientId = config.hubtelClientId
-    const clientSecret = config.hubtelClientSecret
-    const from = config.hubtelSenderId || 'RentBase'
-
-    if (!clientId || !clientSecret) {
-        console.log('[SMS Mock]', { to: phone, message })
-        return { success: true, mock: true }
-    }
-
-    const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
-
-    try {
-        const res = await fetch('https://smsc.hubtel.com/v1/messages/send', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Basic ${auth}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                From: from,
-                To: phone,
-                Content: message.slice(0, 160),
-                RegisteredDelivery: true
-            })
-        })
-        const data = await res.json()
-        return data
-    } catch (e) {
-        console.error('Hubtel SMS Error:', e)
-        throw e
-    }
-}
+import { sendSMS } from '~/server/utils/sms'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
@@ -65,7 +29,6 @@ export default defineEventHandler(async (event) => {
 
     // Use service role client to bypass RLS for anonymous users
     const client = await serverSupabaseServiceRole(event)
-    const config = useRuntimeConfig()
 
     // Generate cryptographically secure 4-digit code
     const code = crypto.randomInt(1000, 9999).toString()
@@ -99,7 +62,7 @@ export default defineEventHandler(async (event) => {
 
     // Send SMS
     const message = `Your RentBase verification code is: ${code}. Valid for 10 minutes.`
-    await sendHubtelSMS(validatedPhone.replace('+', ''), message, config)
+    await sendSMS(validatedPhone, message)
 
     return { success: true }
 })

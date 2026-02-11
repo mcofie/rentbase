@@ -1,107 +1,92 @@
 <template>
-  <div class="contract-summary-card bg-gradient-to-br from-stone-900 to-stone-800 dark:from-stone-800 dark:to-stone-900 rounded-[24px] p-6 text-white overflow-hidden relative">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-5">
-      <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+  <div class="contract-summary-card bg-notion-text dark:bg-stone-900 rounded-[24px] p-6 text-white overflow-hidden relative shadow-lg shadow-stone-300 dark:shadow-none">
+    <!-- Background subtle texture -->
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none">
+      <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z\' fill=\'%23ffffff\' fill-opacity=\'1\' fill-rule=\'evenodd\'/%3E%3C/svg%3E');"></div>
     </div>
 
     <div class="relative z-10">
       <!-- Header -->
-      <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-            <UIcon name="i-lucide-calculator" class="w-4 h-4 text-white" />
+          <div class="w-8 h-8 bg-notion-pastel-blue rounded-lg flex items-center justify-center">
+            <UIcon name="i-lucide-calculator" class="w-4 h-4 text-notion-blue" />
           </div>
-          <span class="text-xs font-black uppercase tracking-widest text-stone-400">Summary</span>
+          <span class="text-[10px] font-black uppercase tracking-widest text-stone-400">Total Obligation</span>
         </div>
-        <span class="text-xs font-mono text-stone-500">{{ details.rent_currency }}</span>
+        <span class="text-[10px] font-bold bg-white/10 px-2 py-0.5 rounded text-stone-300">{{ details.rent_currency }}</span>
       </div>
 
       <!-- Total Rent -->
-      <div class="mb-6">
-        <p class="text-xs text-stone-400 mb-1">Total Rent for {{ details.lease_duration_months }} months</p>
-        <p class="text-3xl font-black tracking-tight">
+      <div class="mb-8">
+        <p class="text-[11px] text-stone-400 mb-1">Estimated Commitment ({{ details.lease_duration_months }} Months)</p>
+        <p class="text-4xl font-black tracking-tighter">
           {{ formatNumber(totalRent) }}
-          <span class="text-base font-normal text-stone-400">{{ details.rent_currency }}</span>
+          <span class="text-base font-normal text-stone-500">{{ details.rent_currency }}</span>
         </p>
       </div>
 
       <!-- Breakdown -->
-      <div class="space-y-3 mb-6">
-        <div class="flex items-center justify-between py-2 border-b border-stone-700/50">
+      <div class="space-y-3 mb-8">
+        <div class="flex items-center justify-between py-2.5 border-b border-white/10">
           <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-home" class="w-4 h-4 text-stone-400" />
-            <span class="text-sm text-stone-300">{{ paymentFrequencyLabel }} Rent</span>
+            <UIcon name="i-lucide-home" class="w-4 h-4 text-stone-500" />
+            <span class="text-xs text-stone-300">{{ paymentFrequencyLabel }} Base Rent</span>
           </div>
-          <span class="font-bold">{{ formatNumber(details.rent_amount) }}</span>
+          <span class="text-sm font-bold">{{ formatNumber(details.rent_amount) }}</span>
         </div>
         
-        <div class="flex items-center justify-between py-2 border-b border-stone-700/50">
+        <div class="flex items-center justify-between py-2.5 border-b border-white/10">
           <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-shield" class="w-4 h-4 text-stone-400" />
-            <span class="text-sm text-stone-300">Security Deposit</span>
+            <UIcon name="i-lucide-shield" class="w-4 h-4 text-stone-500" />
+            <span class="text-xs text-stone-300">Security Deposit</span>
           </div>
-          <span class="font-bold">{{ formatNumber(details.security_deposit) }}</span>
+          <span class="text-sm font-bold">{{ formatNumber(details.security_deposit) }}</span>
         </div>
 
-        <div class="flex items-center justify-between py-2 border-b border-stone-700/50">
+        <div class="flex items-center justify-between py-2.5 border-b border-white/10">
           <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-file-text" class="w-4 h-4 text-stone-400" />
-            <span class="text-sm text-stone-300">Agreement Fee</span>
+            <UIcon name="i-lucide-file-text" class="w-4 h-4 text-stone-500" />
+            <span class="text-xs text-stone-300">Commission/Fees</span>
           </div>
-          <span class="font-bold text-emerald-400">40</span>
+          <span class="text-sm font-bold text-emerald-400">Free</span>
         </div>
 
-        <div class="flex items-center justify-between pt-2">
-          <span class="text-sm font-bold text-white">Move-in Cost</span>
-          <span class="text-xl font-black text-emerald-400">{{ formatNumber(moveInCost) }}</span>
+        <div class="flex items-center justify-between pt-4">
+          <span class="text-[11px] font-black uppercase tracking-widest text-stone-400">First Payment Amount</span>
+          <span class="text-2xl font-black text-emerald-400 tracking-tight">{{ formatNumber(moveInCost) }}</span>
         </div>
       </div>
 
       <!-- Key Dates -->
-      <div class="bg-stone-800/50 rounded-xl p-4 space-y-3">
-        <p class="text-xs font-black uppercase tracking-widest text-stone-500 mb-3">Key Dates</p>
-        
+      <div class="bg-white/5 rounded-2xl p-4 space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-calendar-plus" class="w-4 h-4 text-emerald-400" />
-            <span class="text-xs text-stone-400">Lease Starts</span>
+            <UIcon name="i-lucide-calendar-days" class="w-4 h-4 text-blue-400" />
+            <span class="text-[10px] uppercase font-bold text-stone-400">Lease window</span>
           </div>
-          <span class="text-sm font-bold">{{ formatDate(details.lease_start_date) }}</span>
+          <span class="text-xs font-bold">{{ formatDate(details.lease_start_date) }} — {{ formatDate(leaseEndDate) }}</span>
         </div>
 
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-calendar-x" class="w-4 h-4 text-rose-400" />
-            <span class="text-xs text-stone-400">Lease Ends</span>
+            <UIcon name="i-lucide-clock-rewind" class="w-4 h-4 text-amber-400" />
+            <span class="text-[10px] uppercase font-bold text-stone-400">Total Span</span>
           </div>
-          <span class="text-sm font-bold">{{ formatDate(leaseEndDate) }}</span>
-        </div>
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-clock" class="w-4 h-4 text-amber-400" />
-            <span class="text-xs text-stone-400">Duration</span>
-          </div>
-          <span class="text-sm font-bold">{{ details.lease_duration_months }} months</span>
+          <span class="text-xs font-bold">{{ details.lease_duration_months }} Months</span>
         </div>
       </div>
 
       <!-- Parties Summary -->
-      <div class="mt-4 pt-4 border-t border-stone-700/50">
-        <div class="flex items-center justify-between text-xs">
-          <div class="flex items-center gap-2">
-            <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center">
-              <UIcon name="i-lucide-user" class="w-3 h-3 text-blue-400" />
-            </div>
-            <span class="text-stone-400 truncate max-w-[80px]">{{ details.landlord_name.split(' ')[0] }}</span>
+      <div class="mt-8 pt-6 border-t border-white/10">
+        <div class="flex items-center justify-between">
+          <div class="flex -space-x-3 overflow-hidden">
+            <div class="inline-block h-8 w-8 rounded-full ring-2 ring-notion-text bg-blue-500 flex items-center justify-center text-[10px] font-bold">L</div>
+            <div class="inline-block h-8 w-8 rounded-full ring-2 ring-notion-text bg-emerald-500 flex items-center justify-center text-[10px] font-bold">T</div>
           </div>
-          <UIcon name="i-lucide-arrow-left-right" class="w-4 h-4 text-stone-600" />
-          <div class="flex items-center gap-2">
-            <span class="text-stone-400 truncate max-w-[80px]">{{ details.tenant_name.split(' ')[0] }}</span>
-            <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
-              <UIcon name="i-lucide-user-check" class="w-3 h-3 text-emerald-400" />
-            </div>
+          <div class="text-right">
+            <p class="text-[10px] text-stone-400 uppercase font-black tracking-widest leading-none">Parties</p>
+            <p class="text-[11px] font-bold text-stone-300">{{ details.landlord_name.split(' ')[0] }} & {{ details.tenant_name.split(' ')[0] }}</p>
           </div>
         </div>
       </div>

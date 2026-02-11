@@ -1,9 +1,12 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
 import { validatePhone } from '~/server/utils/validation'
+import { sendDiscordNotification } from '~/server/utils/discord'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     const { phone, fullName, agencyName, location, otpVerified } = body
+
+    // ... (rest of the code)
 
     // Ensure OTP was verified before submitting claim
     if (!otpVerified) {
@@ -115,13 +118,15 @@ export default defineEventHandler(async (event) => {
             location: location
         })
 
-    if (insertError) {
-        console.error('Error creating claim:', JSON.stringify(insertError, null, 2))
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Failed to submit claim: ' + insertError.message
-        })
-    }
+    // Send Discord notification
+    await sendDiscordNotification(
+        `🆕 **New Agent Claim Submitted**\n` +
+        `**Name:** ${fullName.trim()}\n` +
+        `**Phone:** ${validatedPhone}\n` +
+        `**Agency:** ${agencyName?.trim() || 'N/A'}\n` +
+        `**Location:** ${location}`,
+        'info'
+    )
 
     return {
         success: true,
