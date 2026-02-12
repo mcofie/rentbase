@@ -5,13 +5,13 @@ export function useAuth() {
     const supabase = useSupabaseClient()
     const user = useSupabaseUser()
 
-    const state = reactive<AuthFormState>({
+    const state = useState<AuthFormState>('auth-form-state', () => ({
         phone: '',
         otp: '',
         step: 'phone',
         loading: false,
         error: null,
-    })
+    }))
 
     const profile = ref<Profile | null>(null)
 
@@ -19,8 +19,8 @@ export function useAuth() {
      * Send OTP to phone number
      */
     async function sendOTP(phone: string): Promise<boolean> {
-        state.loading = true
-        state.error = null
+        state.value.loading = true
+        state.value.error = null
 
         try {
             // Call our custom Admin OTP endpoint instead of Supabase Auth
@@ -33,14 +33,14 @@ export function useAuth() {
                 throw new Error((response as any).message || 'Failed to send OTP')
             }
 
-            state.phone = phone
-            state.step = 'otp'
-            state.loading = false
+            state.value.phone = phone
+            state.value.step = 'otp'
+            state.value.loading = false
             return true
         } catch (err: any) {
             console.error('[sendOTP] Error:', err)
-            state.error = err.data?.message || err.message || 'Failed to send OTP'
-            state.loading = false
+            state.value.error = err.data?.message || err.message || 'Failed to send OTP'
+            state.value.loading = false
             return false
         }
     }
@@ -49,15 +49,15 @@ export function useAuth() {
      * Verify OTP code
      */
     async function verifyOTP(otp: string): Promise<boolean> {
-        state.loading = true
-        state.error = null
+        state.value.loading = true
+        state.value.error = null
 
         try {
             // Call our custom Admin OTP verification endpoint
             const response = await $fetch('/api/admin/auth/verify-otp', {
                 method: 'POST',
                 body: {
-                    phone: state.phone,
+                    phone: state.value.phone,
                     otp: otp
                 }
             })
@@ -69,12 +69,12 @@ export function useAuth() {
             // Fetch profile to update state
             await fetchProfile()
 
-            state.loading = false
+            state.value.loading = false
             return true
         } catch (err: any) {
             console.error('[verifyOTP] Error:', err)
-            state.error = err.data?.message || err.message || 'Failed to verify OTP'
-            state.loading = false
+            state.value.error = err.data?.message || err.message || 'Failed to verify OTP'
+            state.value.loading = false
             return false
         }
     }
@@ -83,7 +83,7 @@ export function useAuth() {
      * Resend OTP
      */
     async function resendOTP(): Promise<boolean> {
-        return sendOTP(state.phone)
+        return sendOTP(state.value.phone)
     }
 
     /**
@@ -148,20 +148,20 @@ export function useAuth() {
         }
         await supabase.auth.signOut()
         profile.value = null
-        state.step = 'phone'
-        state.phone = ''
-        state.otp = ''
+        state.value.step = 'phone'
+        state.value.phone = ''
+        state.value.otp = ''
     }
 
     /**
      * Reset auth state
      */
     function resetState(): void {
-        state.phone = ''
-        state.otp = ''
-        state.step = 'phone'
-        state.loading = false
-        state.error = null
+        state.value.phone = ''
+        state.value.otp = ''
+        state.value.step = 'phone'
+        state.value.loading = false
+        state.value.error = null
     }
 
     // Initialize profile on mount

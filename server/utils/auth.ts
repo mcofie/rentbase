@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 import { useRuntimeConfig } from '#imports'
+import { validatePhone } from '~/server/utils/validation'
 
 function getServiceClient() {
     const config = useRuntimeConfig()
@@ -17,25 +18,13 @@ function getServiceClient() {
 export async function findUserByPhone(phone: string) {
     const supabase = getServiceClient()
 
-    // Normalize phone
-    const normalizedPhone = phone.startsWith('+') ? phone : `+233${phone.replace(/^0/, '')}`
+    // Normalize phone using standardized utility
+    const phoneValidation = validatePhone(phone)
+    if (!phoneValidation.valid) return null
+    const normalizedPhone = phoneValidation.value
 
-    // 1. Check Admin
-    const { data: admin } = await (supabase as any)
-        .schema('rentbase')
-        .from('admin_users')
-        .select('id, name, role')
-        .eq('phone', normalizedPhone)
-        .eq('is_active', true)
-        .single()
-
-    if (admin) {
-        return { ...admin, role: 'admin' }
-    }
-
-    // 2. Check Profiles table (for existing agents/tenants)
-    const { data: profile } = await (supabase as any)
-        .schema('rentbase')
+    // 1. Check Profiles table (for existing agents/tenants)
+    const { data: profile } = await supabase
         .from('profiles')
         .select('id, full_name, role')
         .eq('phone_number', normalizedPhone)
@@ -45,9 +34,8 @@ export async function findUserByPhone(phone: string) {
         return { id: profile.id, name: profile.full_name, role: profile.role }
     }
 
-    // 3. Check Approved Agent Claims (if profile doesn't exist yet)
-    const { data: agent } = await (supabase as any)
-        .schema('rentbase')
+    // 2. Check Approved Agent Claims (if profile doesn't exist yet)
+    const { data: agent } = await supabase
         .from('agent_claims')
         .select('id, full_name, status')
         .eq('phone', normalizedPhone)
@@ -58,18 +46,11 @@ export async function findUserByPhone(phone: string) {
         return { id: agent.id, name: agent.full_name, role: 'agent' }
     }
 
-    return null
-}
-
-export async function findUserById(id: string) {
-    const supabase = getServiceClient()
-
-    // 1. Check Admin
-    const { data: admin } = await (supabase as any)
-        .schema('rentbase')
+    // 3. Check Admin
+    const { data: admin } = await supabase
         .from('admin_users')
-        .select('id, phone, name, role')
-        .eq('id', id)
+        .select('id, name')
+        .eq('phone', normalizedPhone)
         .eq('is_active', true)
         .single()
 
@@ -77,9 +58,14 @@ export async function findUserById(id: string) {
         return { ...admin, role: 'admin' }
     }
 
-    // 2. Check Profiles
-    const { data: profile } = await (supabase as any)
-        .schema('rentbase')
+    return null
+}
+
+export async function findUserById(id: string) {
+    const supabase = getServiceClient()
+
+    // 1. Check Profiles
+    const { data: profile } = await supabase
         .from('profiles')
         .select('id, phone_number, full_name, role')
         .eq('id', id)
@@ -89,9 +75,8 @@ export async function findUserById(id: string) {
         return { id: profile.id, phone: profile.phone_number, name: profile.full_name, role: profile.role }
     }
 
-    // 3. Check Claims
-    const { data: agent } = await (supabase as any)
-        .schema('rentbase')
+    // 2. Check Claims
+    const { data: agent } = await supabase
         .from('agent_claims')
         .select('id, phone, full_name, status')
         .eq('id', id)
@@ -100,6 +85,18 @@ export async function findUserById(id: string) {
 
     if (agent) {
         return { id: agent.id, phone: agent.phone, name: agent.full_name, role: 'agent' }
+    }
+
+    // 3. Check Admin
+    const { data: admin } = await supabase
+        .from('admin_users')
+        .select('id, phone, name')
+        .eq('id', id)
+        .eq('is_active', true)
+        .single()
+
+    if (admin) {
+        return { ...admin, role: 'admin' }
     }
 
     return null
@@ -124,14 +121,14 @@ export async function createSession(userId: string, role: string) {
         insertData.role = role
     }
 
-    const { error } = await (supabase as any)
-        .schema('rentbase')
+    console.log(`[Auth] Creating session for ${userId} (${role}) in ${tableName}`)
+
+    const { error } = await supabase
         .from(tableName)
         .insert(insertData)
 
     if (error) {
-        console.error('Session creation error:', error)
-        // Fallback: If user_sessions doesn't exist, we might need to handle it or use a default
+        console.error('[Auth] Session creation error:', JSON.stringify(error, null, 2))
         return null
     }
 
@@ -144,14 +141,12 @@ export async function createLoginOTP(phone: string) {
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
 
     // Store in admin_otps for now as it's a generic OTP table
-    await (supabase as any)
-        .schema('rentbase')
+    await supabase
         .from('admin_otps')
         .delete()
         .eq('phone', phone)
 
-    const { error } = await (supabase as any)
-        .schema('rentbase')
+    const { error } = await supabase
         .from('admin_otps')
         .insert({
             phone,
@@ -166,14 +161,17 @@ export async function createLoginOTP(phone: string) {
         return null
     }
 
+    console.log(`[Auth] OTP created for ${phone}: ${otp}`)
+
     return { otp, expiresAt }
 }
 
 export async function verifyLoginOTP(phone: string, code: string) {
     const supabase = getServiceClient()
 
-    const { data: record, error } = await (supabase as any)
-        .schema('rentbase')
+    console.log(`[Auth] Verifying OTP for ${phone}, code: ${code}`)
+
+    const { data: record, error } = await supabase
         .from('admin_otps')
         .select('*')
         .eq('phone', phone)
@@ -183,12 +181,12 @@ export async function verifyLoginOTP(phone: string, code: string) {
         .single()
 
     if (error || !record) {
+        console.warn(`[Auth] OTP verification failed for ${phone}. Error:`, error?.message || 'No record found')
         return { success: false, error: 'Invalid or expired code' }
     }
 
     // Mark as used
-    await (supabase as any)
-        .schema('rentbase')
+    await supabase
         .from('admin_otps')
         .update({ is_used: true })
         .eq('id', record.id)

@@ -5,6 +5,7 @@
 
 import { defineEventHandler, readBody, createError } from 'h3'
 import { findUserByPhone, createLoginOTP } from '~/server/utils/auth'
+import { validatePhone } from '~/server/utils/validation'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
@@ -19,22 +20,15 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    // Normalize phone number (ensure +233 format)
-    let normalizedPhone = phone.replace(/[\s\-\(\)]/g, '') // Remove spaces, dashes, parentheses
-
-    // Remove leading 0 if present
-    normalizedPhone = normalizedPhone.replace(/^0+/, '')
-
-    // Add +233 if not already present
-    if (!normalizedPhone.startsWith('+233')) {
-        if (normalizedPhone.startsWith('233')) {
-            normalizedPhone = '+' + normalizedPhone
-        } else if (normalizedPhone.startsWith('+')) {
-            // Already has a different country code, use as-is
-        } else {
-            normalizedPhone = '+233' + normalizedPhone
-        }
+    // Normalize phone number using standardized utility
+    const phoneValidation = validatePhone(phone)
+    if (!phoneValidation.valid) {
+        throw createError({
+            statusCode: 400,
+            message: phoneValidation.error || 'Invalid phone number format'
+        })
     }
+    const normalizedPhone = phoneValidation.value
 
     // Check if user exists (Admin or Approved Agent)
     const user = await findUserByPhone(normalizedPhone)
@@ -127,4 +121,3 @@ export default defineEventHandler(async (event) => {
         }
     }
 })
-

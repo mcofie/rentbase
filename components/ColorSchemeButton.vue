@@ -1,11 +1,12 @@
 <template>
   <button
-    class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none"
+    class="flex items-center justify-center p-2.5 rounded-xl bg-white dark:bg-stone-900/50 border border-notion-border/50 dark:border-stone-800/50 hover:border-notion-blue transition-all active:scale-90 shadow-sm group"
+    aria-label="Toggle Color Mode"
     @click="toggleColorMode"
   >
     <UIcon
       :name="isDark ? 'i-lucide-sun' : 'i-lucide-moon'"
-      class="w-5 h-5 text-gray-500 dark:text-gray-400"
+      class="w-4 h-4 text-notion-text-secondary dark:text-stone-400 group-hover:text-notion-blue group-hover:rotate-12 transition-all duration-300"
     />
   </button>
 </template>

@@ -317,7 +317,7 @@ export async function verifyPassword(email: string, password: string): Promise<{
         .schema('rentbase')
         .from('admin_users')
         .select('*')
-        .eq('email', email.toLowerCase())
+        .eq('email', email.toLowerCase().trim())
         .eq('is_active', true)
         .single()
 
@@ -331,14 +331,21 @@ export async function verifyPassword(email: string, password: string): Promise<{
     const [salt, storedHash] = (adminUser.password_hash || '').split(':')
 
     if (!salt || !storedHash) {
-        console.error('[verifyPassword] No hash set')
+        console.error('[verifyPassword] No salt or hash found in stored password_hash')
         return { success: false, error: 'Password not set for this account' }
     }
 
-    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
+    // Trim password to handle accidental whitespace from inputs
+    const trimmedPassword = password.trim()
+    const hash = crypto.pbkdf2Sync(trimmedPassword, salt, 1000, 64, 'sha512').toString('hex')
+
+    console.log(`[verifyPassword] Verification for ${email}:`)
+    console.log(` - Stored Hash starts with: ${storedHash.substring(0, 8)}...`)
+    console.log(` - Gen. Hash starts with:   ${hash.substring(0, 8)}...`)
+    console.log(` - Match: ${hash === storedHash}`)
 
     if (hash !== storedHash) {
-        console.error('[verifyPassword] Hash mismatch')
+        console.error(`[verifyPassword] Hash mismatch for user: ${email}`)
         return { success: false, error: 'Invalid password' }
     }
 

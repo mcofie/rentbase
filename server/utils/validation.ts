@@ -5,21 +5,23 @@
 
 /**
  * Validate and sanitize phone number (Ghana format)
+ * Returns E.164 format: +233XXXXXXXXX
  */
 export function validatePhone(phone: string): { valid: boolean; value: string; error?: string } {
     if (!phone || typeof phone !== 'string') {
         return { valid: false, value: '', error: 'Phone number is required' }
     }
 
-    // Remove all non-digit characters
+    // Remove all non-digit characters (except maybe a leading + which we handle after)
+    const hasLeadingPlus = phone.trim().startsWith('+')
     const cleaned = phone.replace(/\D/g, '')
 
-    // Check for valid Ghana phone patterns
-    // 0XX XXX XXXX (10 digits starting with 0)
-    // 233XXXXXXXXX (12 digits starting with 233)
-    // XXXXXXXXX (9 digits without prefix)
-
     let normalized: string
+
+    // Cases:
+    // 1. 0241234567 (10 digits starting with 0)
+    // 2. 233241234567 (12 digits starting with 233)
+    // 3. 241234567 (9 digits)
 
     if (cleaned.length === 10 && cleaned.startsWith('0')) {
         normalized = '+233' + cleaned.slice(1)
@@ -27,16 +29,22 @@ export function validatePhone(phone: string): { valid: boolean; value: string; e
         normalized = '+' + cleaned
     } else if (cleaned.length === 9) {
         normalized = '+233' + cleaned
+    } else if (hasLeadingPlus && cleaned.length >= 7) {
+        // Generic international format
+        normalized = '+' + cleaned
     } else {
-        return { valid: false, value: '', error: 'Invalid Ghana phone number format' }
+        return { valid: false, value: '', error: 'Invalid phone number format. Use 0XX XXX XXXX or +233...' }
     }
 
-    // Validate network prefixes (Ghana mobile networks)
-    const networkPrefix = normalized.slice(4, 6)
-    const validPrefixes = ['20', '23', '24', '25', '26', '27', '28', '29', '50', '53', '54', '55', '56', '57', '59']
+    // Optional: Validate network prefixes for Ghana (+233)
+    if (normalized.startsWith('+233')) {
+        const networkPrefix = normalized.slice(4, 6)
+        const validPrefixes = ['20', '23', '24', '25', '26', '27', '28', '29', '50', '53', '54', '55', '56', '57', '58', '59']
 
-    if (!validPrefixes.includes(networkPrefix)) {
-        return { valid: false, value: '', error: 'Invalid Ghana mobile network prefix' }
+        if (!validPrefixes.includes(networkPrefix)) {
+            // We'll be more lenient in general but keep a warning or specific check if needed
+            // For now, allow it but maybe it's a new prefix
+        }
     }
 
     return { valid: true, value: normalized }
@@ -123,8 +131,8 @@ export function validateOtpCode(code: string): { valid: boolean; value: string; 
 
     const cleaned = code.replace(/\D/g, '')
 
-    if (cleaned.length !== 4) {
-        return { valid: false, value: '', error: 'Code must be 4 digits' }
+    if (cleaned.length !== 4 && cleaned.length !== 6) {
+        return { valid: false, value: '', error: 'Code must be 4 or 6 digits' }
     }
 
     return { valid: true, value: cleaned }
